@@ -1,18 +1,29 @@
 # 🧪 Laboratorium Universitas Medan Area — Redesign Prototype
 
-Website demo prototype untuk **Laboratorium Universitas Medan Area (UMA)** dengan desain modern, responsif, dan mendukung dark mode.
+Website demo prototype untuk **Laboratorium Universitas Medan Area (UMA)** dengan desain modern, responsif, dan mendukung dark mode. Termasuk **Dashboard 4 Role** yang terintegrasi dengan Google Sheets.
 
-## ✅ Fitur Redesign
+## ✅ Fitur Website
 
 - 🎨 **Desain Modern** — Tailwind CSS + Poppins font + Lucide icons
 - 📱 **Fully Responsive** — Mobile hamburger menu (drawer), adaptif di semua layar
 - 🌙 **Dark Mode Toggle** — Beralih tema terang/gelap di top bar
 - 🧭 **Mega Menu** — Dropdown lebar dengan ikon + deskripsi (desktop)
 - 📂 **Menu Lengkap & Aktif** — Semua menu mengarah ke halaman nyata
-- 🃏 **Card-based Layout** — Untuk fakultas, berita, galeri, dan layanan
-- 📊 **Statistik Interaktif** — Section ringkasan angka
-- 🖼 **Galeri dengan Filter** — Galeri dapat disaring per fakultas (JS)
 - 🔍 **Auto-highlight menu aktif** — Deteksi halaman dari URL
+- 🖼 **Galeri dengan Filter** — Galeri dapat disaring per fakultas (JS)
+
+## ✅ Dashboard Operasional (4 Role)
+
+| Role | Menu Utama |
+|------|------------|
+| **Admin** | Kelola pengguna, master data lab, proses pembelian, pantau aktivitas, laporan inventaris & bulanan |
+| **Laboran** | Inventaris alat, inventaris bahan (stok + peringatan), pengajuan alat/bahan, jadwal, peminjaman, verifikasi laporan, terima barang |
+| **Kepala Lab** | Setujui pengajuan, peminjaman, laporan, sertifikat, statistik & laporan bulanan |
+| **Asisten** | Jadwal, inventaris (view), peminjaman + cetak surat, laporan praktikum, sertifikat |
+
+**Backend:** Google Sheets + Google Apps Script (gratis, data transparan) — lihat `README-DASHBOARD.md` untuk panduan setup (±15 menit).
+
+**Output cetak (A4):** surat pengajuan alat/bahan, surat peminjaman, laporan praktikum, sertifikat, laporan inventaris, kartu stok, jadwal, laporan bulanan.
 
 ## 🗂 Struktur Halaman
 
@@ -63,6 +74,14 @@ lab-uma/
 ├── berita.html             # Berita & pengumuman
 ├── unduhan.html            # Dokumen & sertifikat
 ├── kontak.html             # Kontak + form + maps
+├── dashboard/              # ★ Dashboard 4 role
+│   ├── login.html          #   Login
+│   ├── dashboard.html      #   Shell dashboard (sidebar + konten)
+│   ├── css/print.css       #   Layout cetak A4
+│   └── js/                 #   api, auth, app(router), print,
+│                           #   views-admin/laboran/kepalalab/asisten
+├── backend/
+│   └── code.gs             # ★ Google Apps Script (backend/database)
 ├── _shell.html             # Template kerangka (untuk build script)
 ├── build.ps1               # Script generate halaman dari template
 ├── navbar-template.html    # Referensi blok navbar (arsip)
@@ -72,19 +91,22 @@ lab-uma/
 │   ├── js/app.js           # Custom JS (theme, galeri filter)
 │   ├── js/nav.js           # JS navigasi (drawer, active highlight)
 │   └── img/                # Gambar lokal (jika diperlukan)
-└── README.md
+├── README.md
+└── README-DASHBOARD.md     # ★ Panduan setup Google Sheets + Apps Script
 ```
 
 ## ⚠️ Catatan
 
 - Prototype ini **clone visual** dari situs resmi `laboratorium.uma.ac.id` untuk keperluan **demonstrasi** upgrade tampilan.
-- Live URL pada tautan (Lab Pengujian ISO, P2MAL, login) mengarah ke situs asli agar data tetap real-time.
-- Jika ingin menambah/mengubah halaman, gunakan `_shell.html` sebagai template lalu jalankan `build.ps1`.
+- **Dashboard memerlukan setup Google Sheets** — ikuti `README-DASHBOARD.md` (±15 menit). Sampai di-setup, halaman login akan menampilkan pesan "koneksi gagal".
+- Tombol **Login** di website publik sudah mengarah ke `dashboard/login.html`.
+- Jika ingin menambah/mengubah halaman publik, gunakan `_shell.html` sebagai template lalu jalankan `build.ps1`.
 
-## 🔧 Untuk Selanjutnya (Roadmap)
+## 🔧 Roadmap
 
-- [ ] Halaman detail Profil, Struktur Organisasi
-- [ ] Halaman Galeri per Fakultas/Prodi
-- [ ] Dashboard admin dengan statistik & kalender
-- [ ] Integrasi jadwal praktikum real-time
+- [x] Redesign tampilan + halaman lengkap + responsive
+- [x] Dashboard 4 role + inventaris + pengajuan + laporan + sertifikat + cetak
+- [ ] Integrasi jadwal praktikum real-time dari sistem asli
+- [ ] Multi-akun per fakultas/prodi
+- [ ] Migrasi ke Firebase bila hendak produksi publik
 - [ ] Custom domain (jika punya)

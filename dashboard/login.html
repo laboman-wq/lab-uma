@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Dashboard Laboratorium UMA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'Inter', 'sans-serif'] },
+                    colors: { primary: { 700: '#1e40af', 800: '#1e3a8a' } }
+                }
+            }
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="font-sans bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+    <div class="absolute -top-24 -right-24 w-96 h-96 bg-blue-700/30 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-32 -left-16 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl"></div>
+
+    <div class="relative w-full max-w-md">
+        <a href="../index.html" class="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-cyan-300 mb-5"><i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Kembali ke Web Laboratorium</a>
+
+        <div class="bg-slate-900/80 backdrop-blur-xl rounded-3xl border border-slate-700/60 shadow-2xl p-8">
+            <div class="flex items-center gap-3 mb-6">
+                <img src="https://susitao.uma.ac.id/assets/img/logo-main.webp" class="w-12 h-12 rounded-xl object-contain bg-white p-1" alt="Logo UMA">
+                <div>
+                    <h1 class="font-bold text-lg leading-tight">LABORATORIUM</h1>
+                    <p class="text-[10px] tracking-widest text-slate-400 uppercase">Universitas Medan Area</p>
+                </div>
+            </div>
+
+            <h2 class="font-semibold text-xl mb-1">Selamat Datang 👋</h2>
+            <p class="text-sm text-slate-400 mb-6">Masuk ke dashboard operator laboratorium.</p>
+
+            <div id="login-error" class="hidden mb-4 px-4 py-3 rounded-xl bg-red-500/15 border border-red-500/40 text-red-300 text-sm"></div>
+
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1.5">Username</label>
+                    <input id="login-user" required autocomplete="username" placeholder="mis. laboran" class="w-full px-4 py-3 rounded-xl bg-slate-800/80 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1.5">Password</label>
+                    <input id="login-pass" type="password" required autocomplete="current-password" placeholder="••••••••" class="w-full px-4 py-3 rounded-xl bg-slate-800/80 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm">
+                </div>
+                <button type="submit" id="login-btn" class="w-full py-3 rounded-xl bg-primary-700 hover:bg-primary-800 font-semibold text-white transition flex items-center justify-center gap-2">
+                    <i data-lucide="log-in" class="w-4 h-4"></i> Masuk
+                </button>
+            </form>
+
+            <div class="mt-6">
+                <p class="text-xs text-slate-400 mb-3">Akun demo (klik untuk mengisi otomatis):</p>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="fillDemo('admin','admin123')" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs text-left"><span class="text-cyan-300 font-semibold">admin</span><br><span class="text-slate-400">Admin</span></button>
+                    <button onclick="fillDemo('laboran','laboran123')" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs text-left"><span class="text-cyan-300 font-semibold">laboran</span><br><span class="text-slate-400">Laboran</span></button>
+                    <button onclick="fillDemo('kepalalab','kepalalab123')" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs text-left"><span class="text-cyan-300 font-semibold">kepalalab</span><br><span class="text-slate-400">Kepala Lab</span></button>
+                    <button onclick="fillDemo('asisten','asisten123')" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs text-left"><span class="text-cyan-300 font-semibold">asisten</span><br><span class="text-slate-400">Asisten Lab</span></button>
+                </div>
+            </div>
+        </div>
+        <p class="text-center text-[11px] text-slate-500 mt-5">© 2026 Laboratorium UMA · Demo dashboard</p>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        function fillDemo(u, p) { document.getElementById('login-user').value = u; document.getElementById('login-pass').value = p; }
+        if (window.lucide) lucide.createIcons();
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('login-btn');
+            const errBox = document.getElementById('login-error');
+            btn.disabled = true; btn.innerHTML = 'Memeriksa...';
+            errBox.classList.add('hidden');
+            try {
+                const r = await Auth.login(document.getElementById('login-user').value, document.getElementById('login-pass').value);
+                if (r.ok) {
+                    Auth.set(r.user);
+                    window.location.href = 'dashboard.html';
+                } else {
+                    errBox.textContent = r.message || 'Login gagal';
+                    errBox.classList.remove('hidden');
+                    btn.disabled = false; btn.innerHTML = '<i data-lucide="log-in" class="w-4 h-4"></i> Masuk';
+                    if (window.lucide) lucide.createIcons();
+                }
+            } catch (err) {
+                errBox.textContent = 'Koneksi gagal: pastikan URL Apps Script sudah diatur di js/api.js';
+                errBox.classList.remove('hidden');
+                btn.disabled = false; btn.innerHTML = '<i data-lucide="log-in" class="w-4 h-4"></i> Masuk';
+                if (window.lucide) lucide.createIcons();
+            }
+        });
+
+        // Redirect ke dashboard jika sudah login
+        if (Auth.current()) window.location.href = 'dashboard.html';
+    </script>
+</body>
+</html>
