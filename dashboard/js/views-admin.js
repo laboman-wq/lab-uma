@@ -38,7 +38,7 @@ function vAdminDashboard() {
                         </div>
                     </div>
                     <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border">
-                        <h3 class="font-semibold text-slate-800 dark:text-white mb-3">Akun Demo</h3>
+                        <h3 class="font-semibold text-slate-800 dark:text-white mb-3">Akun Pengujian</h3>
                         <div class="space-y-2 text-sm">
                             <div class="flex justify-between px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900"><span>admin / admin123</span><span class="text-slate-400">Admin</span></div>
                             <div class="flex justify-between px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900"><span>laboran / laboran123</span><span class="text-slate-400">Laboran</span></div>
@@ -312,21 +312,434 @@ async function buatLapBulananAdmin() {
     } catch (e) { toast(e.message, 'error'); }
 }
 
+/* ============ BLOCK EDITOR (paragraf / judul / gambar / list) ============ */
+window.BlockEditor = {
+    container: null,
+    data: [],
+    init(elId, blocks) {
+        this.container = document.getElementById(elId);
+        this.data = blocks && blocks.length ? blocks : [];
+        if (this.container) this.render();
+    },
+    typeOpts(t) {
+        const map = { p: 'Paragraf', h: 'Judul', img: 'Gambar (URL)', list: 'Daftar Bullet' };
+        return Object.keys(map).map(k => `<option value="${k}" ${t === k ? 'selected' : ''}>${map[k]}</option>`).join('');
+    },
+    inputFor(b, i) {
+        if (b.t === 'img') return `<input data-be-idx="${i}" value="${esc(b.v || '')}" placeholder="https://..." class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">`;
+        const ph = b.t === 'list' ? 'Satu item per baris' : b.t === 'h' ? 'Teks judul' : 'Tulis paragraf...';
+        const val = b.t === 'list' ? (b.v || []).join('\n') : (b.v || '');
+        return `<textarea data-be-idx="${i}" rows="${b.t === 'p' ? 3 : 2}" placeholder="${ph}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">${esc(val)}</textarea>`;
+    },
+    render() {
+        const wrap = this.container;
+        if (!wrap) return;
+        const me = this;
+        const rows = this.data.map((b, i) => `
+            <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 be-row" data-row="${i}">
+                <div class="flex items-center gap-2 mb-1.5">
+                    <select onchange="window.BlockEditor.setT(${i},this.value)" class="px-2 py-1 rounded-lg border border-slate-200 text-sm bg-white dark:bg-slate-800">${this.typeOpts(b.t)}</select>
+                    <span class="text-xs text-slate-400">Blok ${i + 1}</span>
+                    <button type="button" onclick="window.BlockEditor.del(${i})" class="ml-auto text-xs font-semibold text-red-500">Hapus</button>
+                </div>
+                ${this.inputFor(b, i)}
+            </div>`).join('');
+        wrap.innerHTML = rows +
+            `<button type="button" onclick="window.BlockEditor.add()" class="mt-3 w-full px-3 py-2.5 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 text-sm font-semibold text-cyan-600 hover:border-cyan-400 transition">+ Tambah Blok</button>`;
+    },
+    add() { this.data.push({ t: 'p', v: '' }); this.render(); },
+    del(i) { this.data.splice(i, 1); this.render(); },
+    setT(i, t) { this.data[i].t = t; this.data[i].v = []; this.render(); },
+    collect() {
+        if (!this.container) return '[]';
+        const out = [];
+        this.container.querySelectorAll('.be-row').forEach(row => {
+            const i = parseInt(row.getAttribute('data-row'), 10);
+            const el = row.querySelector('[data-be-idx]');
+            const type = this.data[i] ? this.data[i].t : 'p';
+            const raw = el ? el.value.trim() : '';
+            if (!raw) return;
+            if (type === 'list') out.push({ t: type, v: raw.split(/\n/).map(s => s.trim()).filter(Boolean) });
+            else out.push({ t: type, v: raw });
+        });
+        return JSON.stringify(out);
+    }
+};
+
+/* ================= MENU BUILDER (Admin) ================= */
+function vAdminMenus() {
+    const content = $('#content');
+    content.innerHTML = `<div class="p-6 text-center py-10 text-slate-400">Memuat...</div>`;
+    getTable('menus').then(menus => {
+        window._menusData = menus;
+        const parents = menus.filter(m => !m.parent_id || m.parent_id === '0' || m.parent_id === '');
+        content.innerHTML = `
+        <div class="p-6">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                <h1 class="font-display text-2xl font-extrabold text-slate-900 dark:text-white">Menu & Sub Menu Website</h1>
+                <button onclick="modalMenu()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-700 text-white text-sm font-semibold hover:bg-primary-800"><i data-lucide="plus" class="w-4 h-4"></i> Tambah Menu</button>
+            </div>
+            <p class="text-sm text-slate-500 mb-4">Perubahan langsung terlihat di header website. Tipe: <b>parent</b> (punya sub menu), <b>page</b> (halaman), <b>link</b> (tautan eksternal).</p>
+            <div class="space-y-3" id="menu-tree">
+            ${parents.map(p => `
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden">
+                    <div class="flex items-center gap-3 px-4 py-3 bg-slate-50 dark:bg-slate-900">
+                        <span class="font-semibold text-slate-800 dark:text-white">${esc(p.label)}</span>
+                        ${badge(p.tipe)} ${p.published === '1' ? badge('Aktif') : badge('Tidak Aktif')}
+                        <span class="ml-auto flex gap-1">
+                            <button onclick="menuUp('${p.id}')" class="px-2 py-1 text-xs rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700" title="Naik">↑</button>
+                            <button onclick="menuDown('${p.id}')" class="px-2 py-1 text-xs rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700" title="Turun">↓</button>
+                            <button onclick='modalMenuEdit(${JSON.stringify(p).replace(/'/g, '&#39;')})' class="px-2 py-1 text-xs rounded-lg text-cyan-600 hover:bg-cyan-50 font-semibold">Edit</button>
+                            <button onclick="hapusMenu('${p.id}')" class="px-2 py-1 text-xs rounded-lg text-red-500 hover:bg-red-50 font-semibold">Hapus</button>
+                        </span>
+                    </div>
+                    ${p.children && p.children.length ? `<div class="px-4 py-2 space-y-1.5">${p.children.map(c => `
+                        <div class="flex items-center gap-2 pl-5 py-1.5 border-l-2 border-cyan-200 dark:border-slate-700">
+                            <span class="text-sm text-slate-600 dark:text-slate-300">↳ ${esc(c.label)}</span>
+                            <span class="text-xs text-slate-400">${esc(c.slug || '')}</span>
+                            <span class="ml-auto flex gap-1">
+                                <button onclick='modalMenuEdit(${JSON.stringify(c).replace(/'/g, '&#39;')})' class="px-2 py-0.5 text-xs text-cyan-600 hover:bg-cyan-50 rounded">Edit</button>
+                                <button onclick="hapusMenu('${c.id}')" class="px-2 py-0.5 text-xs text-red-500 hover:bg-red-50 rounded">Hapus</button>
+                            </span>
+                        </div>`).join('')}</div>` : ''}
+                </div>`).join('')}
+            </div>
+        </div>`;
+        initIconsNow();
+    }).catch(e => toast(e.message, 'error'));
+}
+
+function modalMenu(data = {}) {
+    const isEdit = !!data.id;
+    getTable('menus').then(menus => {
+        const parentOpts = menus.filter(m => (!m.parent_id || m.parent_id === '0') && m.id !== data.id)
+            .map(m => `<option value="${m.id}" ${String(data.parent_id) === String(m.id) ? 'selected' : ''}>${esc(m.label)}</option>`).join('');
+        openModal(`
+        <form id="frm-menu" class="p-6">
+            <div class="flex items-center justify-between mb-4"><h3 class="font-display text-lg font-bold">${isEdit ? 'Edit' : 'Tambah'} Menu</h3><button type="button" onclick="closeModal()" class="w-8 h-8 rounded-lg hover:bg-slate-100"><i data-lucide="x" class="w-5 h-5"></i></button></div>
+            <div class="space-y-4">
+                <div><label class="block text-sm font-medium mb-1">Label Menu</label><input id="m-label" required value="${esc(data.label || '')}" placeholder="Biodata Lab" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-sm font-medium mb-1">Tipe</label><select id="m-tipe" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">
+                        <option value="page" ${data.tipe === 'page' ? 'selected' : ''}>Page (halaman)</option>
+                        <option value="parent" ${data.tipe === 'parent' ? 'selected' : ''}>Parent (punya sub menu)</option>
+                        <option value="link" ${data.tipe === 'link' ? 'selected' : ''}>Link (eksternal)</option></select></div>
+                    <div><label class="block text-sm font-medium mb-1">Sub dari (Parent)</label><select id="m-parent" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"><option value="">(Menu Utama)</option>${parentOpts}</select></div>
+                </div>
+                <div><label class="block text-sm font-medium mb-1">Slug / URL</label><input id="m-slug" value="${esc(data.slug || '')}" placeholder="berita.html  atau  page-bar  atau  https://..." class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">
+                    <p class="text-xs text-slate-400 mt-1">Halaman dinamis: tulis slug tanpa .html (mis. <b>sop-laboratorium</b>). Halaman statis: <b>fasilitas.html</b>. Eksternal: full URL.</p></div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div><label class="block text-sm font-medium mb-1">Urutan</label><input id="m-urutan" type="number" min="1" value="${esc(data.urutan || 1)}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                    <div><label class="block text-sm font-medium mb-1">Ikon (Lucide)</label><input id="m-ikon" value="${esc(data.ikon || 'file-text')}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                    <div><label class="block text-sm font-medium mb-1">Aktif</label><select id="m-aktif" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"><option value="1">Ya</option><option value="0" ${data.published === '0' ? 'selected' : ''}>Tidak</option></select></div>
+                </div>
+                <button class="w-full py-2.5 rounded-lg bg-primary-700 text-white font-semibold text-sm">${isEdit ? 'Simpan' : 'Tambah'}</button>
+            </div>
+        </form>`);
+        $('#frm-menu').addEventListener('submit', async e => {
+            e.preventDefault();
+            const payload = {
+                label: $('#m-label').value, tipe: $('#m-tipe').value,
+                parent_id: $('#m-parent').value || '', slug: $('#m-slug').value,
+                urutan: $('#m-urutan').value, ikon: $('#m-ikon').value, published: $('#m-aktif').value, target: ''
+            };
+            try {
+                if (isEdit) { await updateRow('menus', data.id, payload); toast('Menu diperbarui'); }
+                else { await addRow('menus', payload); toast('Menu ditambahkan'); }
+                closeModal(); vAdminMenus();
+            } catch (err) { toast(err.message, 'error'); }
+        });
+        initIconsNow();
+    });
+}
+function modalMenuEdit(d) { modalMenu(d); }
+async function hapusMenu(id) {
+    if (!confirm('Hapus menu ini (anak ikut terhapus visual jika di halaman)?')) return;
+    try { await deleteRow('menus', id); toast('Menu dihapus'); vAdminMenus(); } catch (e) { toast(e.message, 'error'); }
+}
+async function menuUp(id) {
+    const menus = window._menusData || [];
+    const parents = menus.filter(m => !m.parent_id || m.parent_id === '0' || m.parent_id === '').sort((a, b) => (parseInt(a.urutan, 10) || 0) - (parseInt(b.urutan, 10) || 0));
+    const idx = parents.findIndex(m => m.id === String(id));
+    if (idx <= 0) return;
+    const a = parents[idx], b = parents[idx - 1];
+    try { await updateRow('menus', a.id, { urutan: b.urutan }); await updateRow('menus', b.id, { urutan: a.urutan }); vAdminMenus(); } catch (e) { toast(e.message, 'error'); }
+}
+async function menuDown(id) {
+    const menus = window._menusData || [];
+    const parents = menus.filter(m => !m.parent_id || m.parent_id === '0' || m.parent_id === '').sort((a, b) => (parseInt(a.urutan, 10) || 0) - (parseInt(b.urutan, 10) || 0));
+    const idx = parents.findIndex(m => m.id === String(id));
+    if (idx < 0 || idx >= parents.length - 1) return;
+    const a = parents[idx], b = parents[idx + 1];
+    try { await updateRow('menus', a.id, { urutan: b.urutan }); await updateRow('menus', b.id, { urutan: a.urutan }); vAdminMenus(); } catch (e) { toast(e.message, 'error'); }
+}
+
+/* ================= KELOLA HALAMAN DINAMIS (Admin) ================= */
+function vAdminPages() {
+    const content = $('#content');
+    content.innerHTML = `<div class="p-6 text-center py-10 text-slate-400">Memuat...</div>`;
+    getTable('pages').then(pages => {
+        content.innerHTML = `
+        <div class="p-6">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                <h1 class="font-display text-2xl font-extrabold text-slate-900 dark:text-white">Halaman Dinamis</h1>
+                <button onclick="modalPage()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-700 text-white text-sm font-semibold hover:bg-primary-800"><i data-lucide="plus" class="w-4 h-4"></i> Halaman Baru</button>
+            </div>
+            <p class="text-sm text-slate-500 mb-4">Halaman dibuat di sini lalu ditautkan lewat Menu Builder (tipe <b>page</b> dengan slug).</p>
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-x-auto">
+            <table class="w-full text-sm"><thead><tr class="text-left text-xs uppercase tracking-wider text-slate-400 bg-slate-50 dark:bg-slate-900">
+                <th class="py-3 px-3">Judul</th><th class="py-3 px-3">Slug</th><th class="py-3 px-3">Kategori</th><th class="py-3 px-3">Tanggal</th><th class="py-3 px-3">Status</th><th class="py-3 px-3 text-right">Aksi</th></tr></thead><tbody>
+            ${pages.map(p => `<tr class="border-b border-slate-100 dark:border-slate-700">
+                <td class="py-3 px-3 font-medium">${esc(p.judul)}</td><td class="py-3 px-3 text-slate-500">${esc(p.slug)}</td>
+                <td class="py-3 px-3">${esc(p.kategori)}</td><td class="py-3 px-3">${fmtDate(p.tanggal)}</td>
+                <td class="py-3 px-3">${p.published === '1' ? badge('Aktif') : badge('Tidak Aktif')}</td>
+                <td class="py-3 px-3 text-right whitespace-nowrap">
+                    <a href="../page.html?slug=${encodeURIComponent(p.slug)}" target="_blank" class="text-xs font-semibold text-slate-400 mr-2">Buka</a>
+                    <button onclick='modalPageEdit(${JSON.stringify(p).replace(/'/g, '&#39;')})' class="text-cyan-600 hover:underline text-sm font-semibold mr-2">Edit</button>
+                    <button onclick="hapusPage('${p.id}')" class="text-red-500 hover:underline text-sm font-semibold">Hapus</button></td></tr>`).join('') || '<tr><td colspan="6" class="py-8 text-center text-slate-400">Belum ada halaman.</td></tr>'}
+            </tbody></table></div>
+        </div>`;
+        initIconsNow();
+    }).catch(e => toast(e.message, 'error'));
+}
+
+function modalPage(data = {}) {
+    const isEdit = !!data.id;
+    openModal(`
+        <form id="frm-page" class="p-6">
+            <div class="flex items-center justify-between mb-4"><h3 class="font-display text-lg font-bold">${isEdit ? 'Edit' : 'Buat'} Halaman</h3><button type="button" onclick="closeModal()" class="w-8 h-8 rounded-lg hover:bg-slate-100"><i data-lucide="x" class="w-5 h-5"></i></button></div>
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-sm font-medium mb-1">Judul</label><input id="pg-judul" required value="${esc(data.judul || '')}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                    <div><label class="block text-sm font-medium mb-1">Slug (unik)</label><input id="pg-slug" required value="${esc(data.slug || '')}" placeholder="visi-misi" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-sm font-medium mb-1">Kategori</label><input id="pg-kat" value="${esc(data.kategori || 'Halaman')}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                    <div><label class="block text-sm font-medium mb-1">Status</label><select id="pg-aktif" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"><option value="1">Aktif</option><option value="0" ${data.published === '0' ? 'selected' : ''}>Tidak Aktif</option></select></div>
+                </div>
+                <div><label class="block text-sm font-medium mb-1">Isi Halaman</label><div id="pg-blocks"></div></div>
+                <button class="w-full py-2.5 rounded-lg bg-primary-700 text-white font-semibold text-sm">${isEdit ? 'Simpan' : 'Buat Halaman'}</button>
+            </div>
+        </form>`);
+    try { BlockEditor.init('pg-blocks', JSON.parse(data.isi || '[]')); } catch (e) { BlockEditor.init('pg-blocks', []); }
+    $('#frm-page').addEventListener('submit', async e => {
+        e.preventDefault();
+        const payload = {
+            slug: $('#pg-slug').value.trim().toLowerCase().replace(/\s+/g, '-'),
+            judul: $('#pg-judul').value, kategori: $('#pg-kat').value || 'Halaman',
+            isi: BlockEditor.collect(), published: $('#pg-aktif').value, tanggal: data.tanggal || todayStr()
+        };
+        try {
+            if (isEdit) { await updateRow('pages', data.id, payload); toast('Halaman diperbarui'); }
+            else { await addRow('pages', payload); toast('Halaman dibuat'); }
+            closeModal(); vAdminPages();
+        } catch (err) { toast(err.message, 'error'); }
+    });
+}
+function modalPageEdit(d) { modalPage(d); }
+async function hapusPage(id) {
+    if (!confirm('Hapus halaman ini?')) return;
+    try { await deleteRow('pages', id); toast('Halaman dihapus'); vAdminPages(); }
+    catch (e) { toast(e.message, 'error'); }
+}
+
+/* ================= POSTINGAN (Admin: kelola & terbitkan) ================= */
+function vAdminPosts() {
+    const content = $('#content');
+    const user = Auth.current();
+    content.innerHTML = `<div class="p-6 text-center py-10 text-slate-400">Memuat...</div>`;
+    getTable('posts').then(posts => {
+        posts.sort((a, b) => String(b.tanggal).localeCompare(String(a.tanggal)));
+        content.innerHTML = `
+        <div class="p-6">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                <h1 class="font-display text-2xl font-extrabold text-slate-900 dark:text-white">Postingan / Berita</h1>
+                <button onclick="modalPost()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-700 text-white text-sm font-semibold hover:bg-primary-800"><i data-lucide="plus" class="w-4 h-4"></i> Tulis Postingan</button>
+            </div>
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-x-auto">
+            <table class="w-full text-sm"><thead><tr class="text-left text-xs uppercase tracking-wider text-slate-400 bg-slate-50 dark:bg-slate-900">
+                <th class="py-3 px-3">Judul</th><th class="py-3 px-3">Kategori</th><th class="py-3 px-3">Tanggal</th><th class="py-3 px-3">Penulis</th><th class="py-3 px-3">Status</th><th class="py-3 px-3 text-right">Aksi</th></tr></thead><tbody>
+            ${posts.map(p => `<tr class="border-b border-slate-100 dark:border-slate-700">
+                <td class="py-3 px-3 font-medium text-slate-800 dark:text-white">${esc(p.judul)}</td>
+                <td class="py-3 px-3">${esc(p.kategori)}</td><td class="py-3 px-3">${fmtDate(p.tanggal)}</td>
+                <td class="py-3 px-3">${esc(p.penulis)}</td><td class="py-3 px-3">${badge(p.status)}</td>
+                <td class="py-3 px-3 text-right whitespace-nowrap">
+                    ${p.status === 'Disetujui' ? `<button onclick="publishPost('${p.id}','Terbit')" class="text-emerald-600 hover:underline text-sm font-semibold mr-2">✔ Terbitkan</button>` : p.status === 'Draft' ? `<button onclick="publishPost('${p.id}','Terbit')" class="text-emerald-600 hover:underline text-sm font-semibold mr-2">Terbitkan</button>` : p.status === 'Terbit' ? `<button onclick="publishPost('${p.id}','Arsip')" class="text-amber-600 hover:underline text-sm font-semibold mr-2">Arsipkan</button>` : ''}
+                    <button onclick='modalPostEdit(${JSON.stringify(p).replace(/'/g, '&#39;')})' class="text-cyan-600 hover:underline text-sm font-semibold mr-2">Edit</button>
+                    <button onclick="hapusPost('${p.id}')" class="text-red-500 hover:underline text-sm font-semibold">Hapus</button></td></tr>`).join('') || '<tr><td colspan="6" class="py-8 text-center text-slate-400">Belum ada postingan.</td></tr>'}
+            </tbody></table></div>
+        </div>`;
+        initIconsNow();
+    }).catch(e => toast(e.message, 'error'));
+}
+
+function modalPost(data = {}) {
+    const isEdit = !!data.id;
+    const user = Auth.current();
+    openModal(`
+        <form id="frm-post" class="p-6">
+            <div class="flex items-center justify-between mb-4"><h3 class="font-display text-lg font-bold">${isEdit ? 'Edit' : 'Tulis'} Postingan</h3><button type="button" onclick="closeModal()" class="w-8 h-8 rounded-lg hover:bg-slate-100"><i data-lucide="x" class="w-5 h-5"></i></button></div>
+            <div class="space-y-4">
+                <div><label class="block text-sm font-medium mb-1">Judul</label><input id="po-judul" required value="${esc(data.judul || '')}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-sm font-medium mb-1">Kategori</label><select id="po-kat" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">
+                        <option ${data.kategori === 'Berita' ? 'selected' : ''}>Berita</option><option ${data.kategori === 'Pengumuman' ? 'selected' : ''}>Pengumuman</option><option ${data.kategori === 'Kegiatan' ? 'selected' : ''}>Kegiatan</option></select></div>
+                    <div><label class="block text-sm font-medium mb-1">Tanggal</label><input id="po-tanggal" type="date" value="${esc(data.tanggal || todayStr())}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                </div>
+                <div><label class="block text-sm font-medium mb-1">Gambar (URL)</label><input id="po-gambar" value="${esc(data.gambar || '')}" placeholder="https://... jpg/png" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                <div><label class="block text-sm font-medium mb-1">Ringkasan (tampil di daftar)</label><textarea id="po-ringkas" rows="2" required class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">${esc(data.ringkasan || '')}</textarea></div>
+                <div><label class="block text-sm font-medium mb-1">Isi</label><div id="po-blocks"></div></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-sm font-medium mb-1">Status</label><select id="po-status" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">
+                        <option value="Draft" ${data.status === 'Draft' ? 'selected' : ''}>Draft</option>
+                        <option value="Menunggu" ${data.status === 'Menunggu' ? 'selected' : ''}>Menunggu Persetujuan</option>
+                        <option value="Terbit" ${data.status === 'Terbit' ? 'selected' : ''}>Terbit</option>
+                        <option value="Arsip" ${data.status === 'Arsip' ? 'selected' : ''}>Arsip</option></select></div>
+                    <div><label class="block text-sm font-medium mb-1">Penulis</label><input id="po-penulis" required value="${esc(data.penulis || user.name)}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                </div>
+                <button class="w-full py-2.5 rounded-lg bg-primary-700 text-white font-semibold text-sm">${isEdit ? 'Simpan' : 'Simpan Postingan'}</button>
+            </div>
+        </form>`);
+    try { BlockEditor.init('po-blocks', JSON.parse(data.isi || '[]')); } catch (e) { BlockEditor.init('po-blocks', []); }
+    $('#frm-post').addEventListener('submit', async e => {
+        e.preventDefault();
+        const payload = {
+            judul: $('#po-judul').value, kategori: $('#po-kat').value, ringkasan: $('#po-ringkas').value,
+            isi: BlockEditor.collect(), gambar: $('#po-gambar').value, tanggal: $('#po-tanggal').value || todayStr(),
+            penulis: $('#po-penulis').value, status: $('#po-status').value,
+            by_kepala: data.by_kepala || '', by_admin: user.name
+        };
+        try {
+            if (isEdit) { await updateRow('posts', data.id, payload); toast('Postingan diperbarui'); }
+            else { await addRow('posts', payload); toast('Postingan disimpan'); }
+            closeModal(); vAdminPosts();
+        } catch (err) { toast(err.message, 'error'); }
+    });
+}
+function modalPostEdit(d) { modalPost(d); }
+async function publishPost(id, status) {
+    if (!confirm('Ubah status menjadi ' + status + '?')) return;
+    const user = Auth.current();
+    try { await updateRow('posts', id, { status, by_admin: status === 'Terbit' ? user.name : '' }); toast('Status: ' + status); vAdminPosts(); }
+    catch (e) { toast(e.message, 'error'); }
+}
+async function hapusPost(id) {
+    if (!confirm('Hapus postingan ini?')) return;
+    try { await deleteRow('posts', id); toast('Postingan dihapus'); vAdminPosts(); }
+    catch (e) { toast(e.message, 'error'); }
+}
+
+/* ================= SLIDER (Admin) ================= */
+function vAdminSliders() {
+    const content = $('#content');
+    content.innerHTML = `<div class="p-6 text-center py-10 text-slate-400">Memuat...</div>`;
+    getTable('sliders').then(sliders => {
+        content.innerHTML = `
+        <div class="p-6">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                <h1 class="font-display text-2xl font-extrabold text-slate-900 dark:text-white">Slider / Banner</h1>
+                <button onclick="modalSlider()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-700 text-white text-sm font-semibold hover:bg-primary-800"><i data-lucide="plus" class="w-4 h-4"></i> Tambah Slider</button>
+            </div>
+            <div class="grid md:grid-cols-2 gap-5">
+            ${sliders.map(s => `<div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-700 shadow-sm">
+                <img src="${esc(s.gambar || '')}" class="h-40 w-full object-cover" alt="">
+                <div class="p-4">
+                    <div class="flex items-center justify-between"><p class="font-semibold">${esc(s.judul)}</p>${s.published === '1' ? badge('Aktif') : badge('Tidak Aktif')}</div>
+                    <p class="text-sm text-slate-500 mt-1 line-clamp-2">${esc(s.deskripsi)}</p>
+                    <div class="flex gap-2 mt-3"><button onclick='modalSliderEdit(${JSON.stringify(s).replace(/'/g, '&#39;')})' class="px-3 py-1.5 rounded-lg bg-cyan-50 text-cyan-700 text-sm font-semibold">Edit</button><button onclick="hapusSlider('${s.id}')" class="px-3 py-1.5 rounded-lg bg-red-50 text-red-600 text-sm font-semibold">Hapus</button></div>
+                </div></div>`).join('') || '<div class="md:col-span-2 text-center py-10 text-slate-400">Belum ada slider.</div>'}
+            </div>
+        </div>`;
+        initIconsNow();
+    }).catch(e => toast(e.message, 'error'));
+}
+
+function modalSlider(data = {}) {
+    const isEdit = !!data.id;
+    openModal(`
+        <form id="frm-slider" class="p-6">
+            <div class="flex items-center justify-between mb-4"><h3 class="font-display text-lg font-bold">${isEdit ? 'Edit' : 'Tambah'} Slider</h3><button type="button" onclick="closeModal()" class="w-8 h-8 rounded-lg hover:bg-slate-100"><i data-lucide="x" class="w-5 h-5"></i></button></div>
+            <div class="space-y-4">
+                <div><label class="block text-sm font-medium mb-1">Judul</label><input id="sl-judul" required value="${esc(data.judul || '')}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                <div><label class="block text-sm font-medium mb-1">Deskripsi</label><textarea id="sl-desk" rows="2" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">${esc(data.deskripsi || '')}</textarea></div>
+                <div><label class="block text-sm font-medium mb-1">Gambar (URL)</label><input id="sl-gambar" required value="${esc(data.gambar || '')}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="col-span-2"><label class="block text-sm font-medium mb-1">Link</label><input id="sl-link" value="${esc(data.link || '')}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                    <div><label class="block text-sm font-medium mb-1">Urutan</label><input id="sl-urutan" type="number" min="1" value="${esc(data.urutan || 1)}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                </div>
+                <div><label class="block text-sm font-medium mb-1">Aktif</label><select id="sl-aktif" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"><option value="1">Ya</option><option value="0" ${data.published === '0' ? 'selected' : ''}>Tidak</option></select></div>
+                <button class="w-full py-2.5 rounded-lg bg-primary-700 text-white font-semibold text-sm">${isEdit ? 'Simpan' : 'Tambah'}</button>
+            </div>
+        </form>`);
+    $('#frm-slider').addEventListener('submit', async e => {
+        e.preventDefault();
+        const payload = { judul: $('#sl-judul').value, deskripsi: $('#sl-desk').value, gambar: $('#sl-gambar').value, link: $('#sl-link').value, urutan: $('#sl-urutan').value, published: $('#sl-aktif').value };
+        try {
+            if (isEdit) { await updateRow('sliders', data.id, payload); toast('Slider diperbarui'); }
+            else { await addRow('sliders', payload); toast('Slider ditambahkan'); }
+            closeModal(); vAdminSliders();
+        } catch (err) { toast(err.message, 'error'); }
+    });
+}
+function modalSliderEdit(d) { modalSlider(d); }
+async function hapusSlider(id) {
+    if (!confirm('Hapus slider ini?')) return;
+    try { await deleteRow('sliders', id); toast('Slider dihapus'); vAdminSliders(); }
+    catch (e) { toast(e.message, 'error'); }
+}
+
+/* ================= TERBITKAN SERTIFIKAT (Admin) ================= */
+function vAdminCertPublish() {
+    const content = $('#content');
+    content.innerHTML = `<div class="p-6 text-center py-10 text-slate-400">Memuat...</div>`;
+    getTable('certificates').then(certs => {
+        content.innerHTML = `
+        <div class="p-6">
+            <h1 class="font-display text-2xl font-extrabold text-slate-900 dark:text-white mb-2">Terbitkan Sertifikat</h1>
+            <p class="text-sm text-slate-500 mb-6">Sertifikat <b>Disetujui + Terbit</b> akan tampil di halaman Unduhan publik dan bisa diverifikasi.</p>
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-x-auto">
+            <table class="w-full text-sm"><thead><tr class="text-left text-xs uppercase tracking-wider text-slate-400 bg-slate-50 dark:bg-slate-900">
+                <th class="py-3 px-3">Kode</th><th class="py-3 px-3">Nama</th><th class="py-3 px-3">Fakultas/Prodi</th><th class="py-3 px-3">Status</th><th class="py-3 px-3">Publik</th><th class="py-3 px-3 text-right">Aksi</th></tr></thead><tbody>
+            ${certs.map(c => `<tr class="border-b border-slate-100 dark:border-slate-700">
+                <td class="py-3 px-3 font-medium">${esc(c.kode)}</td><td class="py-3 px-3">${esc(c.nama)}</td><td class="py-3 px-3">${esc(c.fakultas)}/${esc(c.prodi)}</td>
+                <td class="py-3 px-3">${badge(c.status)}</td><td class="py-3 px-3">${c.published === '1' ? badge('Aktif') : badge('Tidak Aktif')}</td>
+                <td class="py-3 px-3 text-right"><button onclick="toggleCertPublish('${c.id}','${c.published === '1' ? '0' : '1'}')" class="text-${c.published === '1' ? 'amber' : 'emerald'}-600 hover:underline text-sm font-semibold">${c.published === '1' ? 'Tarik dari Publik' : 'Terbitkan'}</button></td></tr>`).join('') || '<tr><td colspan="6" class="py-8 text-center text-slate-400">Belum ada sertifikat.</td></tr>'}
+            </tbody></table></div>
+        </div>`;
+        initIconsNow();
+    }).catch(e => toast(e.message, 'error'));
+}
+
+async function toggleCertPublish(id, val) {
+    try { await updateRow('certificates', id, { published: val }); toast(val === '1' ? 'Sertifikat diterbitkan ke publik' : 'Sertifikat ditarik dari publik'); vAdminCertPublish(); }
+    catch (e) { toast(e.message, 'error'); }
+}
+
 window.boards.admin = {
     nav: [
         { id: 'dashboard', label: 'Dashboard', icon: 'layout-dashboard' },
+        { id: 'menu', label: 'Menu Website', icon: 'menu' },
+        { id: 'halaman', label: 'Halaman Dinamis', icon: 'file-text' },
+        { id: 'postingan', label: 'Postingan & Berita', icon: 'newspaper' },
+        { id: 'slider', label: 'Slider / Banner', icon: 'image' },
         { id: 'users', label: 'Kelola Pengguna', icon: 'users' },
         { id: 'labs', label: 'Master Data Lab', icon: 'building-2' },
         { id: 'pengajuan', label: 'Proses Pembelian', icon: 'credit-card' },
+        { id: 'sertifikat', label: 'Terbitkan Sertifikat', icon: 'award' },
         { id: 'monitor', label: 'Pantau Aktivitas', icon: 'eye' },
         { id: 'laporan-inventaris', label: 'Laporan Inventaris', icon: 'box' },
         { id: 'laporan-bulanan', label: 'Laporan Bulanan', icon: 'file-text' }
     ],
     views: {
         dashboard: vAdminDashboard,
+        menu: vAdminMenus,
+        halaman: vAdminPages,
+        postingan: vAdminPosts,
+        slider: vAdminSliders,
         users: vAdminUsers,
         labs: vAdminLabs,
         pengajuan: vAdminPengajuan,
+        sertifikat: vAdminCertPublish,
         monitor: vAdminMonitor,
         'laporan-inventaris': vAdminLapInventaris,
         'laporan-bulanan': vAdminLapBulanan

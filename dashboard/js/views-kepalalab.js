@@ -260,9 +260,58 @@ async function buatLaporanBulanan() {
     } catch (e) { toast(e.message, 'error'); }
 }
 
+/* ================= APPROVE POSTINGAN ================= */
+function vKepalaPostingan() {
+    const content = $('#content');
+    content.innerHTML = `<div class="p-6 text-center py-10 text-slate-400">Memuat...</div>`;
+    getTable('posts').then(posts => {
+        posts.sort((a, b) => String(b.tanggal).localeCompare(String(a.tanggal)));
+        content.innerHTML = `
+        <div class="p-6">
+            <h1 class="font-display text-2xl font-extrabold text-slate-900 dark:text-white mb-2">Persetujuan Postingan</h1>
+            <p class="text-sm text-slate-500 mb-6">Setelah disetujui, Admin akan menerbitkan ke website publik.</p>
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-x-auto">
+            <table class="w-full text-sm"><thead><tr class="text-left text-xs uppercase tracking-wider text-slate-400 bg-slate-50 dark:bg-slate-900">
+                <th class="py-3 px-3">Judul</th><th class="py-3 px-3">Kategori</th><th class="py-3 px-3">Penulis</th><th class="py-3 px-3">Tanggal</th><th class="py-3 px-3">Status</th><th class="py-3 px-3 text-right">Aksi</th></tr></thead><tbody>
+            ${posts.map(p => `<tr class="border-b border-slate-100 dark:border-slate-700">
+                <td class="py-3 px-3 font-medium">${esc(p.judul)}</td><td class="py-3 px-3">${esc(p.kategori)}</td>
+                <td class="py-3 px-3">${esc(p.penulis)}</td><td class="py-3 px-3">${fmtDate(p.tanggal)}</td><td class="py-3 px-3">${badge(p.status)}</td>
+                <td class="py-3 px-3 text-right whitespace-nowrap">
+                    ${p.status === 'Menunggu' ? `<button onclick="kepalaPost('${p.id}','Disetujui')" class="text-emerald-600 hover:underline text-sm font-semibold mr-2">✔ Setujui</button><button onclick="kepalaPost('${p.id}','Ditolak')" class="text-red-500 hover:underline text-sm font-semibold mr-2">✖</button>` : ''}
+                    <button onclick="lihatPost('${p.id}')" class="text-cyan-600 hover:underline text-sm font-semibold">Lihat</button>
+                </td></tr>`).join('') || '<tr><td colspan="6" class="py-8 text-center text-slate-400">Tidak ada postingan.</td></tr>'}
+            </tbody></table></div>
+        </div>`;
+        window._klPosts = posts;
+        initIconsNow();
+    }).catch(e => toast(e.message, 'error'));
+}
+
+async function kepalaPost(id, status) {
+    if (!confirm('Ubah status postingan menjadi ' + status + '?')) return;
+    const user = Auth.current();
+    try { await updateRow('posts', id, { status, by_kepala: status === 'Disetujui' ? user.name : '' }); toast('Status: ' + status); vKepalaPostingan(); }
+    catch (e) { toast(e.message, 'error'); }
+}
+
+function lihatPost(id) {
+    const p = (window._klPosts || []).find(x => x.id === String(id));
+    if (!p) return;
+    openModal(`<div class="p-6 max-w-3xl">
+        <div class="flex items-center justify-between mb-4"><h3 class="font-display text-lg font-bold">${esc(p.judul)}</h3><button type="button" onclick="closeModal()" class="w-8 h-8 rounded-lg hover:bg-slate-100"><i data-lucide="x" class="w-5 h-5"></i></button></div>
+        <p class="text-xs text-slate-400 mb-4">${esc(p.kategori)} · ${fmtDate(p.tanggal)} · ${esc(p.penulis)} · ${badge(p.status)}</p>
+        <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">${esc(p.ringkasan || '')}</p>
+        <div id="kl-post-body" class="space-y-2"></div>
+    </div>`);
+    const box = $('#kl-post-body');
+    try { const blocks = JSON.parse(p.isi || '[]'); (blocks || []).forEach(b => { const el = document.createElement('div'); el.className = 'text-sm text-slate-600 dark:text-slate-300'; el.textContent = b.v || ''; box.appendChild(el); }); } catch (e) { }
+    initIconsNow();
+}
+
 window.boards.kepalalab = {
     nav: [
         { id: 'dashboard', label: 'Dashboard', icon: 'layout-dashboard' },
+        { id: 'postingan', label: 'Setujui Postingan', icon: 'newspaper' },
         { id: 'pengajuan-alat', label: 'Setujui Pengajuan Alat', icon: 'shopping-bag' },
         { id: 'pengajuan-bahan', label: 'Setujui Pengajuan Bahan', icon: 'shopping-cart' },
         { id: 'peminjaman', label: 'Setujui Peminjaman', icon: 'hand' },
@@ -272,6 +321,7 @@ window.boards.kepalalab = {
     ],
     views: {
         dashboard: vKepalaDashboard,
+        postingan: vKepalaPostingan,
         'pengajuan-alat': vKepalaPengajuanAlat,
         'pengajuan-bahan': vKepalaPengajuanBahan,
         peminjaman: vKepalaPeminjaman,

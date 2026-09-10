@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman - Laboratorium Universitas Medan Area</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { fontFamily: { sans: ['Poppins', 'Inter', 'sans-serif'], display: ['Poppins', 'sans-serif'] },
+                colors: { primary: { 700: '#1e40af', 800: '#1e3a8a' } } } }
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/nav.css">
+</head>
+<body class="font-sans bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 antialiased">
+
+    <!-- TOP BAR -->
+    <div class="bg-slate-900 text-slate-200 text-xs py-2 hidden lg:block">
+        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center gap-5">
+                <span class="flex items-center gap-1.5"><i data-lucide="phone" class="w-3.5 h-3.5"></i> (061) 7360168</span>
+                <span class="flex items-center gap-1.5"><i data-lucide="mail" class="w-3.5 h-3.5"></i> lab@uma.ac.id</span>
+            </div>
+            <div class="flex items-center gap-5">
+                <a href="https://umaiso17025.uma.ac.id/" target="_blank" class="hover:text-cyan-300 transition font-medium">Lab Pengujian ISO</a>
+                <a href="http://p2mal.uma.ac.id" target="_blank" class="hover:text-cyan-300 transition font-medium">P2MAL</a>
+                <button data-theme-toggle class="flex items-center gap-1.5 hover:text-cyan-300 transition cursor-pointer"><i data-lucide="moon" class="w-3.5 h-3.5"></i><span class="theme-label">Gelap</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <header class="header-sticky">
+        <nav class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16 relative">
+            <a href="index.html" class="flex items-center gap-2 shrink-0">
+                <img src="https://susitao.uma.ac.id/assets/img/logo-main.webp" alt="Logo UMA" class="w-10 h-10 rounded-lg object-contain bg-white p-1 shadow-sm">
+                <span class="leading-tight"><span class="font-display font-bold text-lg text-primary-700 dark:text-cyan-400 block">LABORATORIUM</span><span class="text-[10px] tracking-widest uppercase text-slate-500 dark:text-slate-400">Universitas Medan Area</span></span>
+            </a>
+            <div class="desktop-nav flex items-center gap-0.5" id="site-nav-desktop"></div>
+            <button class="mobile-hamburger lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition" id="site-hamburger" aria-label="Menu"><i data-lucide="menu" class="w-6 h-6"></i></button>
+        </nav>
+    </header>
+
+    <!-- MOBILE DRAWER -->
+    <div class="nav-backdrop" id="site-backdrop"></div>
+    <nav class="mobile-nav" aria-label="Navigasi utama" id="site-nav-mobile">
+        <div class="mn-header">
+            <div class="flex items-center gap-2"><img src="https://susitao.uma.ac.id/assets/img/logo-main.webp" alt="Logo UMA" class="w-9 h-9 rounded-lg object-contain bg-white p-1"><div class="leading-tight"><p class="font-bold text-sm">LABORATORIUM</p><p class="text-[9px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Universitas Medan Area</p></div></div>
+            <button class="mn-close w-9 h-9 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center" aria-label="Tutup"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+        <div class="flex-1 overflow-y-auto p-2"></div>
+    </nav>
+
+    <!-- KONTEN -->
+    <section class="bg-gradient-to-r from-primary-700 to-blue-600 text-white">
+        <div class="max-w-7xl mx-auto px-4 py-16">
+            <nav class="text-xs text-blue-200 mb-3"><a href="index.html" class="hover:text-white">Beranda</a> / <span class="text-white" id="page-crumb">Halaman</span></nav>
+            <h1 class="font-display text-3xl md:text-4xl font-extrabold" id="page-judul"></h1>
+            <p class="mt-2 text-blue-100" id="page-kategori"></p>
+        </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-4 py-10">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700 p-6 md:p-10" id="page-body">
+            <div class="text-center py-10 text-slate-400">Memuat...</div>
+        </div>
+    </article>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 dark:bg-slate-950 text-slate-300 mt-4">
+        <div class="max-w-7xl mx-auto px-4 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+            <div><div class="flex items-center gap-2"><img src="https://susitao.uma.ac.id/assets/img/logo-main.webp" alt="Logo UMA" class="w-10 h-10 rounded-lg object-contain bg-white p-1"><div class="leading-tight"><p class="font-display font-bold text-lg text-white">LABORATORIUM</p><p class="text-[10px] tracking-widest uppercase text-slate-400">Universitas Medan Area</p></div></div><p class="mt-4 text-sm text-slate-400 leading-relaxed">Pusat kegiatan praktikum, penelitian, dan pengabdian masyarakat yang terstandarisasi di lingkungan Universitas Medan Area.</p></div>
+            <div><h4 class="font-semibold text-white text-sm uppercase tracking-wider mb-4">Tautan Cepat</h4><ul class="space-y-2 text-sm"><li><a href="profil.html" class="hover:text-cyan-400 transition">Profil Laboratorium</a></li><li><a href="layanan.html#jadwal" class="hover:text-cyan-400 transition">Jadwal Praktikum</a></li><li><a href="fasilitas.html" class="hover:text-cyan-400 transition">Laboratorium</a></li><li><a href="berita.html" class="hover:text-cyan-400 transition">Berita Terbaru</a></li><li><a href="kontak.html" class="hover:text-cyan-400 transition">Hubungi Kami</a></li></ul></div>
+            <div><h4 class="font-semibold text-white text-sm uppercase tracking-wider mb-4">Layanan</h4><ul class="space-y-2 text-sm"><li><a href="layanan.html#jadwal" class="hover:text-cyan-400 transition">Jadwal Praktikum</a></li><li><a href="unduhan.html" class="hover:text-cyan-400 transition">Unduhan Dokumen</a></li><li><a href="verifikasi.html" class="hover:text-cyan-400 transition">Verifikasi Sertifikat</a></li><li><a href="dashboard/login.html" class="hover:text-cyan-400 transition">Login Operator</a></li></ul></div>
+            <div><h4 class="font-semibold text-white text-sm uppercase tracking-wider mb-4">Kontak</h4><ul class="space-y-3 text-sm"><li class="flex gap-3"><i data-lucide="map-pin" class="w-5 h-5 text-cyan-400 shrink-0"></i> Jalan Kolam Nomor 1 Medan Estate, Medan 20223</li><li class="flex gap-3"><i data-lucide="phone" class="w-5 h-5 text-cyan-400 shrink-0"></i> (061) 7360168, 7366878, 7364348</li></ul></div>
+        </div>
+        <div class="border-t border-slate-800 py-6 text-center text-xs text-slate-500"><p>© 2026 Laboratorium Universitas Medan Area · <span class="text-cyan-400">Universitas Medan Area</span></p></div>
+    </footer>
+
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/site.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var slug = new URLSearchParams(location.search).get('slug');
+            if (!slug) { document.getElementById('page-body').innerHTML = '<p>Tautan tidak valid.</p>'; return; }
+            Site.pageBySlug(slug).then(function (r) {
+                if (!r.ok || !r.page) { document.getElementById('page-body').innerHTML = '<p>' + Site.esc(r.message || 'Halaman tidak ditemukan') + '</p>'; return; }
+                var pg = r.page;
+                document.title = pg.judul + ' - Laboratorium Universitas Medan Area';
+                document.getElementById('page-crumb').textContent = pg.kategori || 'Halaman';
+                document.getElementById('page-judul').textContent = pg.judul;
+                document.getElementById('page-kategori').textContent = (pg.kategori || '') + ' · Diperbarui ' + Site.fmtDate(pg.tanggal);
+                var box = document.getElementById('page-body');
+                box.innerHTML = '';
+                Site.renderBlocks(box, pg.isi);
+                if (window.lucide) lucide.createIcons();
+            }).catch(function () { document.getElementById('page-body').innerHTML = '<p>Gagal memuat halaman.</p>'; });
+        });
+    </script>
+</body>
+</html>

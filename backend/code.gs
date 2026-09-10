@@ -26,8 +26,12 @@ var SHEETS = {
   schedules:       ['id','kode','lab','fakultas','prodi','matkul','dosen','asisten','hari','jam_mulai','jam_selesai','ruang','semester'],
   borrowings:      ['id','no_surat','peminjam','role','keperluan','tanggal_pinjam','tanggal_kembali','items','tanggal_aju','status','by_laboran','by_kepala','keterangan'],
   reports:         ['id','kode','judul','fakultas','prodi','matkul','asisten','tanggal','ringkasan','hasil','file_link','status','by_laboran','by_kepala','keterangan'],
-  certificates:    ['id','kode','nama','role','fakultas','prodi','semester','tanggal_terbit','status','by_kepala'],
+  certificates:    ['id','kode','nama','role','fakultas','prodi','semester','tanggal_terbit','status','by_kepala','published'],
   monthly_reports: ['id','kode','bulan','tahun','disusun_oleh','isi','status','approved_by','tanggal'],
+  menus:           ['id','label','tipe','slug','parent_id','urutan','ikon','published','target'],
+  pages:           ['id','slug','judul','kategori','isi','published','tanggal'],
+  posts:           ['id','judul','kategori','ringkasan','isi','gambar','tanggal','penulis','status','by_kepala','by_admin'],
+  sliders:         ['id','judul','deskripsi','gambar','link','urutan','published'],
   settings:        ['key','value']
 };
 
@@ -70,7 +74,13 @@ function readTable(table) {
   var out = [];
   for (var i = 0; i < values.length; i++) {
     var o = {};
-    for (var c = 0; c < headers.length; c++) o[headers[c]] = String(values[i][c] !== null ? values[i][c] : '');
+    for (var c = 0; c < headers.length; c++) {
+      var v = values[i][c];
+      if (v instanceof Date) {
+        v = Utilities.formatDate(v, Session.getScriptTimeZone(), 'yyyy-MM-dd');
+      }
+      o[headers[c]] = String(v !== null && v !== undefined ? v : '');
+    }
     out.push(o);
   }
   return out;
@@ -259,6 +269,184 @@ function doOptions() {
   return { ok: true, labs: labs, fakultas: fakultas };
 }
 
+/*** ================= KONTEN PUBLIK (website) ================= ***/
+function buildMenuTree(list) {
+  var parents = [];
+  var parentMap = {};
+  list.forEach(function (m) { parentMap[m.id] = m; });
+  list.forEach(function (m) {
+    var pid = String(m.parent_id || '').trim();
+    if (pid === '' || pid === '0' || !parentMap[pid]) {
+      m.children = [];
+      parents.push(m);
+    }
+  });
+  parents.sort(function (a, b) { return (parseInt(a.urutan, 10) || 0) - (parseInt(b.urutan, 10) || 0); });
+  parents.forEach(function (p) {
+    var children = list.filter(function (m) { return String(m.parent_id) === String(p.id); });
+    children.sort(function (a, b) { return (parseInt(a.urutan, 10) || 0) - (parseInt(b.urutan, 10) || 0); });
+    p.children = children;
+  });
+  return parents;
+}
+
+function doSite() {
+  var menus = readTable('menus').filter(function (m) { return m.published === '1'; });
+  var posts = readTable('posts').filter(function (p) { return p.status === 'Terbit'; });
+  posts.sort(function (a, b) { return String(b.tanggal).localeCompare(String(a.tanggal)); });
+  var sliders = readTable('sliders').filter(function (s) { return s.published === '1'; });
+  sliders.sort(function (a, b) { return (parseInt(a.urutan, 10) || 0) - (parseInt(b.urutan, 10) || 0); });
+  var certs = readTable('certificates').filter(function (c) { return c.published === '1' && c.status === 'Disetujui'; });
+  return {
+    ok: true,
+    menus: buildMenuTree(menus),
+    posts: posts.slice(0, 9),
+    sliders: sliders,
+    certs: certs,
+    settings: { semester: getSetting('semester') }
+  };
+}
+
+function doPage(data) {
+  var rows = readTable('pages');
+  var p = rows.find(function (r) { return r.slug === data.slug && r.published === '1'; });
+  if (!p) return { ok: false, message: 'Halaman tidak ditemukan' };
+  return { ok: true, page: p };
+}
+
+function doPosts(data) {
+  var rows = readTable('posts').filter(function (p) { return p.status === 'Terbit'; });
+  rows.sort(function (a, b) { return String(b.tanggal).localeCompare(String(a.tanggal)); });
+  if (data.category && data.category !== 'all') {
+    rows = rows.filter(function (p) { return p.kategori === data.category; });
+  }
+  return { ok: true, posts: rows };
+}
+
+function doPost(data) {
+  var rows = readTable('posts');
+  var p = rows.find(function (r) { return String(r.id) === String(data.id); });
+  if (!p) return { ok: false, message: 'Postingan tidak ditemukan' };
+  return { ok: true, post: p };
+}
+
+function doCert(data) {
+  var rows = readTable('certificates');
+  var c = rows.find(function (r) { return r.kode === data.kode; });
+  if (!c) return { ok: false, message: 'Sertifikat tidak ditemukan. Periksa kembali kode.' };
+  return {
+    ok: true,
+    cert: {
+      kode: c.kode, nama: c.nama, role: c.role, fakultas: c.fakultas, prodi: c.prodi,
+      semester: c.semester, tanggal_terbit: c.tanggal_terbit, status: c.status, published: c.published
+    }
+  };
+}
+
+/*** ================= UPGRADE (tambah tabel tanpa menghapus data) ================= ***/
+function upgradeDB() {
+  var book = ss();
+  // Pastikan semua sheet ada dengan header yang benar
+  Object.keys(SHEETS).forEach(function (name) {
+    if (!book.getSheetByName(name)) book.insertSheet(name);
+    var sh = book.getSheetByName(name);
+    // Set header jika sheet kosong
+    if (sh.getLastRow() === 0) {
+      sh.getRange(1, 1, 1, SHEETS[name].length).setValues([SHEETS[name]]);
+      sh.setFrozenRows(1);
+    }
+  });
+
+  function hasRows(name) { return book.getSheetByName(name).getLastRow() > 1; }
+
+  // Seed menus (nama sesuai tabel, 'tipe': parent | page | link)
+  if (!hasRows('menus')) {
+    var menuSh = book.getSheetByName('menus');
+    [
+      ['1', 'Beranda', 'page', 'index.html', '', '1', 'home', '1', ''],
+      ['2', 'Profil', 'parent', '', '', '2', 'info', '1', ''],
+      ['3', 'Visi, Tugas & Fungsi', 'page', 'profil.html#visi', '2', '1', 'eye', '1', ''],
+      ['4', 'Struktur Organisasi', 'page', 'profil.html#struktur', '2', '2', 'users', '1', ''],
+      ['5', 'Lokasi & Peta', 'page', 'profil.html#maps', '2', '3', 'map-pin', '1', ''],
+      ['6', 'Fasilitas', 'page', 'fasilitas.html', '', '3', 'microscope', '1', ''],
+      ['7', 'Layanan', 'parent', '', '', '4', 'calendar', '1', ''],
+      ['8', 'Jadwal Praktikum', 'page', 'layanan.html#jadwal', '7', '1', 'calendar', '1', ''],
+      ['9', 'Matakuliah Praktikum', 'page', 'layanan.html#matkul', '7', '2', 'book-open', '1', ''],
+      ['10', 'Pengelola Lab', 'page', 'layanan.html#pengelola', '7', '3', 'user-cog', '1', ''],
+      ['11', 'Unduhan', 'page', 'unduhan.html', '7', '4', 'download', '1', ''],
+      ['12', 'Penelitian', 'parent', '', '', '5', 'flask-conical', '1', ''],
+      ['13', 'Lab Fisiologi Tumbuhan', 'page', 'penelitian.html#fisiologi', '12', '1', 'leaf', '1', ''],
+      ['14', 'Lab Proteksi Tanaman', 'page', 'penelitian.html#proteksi', '12', '2', 'shield', '1', ''],
+      ['15', 'Lahan Percobaan', 'page', 'penelitian.html#lahan', '12', '3', 'trees', '1', ''],
+      ['16', 'Rumah Kasa', 'page', 'penelitian.html#rumahkasa', '12', '4', 'home', '1', ''],
+      ['17', 'Galeri', 'page', 'galeri.html', '', '6', 'image', '1', ''],
+      ['18', 'Berita', 'page', 'berita.html', '', '7', 'newspaper', '1', ''],
+      ['19', 'Kontak', 'page', 'kontak.html', '', '8', 'phone', '1', ''],
+      ['20', 'SOP Laboratorium', 'page', 'sop-laboratorium', '', '9', 'file-text', '1', '']
+    ].forEach(function (r) { menuSh.appendRow(r); });
+  }
+
+  // Seed pages (halaman dinamis)
+  if (!hasRows('pages')) {
+    var pgSh = book.getSheetByName('pages');
+    pgSh.appendRow(['1', 'sop-laboratorium', 'SOP Laboratorium', 'Layanan', JSON.stringify([
+      { "t": "p", "v": "Standar Operasional Prosedur penggunaan fasilitas laboratorium Universitas Medan Area disusun untuk menjamin kelancaran, ketertiban, dan keselamatan kerja di lingkungan laboratorium." },
+      { "t": "h", "v": "1. Ketentuan Umum" },
+      { "t": "p", "v": "Seluruh pengguna laboratorium wajib membawa kartu identitas dan mengisi daftar hadir yang tersedia di laboratorium." },
+      { "t": "h", "v": "2. Penggunaan Alat" },
+      { "t": "p", "v": "Peminjaman alat dilakukan melalui unit laboratorium paling lambat satu hari sebelum digunakan. Alat wajib dikembalikan dalam keadaan bersih dan baik." },
+      { "t": "h", "v": "3. Keselamatan Kerja" },
+      { "t": "p", "v": "Wajib menggunakan APD (alat pelindung diri) di area kerja. Setiap kecelakaan kerja wajib dilaporkan kepada laboran segera." }
+    ], null, 2), '1', '2026-09-01']);
+  }
+
+  // Seed posts (berita)
+  if (!hasRows('posts')) {
+    var postSh = book.getSheetByName('posts');
+    function post(id, judul, kat, ringkasan, blocks, gambar, tanggal, penulis, status) {
+      postSh.appendRow([String(id), judul, kat, ringkasan, JSON.stringify(blocks), gambar, tanggal, penulis, status, 'kepalalab', 'admin']);
+    }
+    post('1', 'Laboratorium UMA Dukung Praktikum Semester Ganjil 2025/2026', 'Berita',
+      'Seluruh laboratorium di lingkungan Universitas Medan Area siap melayani kegiatan praktikum semester ganjil TA 2025/2026.',
+      [{ "t": "h", "v": "Praktikum Semester Ganjil 2025/2026 Resmi Dimulai" },
+       { "t": "p", "v": "Universitas Medan Area melalui unit laboratorium telah menyiapkan seluruh fasilitas praktikum..." },
+       { "t": "list", "v": ["Jadwal praktikum dapat diakses melalui menu Layanan", "Asisten wajib konfirmasi kehadiran 1 hari sebelumnya", "Penggunaan APD wajib selama kegiatan berlangsung"] }],
+      'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6878142371714375724.jpg', '2026-09-01', 'Laboran Utama', 'Terbit');
+    post('2', 'Pengisian Kuesioner Dosen dan Mahasiswa', 'Pengumuman',
+      'Kuesioner evaluasi kegiatan praktikum untuk dosen dan mahasiswa telah dibuka.',
+      [{ "t": "h", "v": "E-Valuasi Praktikum (KUESIONER)" },
+       { "t": "p", "v": "Dosen dan mahasiswa diharapkan mengisi kuesioner evaluasi pelaksanaan praktikum..." }],
+      'https://laboratorium.uma.ac.id/admin/uploads/kuesioner-ganjil-25-26.png.png', '2026-08-20', 'Laboran Utama', 'Terbit');
+    post('3', 'Kegiatan Praktikum di Lahan Percobaan UMA', 'Kegiatan',
+      'Kegiatan praktikum lapangan Prodi Agroteknologi berlangsung di lahan percobaan UMA.',
+      [{ "t": "h", "v": "Praktikum Lapangan Agroteknologi" },
+       { "t": "p", "v": "Mahasiswa Prodi Agroteknologi melaksanakan praktikum budidaya tanaman di lahan percobaan..." }],
+      'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6506652741715048206.jpeg', '2026-08-12', 'Laboran Utama', 'Terbit');
+  }
+
+  // Seed sliders (hero)
+  if (!hasRows('sliders')) {
+    var slSh = book.getSheetByName('sliders');
+    [
+      ['1', 'Pusat Riset & Praktikum UMA', 'Mendukung praktikum, penelitian, dan pengujian terstandarisasi di lingkungan Universitas Medan Area.', 'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6878142371714375724.jpg', 'layanan.html#jadwal', '1', '1'],
+      ['2', 'Fasilitas Laboratorium Modern', 'Berbagai laboratorium di seluruh fakultas siap mendukung kegiatan akademik Anda.', 'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6787828731762504523.jpeg', 'fasilitas.html', '2', '1']
+    ].forEach(function (r) { slSh.appendRow(r); });
+  }
+
+  // Pastikan kolom published tersedia di certificates (jika header lama)
+  var certSh = book.getSheetByName('certificates');
+  var certHead = certSh.getRange(1, 1, 1, certSh.getLastColumn()).getValues()[0];
+  if (certHead.indexOf('published') === -1) {
+    certSh.getRange(1, certSh.getLastColumn() + 1).setValue('published');
+    var lastRow = certSh.getLastRow();
+    for (var i = 2; i <= lastRow; i++) {
+      certSh.getRange(i, certSh.getLastColumn()).setValue('1');
+    }
+  }
+
+  return { ok: true, message: 'Upgrade selesai: tabel konten website dibuat + data awal diisi tanpa menghapus data lama.' };
+}
+
 /*** ================= SETUP ================= ***/
 function setupDB() {
   var book = ss();
@@ -331,9 +519,9 @@ function setupDB() {
   var schSh = book.getSheetByName('schedules');
   sch.forEach(function (r) { schSh.appendRow(r); });
 
-  // Seed: certificates
+// Seed: certificates
   var certSh = book.getSheetByName('certificates');
-  certSh.appendRow(['1', 'CRT-2026-0001', 'Asisten Lab Biologi', 'asisten', 'Saintek', 'Biologi', 'Ganjil 2025/2026', '2026-01-15', 'Disetujui', 'kepalalab']);
+  certSh.appendRow(['1', 'CRT-2026-0001', 'Asisten Lab Biologi', 'asisten', 'Saintek', 'Biologi', 'Ganjil 2025/2026', '2026-01-15', 'Disetujui', 'kepalalab', '1']);
 
   var url = book.getUrl();
   return { ok: true, message: 'Database berhasil disetup + data demo diisi.', url: url };
@@ -364,14 +552,20 @@ function handle(e) {
     return json({ ok: false, message: 'Token tidak valid' });
   }
 
-  try {
+try {
     switch (data.action) {
       case 'setup': return json(setupDB());
+      case 'upgrade': return json(upgradeDB());
       case 'login': return json(doLogin(data));
       case 'get': return json({ ok: true, data: readTable(data.table) });
       case 'summary': return json(doSummary());
       case 'options': return json(doOptions());
       case 'monthly': return json(doMonthly(data));
+      case 'site': return json(doSite());
+      case 'page': return json(doPage(data));
+      case 'posts': return json(doPosts(data));
+      case 'post': return json(doPost(data));
+      case 'cert': return json(doCert(data));
       case 'add':
         var aid = addRow(data.table, data.data || {});
         return json({ ok: true, id: aid });

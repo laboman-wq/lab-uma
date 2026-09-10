@@ -571,6 +571,83 @@ function lihatLaporan(id) {
     initIconsNow();
 }
 
+/* ================= POSTINGAN (Laboran: buat & kirim) ================= */
+function vLaboranPostingan() {
+    const content = $('#content');
+    const user = Auth.current();
+    content.innerHTML = `<div class="p-6 text-center py-10 text-slate-400">Memuat...</div>`;
+    getTable('posts').then(posts => {
+        const my = posts.filter(p => p.penulis === user.name || p.by_admin === user.name);
+        my.sort((a, b) => String(b.tanggal).localeCompare(String(a.tanggal)));
+        content.innerHTML = `
+        <div class="p-6">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                <h1 class="font-display text-2xl font-extrabold text-slate-900 dark:text-white">Postingan Saya</h1>
+                <button onclick="modalPostLaboran()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-700 text-white text-sm font-semibold hover:bg-primary-800"><i data-lucide="plus" class="w-4 h-4"></i> Buat Postingan</button>
+            </div>
+            <p class="text-sm text-slate-500 mb-4">Alur: Draft → <b>Kirim ke Kepala Lab</b> → Disetujui → <b>Admin terbitkan</b> ke website.</p>
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-x-auto">
+            <table class="w-full text-sm"><thead><tr class="text-left text-xs uppercase tracking-wider text-slate-400 bg-slate-50 dark:bg-slate-900">
+                <th class="py-3 px-3">Judul</th><th class="py-3 px-3">Kategori</th><th class="py-3 px-3">Tanggal</th><th class="py-3 px-3">Status</th><th class="py-3 px-3 text-right">Aksi</th></tr></thead><tbody>
+            ${my.map(p => `<tr class="border-b border-slate-100 dark:border-slate-700">
+                <td class="py-3 px-3 font-medium">${esc(p.judul)}</td><td class="py-3 px-3">${esc(p.kategori)}</td><td class="py-3 px-3">${fmtDate(p.tanggal)}</td>
+                <td class="py-3 px-3">${badge(p.status)}</td>
+                <td class="py-3 px-3 text-right whitespace-nowrap">
+                    ${(p.status === 'Draft') ? `<button onclick="submitPost('${p.id}')" class="text-indigo-600 hover:underline text-sm font-semibold mr-2">Kirim ke Kepala</button>` : ''}
+                    <button onclick='modalPostLaboranEdit(${JSON.stringify(p).replace(/'/g, '&#39;')})' class="text-cyan-600 hover:underline text-sm font-semibold mr-2">Edit</button>
+                    <button onclick="hapusPostLab('${p.id}')" class="text-red-500 hover:underline text-sm font-semibold">Hapus</button></td></tr>`).join('') || '<tr><td colspan="5" class="py-8 text-center text-slate-400">Belum ada postingan.</td></tr>'}
+            </tbody></table></div>
+        </div>`;
+        initIconsNow();
+    }).catch(e => toast(e.message, 'error'));
+}
+
+function modalPostLaboran(data = {}) {
+    const isEdit = !!data.id;
+    const user = Auth.current();
+    openModal(`
+        <form id="frm-pl" class="p-6">
+            <div class="flex items-center justify-between mb-4"><h3 class="font-display text-lg font-bold">${isEdit ? 'Edit' : 'Buat'} Postingan</h3><button type="button" onclick="closeModal()" class="w-8 h-8 rounded-lg hover:bg-slate-100"><i data-lucide="x" class="w-5 h-5"></i></button></div>
+            <div class="space-y-4">
+                <div><label class="block text-sm font-medium mb-1">Judul</label><input id="pl-judul" required value="${esc(data.judul || '')}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-sm font-medium mb-1">Kategori</label><select id="pl-kat" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">
+                        <option ${data.kategori === 'Berita' ? 'selected' : ''}>Berita</option><option ${data.kategori === 'Pengumuman' ? 'selected' : ''}>Pengumuman</option><option ${data.kategori === 'Kegiatan' ? 'selected' : ''}>Kegiatan</option></select></div>
+                    <div><label class="block text-sm font-medium mb-1">Tanggal</label><input id="pl-tanggal" type="date" value="${esc(data.tanggal || todayStr())}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                </div>
+                <div><label class="block text-sm font-medium mb-1">Gambar (URL)</label><input id="pl-gambar" value="${esc(data.gambar || '')}" placeholder="https://... jpg/png" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                <div><label class="block text-sm font-medium mb-1">Ringkasan</label><textarea id="pl-ringkas" rows="2" required class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">${esc(data.ringkasan || '')}</textarea></div>
+                <div><label class="block text-sm font-medium mb-1">Isi</label><div id="pl-blocks"></div></div>
+                <button class="w-full py-2.5 rounded-lg bg-primary-700 text-white font-semibold text-sm">${isEdit ? 'Simpan' : 'Simpan Draft'}</button>
+            </div>
+        </form>`);
+    try { window.BlockEditor.init('pl-blocks', JSON.parse(data.isi || '[]')); } catch (e) { window.BlockEditor.init('pl-blocks', []); }
+    $('#frm-pl').addEventListener('submit', async e => {
+        e.preventDefault();
+        const payload = {
+            judul: $('#pl-judul').value, kategori: $('#pl-kat').value, ringkasan: $('#pl-ringkas').value,
+            isi: window.BlockEditor.collect(), gambar: $('#pl-gambar').value, tanggal: $('#pl-tanggal').value || todayStr(),
+            penulis: data.penulis || user.name, status: data.status || 'Draft', by_kepala: '', by_admin: ''
+        };
+        try {
+            if (isEdit) { await updateRow('posts', data.id, payload); toast('Postingan disimpan'); }
+            else { await addRow('posts', payload); toast('Draft disimpan'); }
+            closeModal(); vLaboranPostingan();
+        } catch (err) { toast(err.message, 'error'); }
+    });
+}
+function modalPostLaboranEdit(d) { modalPostLaboran(d); }
+async function submitPost(id) {
+    if (!confirm('Kirim postingan ke Kepala Lab untuk persetujuan?')) return;
+    try { await updateRow('posts', id, { status: 'Menunggu' }); toast('Dikirim ke Kepala Lab'); vLaboranPostingan(); }
+    catch (e) { toast(e.message, 'error'); }
+}
+async function hapusPostLab(id) {
+    if (!confirm('Hapus postingan ini?')) return;
+    try { await deleteRow('posts', id); toast('Postingan dihapus'); vLaboranPostingan(); }
+    catch (e) { toast(e.message, 'error'); }
+}
+
 window.boards.laboran = {
     nav: [
         { id: 'dashboard', label: 'Dashboard', icon: 'layout-dashboard' },
@@ -580,7 +657,8 @@ window.boards.laboran = {
         { id: 'pengajuan-bahan', label: 'Pengajuan Bahan', icon: 'shopping-cart' },
         { id: 'jadwal', label: 'Jadwal Praktikum', icon: 'calendar' },
         { id: 'peminjaman', label: 'Peminjaman Alat', icon: 'hand' },
-        { id: 'laporan', label: 'Verifikasi Laporan', icon: 'file-check' }
+        { id: 'laporan', label: 'Verifikasi Laporan', icon: 'file-check' },
+        { id: 'postingan', label: 'Postingan & Berita', icon: 'newspaper' }
     ],
     views: {
         dashboard: vLaboranDashboard,
@@ -590,6 +668,7 @@ window.boards.laboran = {
         'pengajuan-bahan': vLaboranPengajuanBahan,
         jadwal: vLaboranJadwal,
         peminjaman: vLaboranPeminjaman,
-        laporan: vLaboranLaporan
+        laporan: vLaboranLaporan,
+        postingan: vLaboranPostingan
     }
 };
