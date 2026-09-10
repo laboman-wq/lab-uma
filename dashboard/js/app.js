@@ -119,19 +119,20 @@ function initDashboard() {
     const board = window.boards[user.role];
     if (!board) { toast('Role tidak dikenali', 'error'); Auth.clear(); window.location.href = 'login.html'; return; }
 
-    // Header user info
-    $('#user-name').textContent = user.name;
-    $('#user-role').textContent = roleLabel(user.role);
-    $('#user-fakultas').textContent = user.fakultas && user.fakultas !== '-' ? user.fakultas : 'Pusat';
+    // Header user info (defensif: jangan crash jika elemen belum ada)
+    const uName = $('#user-name'); const uRole = $('#user-role');
+    if (uName) uName.textContent = user.name;
+    if (uRole) uRole.textContent = roleLabel(user.role);
 
     setNav(board.nav);
 
-    // Logout
-    $('#logout-btn').addEventListener('click', () => {
+    const logout = $('#logout-btn');
+    if (logout) logout.addEventListener('click', () => {
         Auth.clear();
         window.location.href = '../index.html';
     });
-    $('#back-site').addEventListener('click', e => { e.preventDefault(); window.location.href = '../index.html'; });
+    const backSite = $('#back-site');
+    if (backSite) backSite.addEventListener('click', e => { e.preventDefault(); window.location.href = '../index.html'; });
 
     goto('dashboard');
 }
