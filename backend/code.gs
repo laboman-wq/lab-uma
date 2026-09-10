@@ -33,10 +33,16 @@ var SHEETS = {
 
 /*** Spreadsheet handler ***/
 function ss() {
-  var id = PropertiesService.getScriptProperties().getProperty('SS_ID');
-  if (id) return SpreadsheetApp.openById(id);
-  if (SS_ID) return SpreadsheetApp.openById(SS_ID);
-  return SpreadsheetApp.getActive();
+  var key = 'SS_ID';
+  var id = PropertiesService.getScriptProperties().getProperty(key);
+  if (!id && SS_ID) id = SS_ID;
+  if (!id) {
+    // Auto-buat spreadsheet di Drive pemilik script (sekali saja)
+    var book = SpreadsheetApp.create('Laboratorium UMA Database');
+    id = book.getId();
+    PropertiesService.getScriptProperties().setProperty(key, id);
+  }
+  return SpreadsheetApp.openById(id);
 }
 
 function getSheet(name) {
@@ -329,7 +335,8 @@ function setupDB() {
   var certSh = book.getSheetByName('certificates');
   certSh.appendRow(['1', 'CRT-2026-0001', 'Asisten Lab Biologi', 'asisten', 'Saintek', 'Biologi', 'Ganjil 2025/2026', '2026-01-15', 'Disetujui', 'kepalalab']);
 
-  return { ok: true, message: 'Database berhasil disetup + data demo diisi.' };
+  var url = book.getUrl();
+  return { ok: true, message: 'Database berhasil disetup + data demo diisi.', url: url };
 }
 
 /*** ================= ROUTER doPost ================= ***/
@@ -390,3 +397,4 @@ function handle(e) {
 function json(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }
+/* deployed via clasp */
