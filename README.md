@@ -5,21 +5,36 @@ Website demo prototype untuk **Laboratorium Universitas Medan Area (UMA)** denga
 ## ✅ Fitur Redesign
 
 - 🎨 **Desain Modern** — Tailwind CSS + Poppins font + Lucide icons
-- 📱 **Fully Responsive** — Mobile hamburger menu, adaptif di semua layar
+- 📱 **Fully Responsive** — Mobile hamburger menu (drawer), adaptif di semua layar
 - 🌙 **Dark Mode Toggle** — Beralih tema terang/gelap di top bar
-- 🧭 **Mega Menu + Hover Dropdown** — Navigasi yang lebih smooth
+- 🧭 **Mega Menu** — Dropdown lebar dengan ikon + deskripsi (desktop)
+- 📂 **Menu Lengkap & Aktif** — Semua menu mengarah ke halaman nyata
 - 🃏 **Card-based Layout** — Untuk fakultas, berita, galeri, dan layanan
 - 📊 **Statistik Interaktif** — Section ringkasan angka
-- 🖼 **Galeri Grid Hover** — Foto langsung dari website asli
+- 🖼 **Galeri dengan Filter** — Galeri dapat disaring per fakultas (JS)
+- 🔍 **Auto-highlight menu aktif** — Deteksi halaman dari URL
+
+## 🗂 Struktur Halaman
+
+| File | Isi |
+|------|-----|
+| `index.html` | Beranda (hero, statistik, fakultas, layanan, berita, galeri) |
+| `profil.html` | Visi & misi, struktur organisasi, maps |
+| `fasilitas.html` | Daftar laboratorium |
+| `layanan.html` | Jadwal praktikum, matakuliah, pengelola |
+| `penelitian.html` | Jenis lab penelitian (fisiologi, proteksi, lahan, rumah kasa) |
+| `galeri.html` | Galeri + filter per fakultas |
+| `berita.html` | Berita & pengumuman |
+| `unduhan.html` | Dokumen & sertifikat |
+| `kontak.html` | Kontak, form, dan maps |
 
 ## 🛠 Teknologi (Semua Free / CDN)
 
 | Teknologi | Peran |
 |-----------|-------|
 | [Tailwind CSS](https://tailwindcss.com) | Styling & responsive |
-| [Alpine.js](https://alpinejs.dev) | Interaktivitas (menu, dark mode) |
-| [Google Fonts](https://fonts.google.com) | Poppins + Inter |
 | [Lucide Icons](https://lucide.dev) | Ikon modern |
+| [Google Fonts](https://fonts.google.com) | Poppins + Inter |
 
 ## 🌐 Cara Deploy ke GitHub Pages
 
@@ -39,19 +54,32 @@ Selain GitHub Pages, bisa juga deploy ke [Netlify](https://netlify.com) atau [Ve
 
 ```
 lab-uma/
-├── index.html              # Halaman utama (prototype)
+├── index.html              # Halaman Beranda
+├── profil.html             # Profil (visi misi, struktur, maps)
+├── fasilitas.html          # Daftar laboratorium
+├── layanan.html            # Jadwal, matakuliah, pengelola
+├── penelitian.html         # Jenis lab penelitian
+├── galeri.html             # Galeri + filter
+├── berita.html             # Berita & pengumuman
+├── unduhan.html            # Dokumen & sertifikat
+├── kontak.html             # Kontak + form + maps
+├── _shell.html             # Template kerangka (untuk build script)
+├── build.ps1               # Script generate halaman dari template
+├── navbar-template.html    # Referensi blok navbar (arsip)
 ├── assets/
 │   ├── css/style.css       # Custom CSS
-│   ├── js/app.js           # Custom JS
-│   └── img/                # Gambar lokal (jika diperlulakan)
+│   ├── css/nav.css         # CSS mega menu + mobile nav
+│   ├── js/app.js           # Custom JS (theme, galeri filter)
+│   ├── js/nav.js           # JS navigasi (drawer, active highlight)
+│   └── img/                # Gambar lokal (jika diperlukan)
 └── README.md
 ```
 
 ## ⚠️ Catatan
 
 - Prototype ini **clone visual** dari situs resmi `laboratorium.uma.ac.id` untuk keperluan **demonstrasi** upgrade tampilan.
-- Live URL pada tautan navbar masih mengarah ke situs asli agar data tetap real-time.
-- Halaman belum memiliki halaman detail (Profil, Galeri per Prodi, dll.) — fokus pada tampilan homepage.
+- Live URL pada tautan (Lab Pengujian ISO, P2MAL, login) mengarah ke situs asli agar data tetap real-time.
+- Jika ingin menambah/mengubah halaman, gunakan `_shell.html` sebagai template lalu jalankan `build.ps1`.
 
 ## 🔧 Untuk Selanjutnya (Roadmap)
 

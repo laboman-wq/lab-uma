@@ -8,6 +8,21 @@ body {
     font-family: 'Poppins', 'Inter', sans-serif;
 }
 
+/* Sticky header */
+.header-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 45;
+    background: rgba(255, 255, 255, .92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.dark .header-sticky {
+    background: rgba(15, 23, 42, .9);
+    border-color: #334155;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
     width: 10px;

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id" x-data="{mobileOpen: false, activeDropdown: null, dark: false}">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratorium Universitas Medan Area</title>
+    <title>Beranda - Laboratorium Universitas Medan Area</title>
     <meta name="description" content="Website Laboratorium Universitas Medan Area - Layanan Informasi, Penelitian, dan Praktikum">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -12,20 +12,9 @@
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Poppins', 'Inter', 'sans-serif'],
-                        display: ['Poppins', 'sans-serif'],
-                    },
+                    fontFamily: { sans: ['Poppins', 'Inter', 'sans-serif'], display: ['Poppins', 'sans-serif'] },
                     colors: {
-                        primary: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            500: '#1e40af',
-                            600: '#1e3a8a',
-                            700: '#1e40af',
-                            800: '#1e3a8a',
-                            900: '#172554',
-                        },
+                        primary: { 50: '#eff6ff', 100: '#dbeafe', 500: '#1e40af', 600: '#1e3a8a', 700: '#1e40af', 800: '#1e3a8a', 900: '#172554' },
                         accent: '#06b6d4',
                     },
                 },
@@ -35,410 +24,220 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/alpinejs" defer></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/nav.css">
 </head>
-<body class="font-sans bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 antialiased transition-colors duration-300" :class="dark ? 'dark' : ''">
+<body class="font-sans bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 antialiased transition-colors duration-300">
 
     <!-- ==================== TOP BAR ==================== -->
-    <div class="bg-slate-900 text-slate-200 text-xs py-2 hidden md:block">
+    <div class="bg-slate-900 text-slate-200 text-xs py-2 hidden lg:block">
         <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-5">
                 <span class="flex items-center gap-1.5"><i data-lucide="phone" class="w-3.5 h-3.5"></i> (061) 7360168</span>
-                <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Jl. Kolam No. 1 Medan Estate</span>
+                <span class="flex items-center gap-1.5"><i data-lucide="mail" class="w-3.5 h-3.5"></i> lab@uma.ac.id</span>
+                <span class="flex items-center gap-1.5 hidden xl:flex"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Jl. Kolam No.1 Medan Estate</span>
             </div>
-            <div class="flex items-center gap-4">
-                <a href="#" class="hover:text-cyan-300 transition">Kalender Akademik</a>
-                <button @click="dark = !dark" class="flex items-center gap-1 hover:text-cyan-300 transition">
-                    <i data-lucide="moon" class="w-3.5 h-3.5" x-show="!dark"></i>
-                    <i data-lucide="sun" class="w-3.5 h-3.5" x-show="dark"></i>
-                    <span x-text="dark ? 'Light' : 'Dark'"></span>
+            <div class="flex items-center gap-5">
+                <a href="https://umaiso17025.uma.ac.id/" target="_blank" class="hover:text-cyan-300 transition font-medium">Lab Pengujian ISO</a>
+                <a href="http://p2mal.uma.ac.id" target="_blank" class="hover:text-cyan-300 transition font-medium">P2MAL</a>
+                <button data-theme-toggle class="flex items-center gap-1.5 hover:text-cyan-300 transition cursor-pointer">
+                    <i data-lucide="moon" class="w-3.5 h-3.5"></i>
+                    <span class="theme-label">Gelap</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- ==================== HEADER / NAVBAR ==================== -->
-    <header class="sticky top-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg shadow-sm border-b border-slate-200 dark:border-slate-700">
-        <nav class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
-            <!-- Logo -->
-            <div class="flex items-center gap-2">
-                <img src="https://susitao.uma.ac.id/assets/img/logo-main.webp" alt="Logo UMA" class="w-10 h-10 rounded-lg object-contain bg-white p-1">
-                <div class="leading-tight">
-                    <p class="font-display font-bold text-lg text-primary-700 dark:text-cyan-400">LABORATORIUM</p>
-                    <p class="text-[10px] tracking-widest uppercase text-slate-500 dark:text-slate-400">Universitas Medan Area</p>
-                </div>
-            </div>
+    <!-- ==================== MAIN NAVBAR ==================== -->
+    <header class="header-sticky">
+        <nav class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16 relative">
+            <a href="index.html" class="flex items-center gap-2 shrink-0">
+                <img src="https://susitao.uma.ac.id/assets/img/logo-main.webp" alt="Logo UMA" class="w-10 h-10 rounded-lg object-contain bg-white p-1 shadow-sm">
+                <span class="leading-tight">
+                    <span class="font-display font-bold text-lg text-primary-700 dark:text-cyan-400 block">LABORATORIUM</span>
+                    <span class="text-[10px] tracking-widest uppercase text-slate-500 dark:text-slate-400">Universitas Medan Area</span>
+                </span>
+            </a>
 
-            <!-- Desktop Menu -->
-            <div class="hidden lg:flex items-center gap-1">
-                <!-- Menu items with dropdown -->
-                <template x-for="(item, idx) in [
-                    {label:'Beranda', href:'#', dropdown:false},
-                    {label:'Profil', href:'#profil', dropdown:['Visi Misi Laboratorium','Struktur Organisasi Pegawai','Maps Laboratorium','P2MAL']},
-                    {label:'Fasilitas', href:'#fasilitas', dropdown:['Laboratorium']},
-                    {label:'Layanan Informasi', href:'#layanan', dropdown:['Jadwal Praktikum / Fakultas','Matakuliah Praktikum','Daftar Pelaksana & Pengelola Lab']},
-                    {label:'Penelitian', href:'#penelitian', dropdown:['LAB FISIOLOGI TUMBUHAN','LAB PROTEKSI TANAMAN','LAHAN PERCOBAAN UMA','RUMAH KASA']},
-                    {label:'Galeri', href:'#galeri', dropdown:false},
-                    {label:'Berita', href:'#berita', dropdown:false}
-                ]">
-                    <div class="relative" @mouseenter="activeDropdown = item.dropdown.length ? idx : null" @mouseleave="activeDropdown = null">
-                        <a :href="item.href" class="flex items-center gap-1 px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary-700 dark:hover:text-cyan-400 transition rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
-                            <span x-text="item.label"></span>
-                            <i data-lucide="chevron-down" class="w-4 h-4" x-show="item.dropdown.length" :class="activeDropdown === idx ? 'rotate-180' : ''" style="transition: transform .2s"></i>
-                        </a>
-                        <!-- Dropdown -->
-                        <div x-show="activeDropdown === idx" x-transition.opacity.duration.150ms @click.outside="activeDropdown = null"
-                             class="absolute left-0 mt-2 w-64 rounded-xl bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 p-2 z-50">
-                            <template x-for="sub in item.dropdown">
-                                <a href="#" class="block px-3 py-2 text-sm text-slate-600 dark:text-slate-300 rounded-lg hover:bg-cyan-50 dark:hover:bg-slate-700 hover:text-cyan-600 transition">
-                                    <span x-text="sub"></span>
-                                </a>
-                            </template>
+            <div class="desktop-nav flex items-center gap-0.5">
+                <a href="index.html" class="px-3 py-2 text-sm font-semibold rounded-lg bg-cyan-50 dark:bg-slate-800 text-primary-700 dark:text-cyan-400">Beranda</a>
+
+                <div class="nav-item relative">
+                    <button class="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary-700 dark:hover:text-cyan-400 transition rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 inline-flex items-center gap-1">Profil <i data-lucide="chevron-down" class="w-4 h-4"></i></button>
+                    <div class="mega-menu">
+                        <div class="grid grid-cols-2 gap-1">
+                            <a href="profil.html"><span class="mm-icon bg-blue-100 dark:bg-slate-700 text-blue-600 dark:text-cyan-400"><i data-lucide="eye" class="w-4 h-4"></i></span><span><span class="mm-title block">Visi & Misi</span><span class="mm-desc block">Tujuan laboratorium</span></span></a>
+                            <a href="profil.html#struktur"><span class="mm-icon bg-amber-100 dark:bg-slate-700 text-amber-600"><i data-lucide="users" class="w-4 h-4"></i></span><span><span class="mm-title block">Struktur Organisasi</span><span class="mm-desc block">Pengurus & pegawai</span></span></a>
+                            <a href="profil.html#maps"><span class="mm-icon bg-emerald-100 dark:bg-slate-700 text-emerald-600"><i data-lucide="map" class="w-4 h-4"></i></span><span><span class="mm-title block">Maps Lab</span><span class="mm-desc block">Lokasi laboratorium</span></span></a>
+                            <a href="http://p2mal.uma.ac.id" target="_blank"><span class="mm-icon bg-purple-100 dark:bg-slate-700 text-purple-600"><i data-lucide="external-link" class="w-4 h-4"></i></span><span><span class="mm-title block">P2MAL</span><span class="mm-desc block">Pusat penelitian</span></span></a>
                         </div>
                     </div>
-                </template>
+                </div>
+
+                <div class="nav-item relative">
+                    <button class="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary-700 dark:hover:text-cyan-400 transition rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 inline-flex items-center gap-1">Fasilitas <i data-lucide="chevron-down" class="w-4 h-4"></i></button>
+                    <div class="mega-menu" style="left:auto;right:0;transform:none;"><div class="grid grid-cols-1 gap-1 min-w-[280px]">
+                        <a href="fasilitas.html"><span class="mm-icon bg-cyan-100 dark:bg-slate-700 text-cyan-600"><i data-lucide="microscope" class="w-4 h-4"></i></span><span><span class="mm-title block">Daftar Laboratorium</span><span class="mm-desc block">Seluruh lab di UMA</span></span></a>
+                        <a href="https://umaiso17025.uma.ac.id/" target="_blank"><span class="mm-icon bg-sky-100 dark:bg-slate-700 text-sky-600"><i data-lucide="badge-check" class="w-4 h-4"></i></span><span><span class="mm-title block">Lab Pengujian ISO 17025</span><span class="mm-desc block">Akreditasi pengujian</span></span></a>
+                    </div></div>
+                </div>
+
+                <div class="nav-item relative">
+                    <button class="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary-700 dark:hover:text-cyan-400 transition rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 inline-flex items-center gap-1">Layanan <i data-lucide="chevron-down" class="w-4 h-4"></i></button>
+                    <div class="mega-menu" style="left:auto;right:0;transform:none;"><div class="grid grid-cols-1 gap-1 min-w-[280px]">
+                        <a href="layanan.html#jadwal"><span class="mm-icon bg-indigo-100 dark:bg-slate-700 text-indigo-600"><i data-lucide="calendar" class="w-4 h-4"></i></span><span><span class="mm-title block">Jadwal Praktikum</span><span class="mm-desc block">Per fakultas & prodi</span></span></a>
+                        <a href="layanan.html#matkul"><span class="mm-icon bg-emerald-100 dark:bg-slate-700 text-emerald-600"><i data-lucide="book-open" class="w-4 h-4"></i></span><span><span class="mm-title block">Matakuliah Praktikum</span><span class="mm-desc block">Daftar mata kuliah</span></span></a>
+                        <a href="layanan.html#pengelola"><span class="mm-icon bg-rose-100 dark:bg-slate-700 text-rose-600"><i data-lucide="user-cog" class="w-4 h-4"></i></span><span><span class="mm-title block">Pengelola Lab & Prakt</span><span class="mm-desc block">Pelaksana lab</span></span></a>
+                        <a href="unduhan.html"><span class="mm-icon bg-amber-100 dark:bg-slate-700 text-amber-600"><i data-lucide="download" class="w-4 h-4"></i></span><span><span class="mm-title block">Unduhan</span><span class="mm-desc block">Dokumen & sertifikat</span></span></a>
+                    </div></div>
+                </div>
+
+                <div class="nav-item relative">
+                    <button class="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary-700 dark:hover:text-cyan-400 transition rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 inline-flex items-center gap-1">Penelitian <i data-lucide="chevron-down" class="w-4 h-4"></i></button>
+                    <div class="mega-menu" style="left:auto;right:0;transform:none;"><div class="grid grid-cols-1 gap-1 min-w-[280px]">
+                        <a href="penelitian.html#fisiologi"><span class="mm-icon bg-green-100 dark:bg-slate-700 text-green-600"><i data-lucide="leaf" class="w-4 h-4"></i></span><span><span class="mm-title block">Lab Fisiologi Tumbuhan</span><span class="mm-desc block">Studi fungsi tumbuhan</span></span></a>
+                        <a href="penelitian.html#proteksi"><span class="mm-icon bg-orange-100 dark:bg-slate-700 text-orange-600"><i data-lucide="shield" class="w-4 h-4"></i></span><span><span class="mm-title block">Lab Proteksi Tanaman</span><span class="mm-desc block">Perlindungan tanaman</span></span></a>
+                        <a href="penelitian.html#lahan"><span class="mm-icon bg-teal-100 dark:bg-slate-700 text-teal-600"><i data-lucide="trees" class="w-4 h-4"></i></span><span><span class="mm-title block">Lahan Percobaan</span><span class="mm-desc block">Area percobaan UMA</span></span></a>
+                        <a href="penelitian.html#rumahkasa"><span class="mm-icon bg-lime-100 dark:bg-slate-700 text-lime-700"><i data-lucide="home" class="w-4 h-4"></i></span><span><span class="mm-title block">Rumah Kasa</span><span class="mm-desc block">Media tanam terlindung</span></span></a>
+                    </div></div>
+                </div>
+
+                <a href="galeri.html" class="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary-700 dark:hover:text-cyan-400 transition rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">Galeri</a>
+                <a href="berita.html" class="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary-700 dark:hover:text-cyan-400 transition rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">Berita</a>
+                <a href="kontak.html" class="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary-700 dark:hover:text-cyan-400 transition rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">Kontak</a>
+
+                <a href="https://laboratorium.uma.ac.id/login" class="ml-2 inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg bg-primary-700 text-white hover:bg-primary-800 transition shadow-sm"><i data-lucide="log-in" class="w-4 h-4"></i> Login</a>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="flex items-center gap-2">
-                <a href="https://umaiso17025.uma.ac.id/" target="_blank" class="hidden md:inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
-                    <i data-lucide="flask-conical" class="w-4 h-4"></i> Lab Pengujian
-                </a>
-                <a href="https://laboratorium.uma.ac.id/login" class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg bg-primary-700 text-white hover:bg-primary-800 transition shadow-sm">
-                    <i data-lucide="log-in" class="w-4 h-4"></i> Login
-                </a>
-                <!-- Mobile Hamburger -->
-                <button @click="mobileOpen = !mobileOpen" class="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">
-                    <i data-lucide="menu" class="w-6 h-6" x-show="!mobileOpen"></i>
-                    <i data-lucide="x" class="w-6 h-6" x-show="mobileOpen"></i>
-                </button>
-            </div>
+            <button class="mobile-hamburger lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition" aria-label="Menu"><i data-lucide="menu" class="w-6 h-6"></i></button>
         </nav>
-
-        <!-- Mobile Menu -->
-        <div x-show="mobileOpen" x-transition.opacity.duration.200ms class="lg:hidden border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
-            <div class="px-4 py-3 space-y-1 max-h-[70vh] overflow-y-auto">
-                <a href="#" class="block px-3 py-2.5 text-sm font-medium rounded-lg bg-cyan-50 dark:bg-slate-800 text-primary-700 dark:text-cyan-400">Beranda</a>
-                <div class="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1"><i data-lucide="folder" class="w-3.5 h-3.5"></i> Profil</div>
-                <a href="#" class="block pl-6 py-2 text-sm text-slate-600 dark:text-slate-300">Visi Misi Laboratorium</a>
-                <a href="#" class="block pl-6 py-2 text-sm text-slate-600 dark:text-slate-300">Struktur Organisasi Pegawai</a>
-                <a href="#" class="block pl-6 py-2 text-sm text-slate-600 dark:text-slate-300">Maps Laboratorium</a>
-                <a href="http://p2mal.uma.ac.id" class="block pl-6 py-2 text-sm text-slate-600 dark:text-slate-300">P2MAL</a>
-
-                <div class="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1"><i data-lucide="microscope" class="w-3.5 h-3.5"></i> Fasilitas</div>
-                <a href="#" class="block pl-6 py-2 text-sm text-slate-600 dark:text-slate-300">Laboratorium</a>
-
-                <div class="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1"><i data-lucide="info" class="w-3.5 h-3.5"></i> Layanan Informasi</div>
-                <a href="#" class="block pl-6 py-2 text-sm text-slate-600 dark:text-slate-300">Jadwal Praktikum</a>
-                <a href="#" class="block pl-6 py-2 text-sm text-slate-600 dark:text-slate-300">Matakuliah Praktikum</a>
-                <a href="#" class="block pl-6 py-2 text-sm text-slate-600 dark:text-slate-300">Pelaksana & Pengelola Lab</a>
-
-                <div class="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1"><i data-lucide="flask-conical" class="w-3.5 h-3.5"></i> Penelitian</div>
-                <a href="#" class="block pl-6 py-2 text-sm text-slate-600 dark:text-slate-300">Lab Fisiologi Tumbuhan</a>
-                <a href="#" class="block pl-6 py-2 text-sm text-slate-600 dark:text-slate-300">Lab Proteksi Tanaman</a>
-                <a href="#" class="block pl-6 py-2 text-sm text-slate-600 dark:text-slate-300">Lahan Percobaan UMA</a>
-                <a href="#" class="block pl-6 py-2 text-sm text-slate-600 dark:text-slate-300">Rumah Kasa</a>
-
-                <a href="#galeri" class="block px-3 py-2.5 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">Galeri</a>
-                <a href="#berita" class="block px-3 py-2.5 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">Berita</a>
-            </div>
-        </div>
     </header>
 
-    <!-- ==================== HERO SECTION ==================== -->
+    <!-- ===== MOBILE DRAWER ===== -->
+    <div class="nav-backdrop"></div>
+    <nav class="mobile-nav" aria-label="Navigasi utama">
+        <div class="mn-header">
+            <div class="flex items-center gap-2">
+                <img src="https://susitao.uma.ac.id/assets/img/logo-main.webp" alt="Logo UMA" class="w-9 h-9 rounded-lg object-contain bg-white p-1">
+                <div class="leading-tight"><p class="font-bold text-sm">LABORATORIUM</p><p class="text-[9px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Universitas Medan Area</p></div>
+            </div>
+            <button class="mn-close w-9 h-9 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center" aria-label="Tutup"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+        <div class="flex-1 overflow-y-auto p-2">
+            <a href="index.html" class="flex items-center gap-2 px-3 py-2.5 rounded-lg font-semibold text-sm bg-cyan-50 dark:bg-slate-800 text-primary-700 dark:text-cyan-400"><i data-lucide="home" class="w-4 h-4"></i> Beranda</a>
+            <div class="mn-group"><button class="mn-trigger"><span class="inline-flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-blue-600"></i> Profil</span><i data-lucide="chevron-down" class="w-4 h-4 chev"></i></button><div class="mn-body"><a href="profil.html">Visi & Misi</a><a href="profil.html#struktur">Struktur Organisasi</a><a href="profil.html#maps">Maps Lab</a><a href="http://p2mal.uma.ac.id" target="_blank">P2MAL</a></div></div>
+            <div class="mn-group"><button class="mn-trigger"><span class="inline-flex items-center gap-2"><i data-lucide="microscope" class="w-4 h-4 text-cyan-600"></i> Fasilitas</span><i data-lucide="chevron-down" class="w-4 h-4 chev"></i></button><div class="mn-body"><a href="fasilitas.html">Daftar Laboratorium</a><a href="https://umaiso17025.uma.ac.id/" target="_blank">Lab Pengujian ISO</a></div></div>
+            <div class="mn-group"><button class="mn-trigger"><span class="inline-flex items-center gap-2"><i data-lucide="calendar" class="w-4 h-4 text-indigo-600"></i> Layanan</span><i data-lucide="chevron-down" class="w-4 h-4 chev"></i></button><div class="mn-body"><a href="layanan.html#jadwal">Jadwal Praktikum</a><a href="layanan.html#matkul">Matakuliah Praktikum</a><a href="layanan.html#pengelola">Pengelola Lab & Prakt</a><a href="unduhan.html">Unduhan</a></div></div>
+            <div class="mn-group"><button class="mn-trigger"><span class="inline-flex items-center gap-2"><i data-lucide="flask-conical" class="w-4 h-4 text-emerald-600"></i> Penelitian</span><i data-lucide="chevron-down" class="w-4 h-4 chev"></i></button><div class="mn-body"><a href="penelitian.html#fisiologi">Lab Fisiologi Tumbuhan</a><a href="penelitian.html#proteksi">Lab Proteksi Tanaman</a><a href="penelitian.html#lahan">Lahan Percobaan</a><a href="penelitian.html#rumahkasa">Rumah Kasa</a></div></div>
+            <a href="galeri.html" class="flex items-center gap-2 px-3 py-2.5 rounded-lg font-semibold text-sm hover:bg-cyan-50 dark:hover:bg-slate-800"><i data-lucide="image" class="w-4 h-4 text-purple-600"></i> Galeri</a>
+            <a href="berita.html" class="flex items-center gap-2 px-3 py-2.5 rounded-lg font-semibold text-sm hover:bg-cyan-50 dark:hover:bg-slate-800"><i data-lucide="newspaper" class="w-4 h-4 text-rose-600"></i> Berita</a>
+            <a href="kontak.html" class="flex items-center gap-2 px-3 py-2.5 rounded-lg font-semibold text-sm hover:bg-cyan-50 dark:hover:bg-slate-800"><i data-lucide="phone" class="w-4 h-4 text-amber-600"></i> Kontak</a>
+            <a href="https://laboratorium.uma.ac.id/login" class="mt-3 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary-700 text-white font-semibold text-sm"><i data-lucide="log-in" class="w-4 h-4"></i> Login</a>
+        </div>
+    </nav>
+
+    <!-- ==================== HERO ==================== -->
     <section class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-primary-700 to-blue-700 dark:from-slate-950 dark:via-slate-900 dark:to-primary-800 text-white">
-        <!-- Decorative blobs -->
         <div class="absolute -top-24 -right-24 w-96 h-96 bg-cyan-400/20 rounded-full blur-3xl"></div>
         <div class="absolute -bottom-32 -left-16 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
-        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Zz4gPHBhdGggZD0iTTM2IDM0djRIMjR2LTRIMjB2LTZoNnY0aDR2LTRoNnY2aC00eiIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIvPiA8L2c+PC9zdmc+')]"></div>
-
-        <div class="relative max-w-7xl mx-auto px-4 py-24 md:py-32">
+        <div class="relative max-w-7xl mx-auto px-4 py-20 md:py-28">
             <div class="max-w-3xl">
-                <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-400/20 text-cyan-200 text-xs font-semibold uppercase tracking-widest border border-cyan-400/30">
-                    <i data-lucide="sparkles" class="w-4 h-4"></i> Pusat Riset & Praktikum
-                </span>
-                <h1 class="mt-6 font-display text-4xl md:text-6xl font-extrabold leading-tight">
-                    Laboratorium
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-cyan-100">Universitas Medan Area</span>
-                </h1>
-                <p class="mt-6 text-lg md:text-xl text-blue-100/90 leading-relaxed">
-                    Mendukung kegiatan praktikum, penelitian, dan pengabdian masyarakat melalui fasilitas laboratorium modern yang terstandarisasi di Kota Medan.
-                </p>
+                <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-400/20 text-cyan-200 text-xs font-semibold uppercase tracking-widest border border-cyan-400/30"><i data-lucide="sparkles" class="w-4 h-4"></i> Pusat Riset & Praktikum</span>
+                <h1 class="mt-6 font-display text-4xl md:text-6xl font-extrabold leading-tight">Laboratorium <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-cyan-100">Universitas Medan Area</span></h1>
+                <p class="mt-6 text-lg md:text-xl text-blue-100/90 leading-relaxed">Mendukung kegiatan praktikum, penelitian, dan pengabdian masyarakat melalui fasilitas laboratorium modern yang terstandarisasi di Kota Medan.</p>
                 <div class="mt-8 flex flex-wrap gap-4">
-                    <a href="https://laboratorium.uma.ac.id/jadwal-praktikum" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-white text-primary-700 font-semibold shadow-lg hover:bg-cyan-50 transition transform hover:-translate-y-0.5">
-                        <i data-lucide="calendar" class="w-5 h-5"></i> Jadwal Praktikum
-                    </a>
-                    <a href="#fasilitas" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-cyan-500 text-white font-semibold hover:bg-cyan-600 transition transform hover:-translate-y-0.5">
-                        <i data-lucide="microscope" class="w-5 h-5"></i> Lihat Laboratorium
-                    </a>
+                    <a href="layanan.html#jadwal" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-white text-primary-700 font-semibold shadow-lg hover:bg-cyan-50 transition transform hover:-translate-y-0.5"><i data-lucide="calendar" class="w-5 h-5"></i> Jadwal Praktikum</a>
+                    <a href="fasilitas.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-cyan-500 text-white font-semibold hover:bg-cyan-600 transition transform hover:-translate-y-0.5"><i data-lucide="microscope" class="w-5 h-5"></i> Lihat Laboratorium</a>
                 </div>
             </div>
         </div>
-
-        <!-- Wave divider -->
-        <div class="absolute bottom-0 left-0 right-0">
-            <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-12 text-slate-50 dark:text-slate-900">
-                <path d="M0 30C240 60 480 0 720 15C960 30 1200 60 1440 30V60H0V30Z" fill="currentColor"></path>
-            </svg>
-        </div>
+        <div class="absolute bottom-0 left-0 right-0"><svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-12 text-slate-50 dark:text-slate-900"><path d="M0 30C240 60 480 0 720 15C960 30 1200 60 1440 30V60H0V30Z" fill="currentColor"></path></svg></div>
     </section>
 
     <!-- ==================== STATISTIK ==================== -->
     <section class="relative max-w-7xl mx-auto px-4 -mt-6 z-10">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <!-- Card 1 -->
-            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-700 p-6 text-center hover:shadow-xl transition hover:-translate-y-1">
-                <div class="w-12 h-12 mx-auto rounded-xl bg-cyan-100 dark:bg-cyan-900/40 flex items-center justify-center text-cyan-600 dark:text-cyan-400 mb-3">
-                    <i data-lucide="microscope" class="w-6 h-6"></i>
-                </div>
-                <p class="text-3xl font-extrabold text-primary-700 dark:text-cyan-400">25+</p>
-                <p class="text-sm text-slate-500 dark:text-slate-400">Laboratorium</p>
-            </div>
-            <!-- Card 2 -->
-            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-700 p-6 text-center hover:shadow-xl transition hover:-translate-y-1">
-                <div class="w-12 h-12 mx-auto rounded-xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-3">
-                    <i data-lucide="building-2" class="w-6 h-6"></i>
-                </div>
-                <p class="text-3xl font-extrabold text-primary-700 dark:text-cyan-400">8+</p>
-                <p class="text-sm text-slate-500 dark:text-slate-400">Fakultas</p>
-            </div>
-            <!-- Card 3 -->
-            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-700 p-6 text-center hover:shadow-xl transition hover:-translate-y-1">
-                <div class="w-12 h-12 mx-auto rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-3">
-                    <i data-lucide="book-open" class="w-6 h-6"></i>
-                </div>
-                <p class="text-3xl font-extrabold text-primary-700 dark:text-cyan-400">50+</p>
-                <p class="text-sm text-slate-500 dark:text-slate-400">Praktikum Aktif</p>
-            </div>
-            <!-- Card 4 -->
-            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-700 p-6 text-center hover:shadow-xl transition hover:-translate-y-1">
-                <div class="w-12 h-12 mx-auto rounded-xl bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center text-purple-600 dark:text-purple-400 mb-3">
-                    <i data-lucide="users" class="w-6 h-6"></i>
-                </div>
-                <p class="text-3xl font-extrabold text-primary-700 dark:text-cyan-400">100+</p>
-                <p class="text-sm text-slate-500 dark:text-slate-400">Asisten Lab</p>
-            </div>
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-700 p-6 text-center hover:shadow-xl transition hover:-translate-y-1"><div class="w-12 h-12 mx-auto rounded-xl bg-cyan-100 dark:bg-cyan-900/40 flex items-center justify-center text-cyan-600 dark:text-cyan-400 mb-3"><i data-lucide="microscope" class="w-6 h-6"></i></div><p class="text-3xl font-extrabold text-primary-700 dark:text-cyan-400">25+</p><p class="text-sm text-slate-500 dark:text-slate-400">Laboratorium</p></div>
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-700 p-6 text-center hover:shadow-xl transition hover:-translate-y-1"><div class="w-12 h-12 mx-auto rounded-xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-3"><i data-lucide="building-2" class="w-6 h-6"></i></div><p class="text-3xl font-extrabold text-primary-700 dark:text-cyan-400">8+</p><p class="text-sm text-slate-500 dark:text-slate-400">Fakultas</p></div>
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-700 p-6 text-center hover:shadow-xl transition hover:-translate-y-1"><div class="w-12 h-12 mx-auto rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-3"><i data-lucide="book-open" class="w-6 h-6"></i></div><p class="text-3xl font-extrabold text-primary-700 dark:text-cyan-400">50+</p><p class="text-sm text-slate-500 dark:text-slate-400">Praktikum Aktif</p></div>
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-700 p-6 text-center hover:shadow-xl transition hover:-translate-y-1"><div class="w-12 h-12 mx-auto rounded-xl bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center text-purple-600 dark:text-purple-400 mb-3"><i data-lucide="users" class="w-6 h-6"></i></div><p class="text-3xl font-extrabold text-primary-700 dark:text-cyan-400">100+</p><p class="text-sm text-slate-500 dark:text-slate-400">Asisten Lab</p></div>
         </div>
     </section>
 
     <!-- ==================== FAKULTAS ==================== -->
-    <section class="max-w-7xl mx-auto px-4 py-20" id="fasilitas">
+    <section class="max-w-7xl mx-auto px-4 py-16 md:py-20" id="fasilitas">
         <div class="text-center max-w-2xl mx-auto mb-12">
             <span class="text-cyan-600 dark:text-cyan-400 font-semibold text-sm uppercase tracking-widest">Fasilitas</span>
             <h2 class="mt-3 font-display text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">Fakultas & Prodi</h2>
             <p class="mt-3 text-slate-500 dark:text-slate-400">Laboratorium tersedia di berbagai fakultas dan program studi di lingkungan UMA</p>
         </div>
-
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Card template using Alpine-->
-            <template x-for="(f, i) in [
-                {nama:'Fakultas Teknik', icon:'cog', bg:'from-sky-500 to-blue-600', prodi:['Sipil','Elektro','Mesin','Arsitektur','Industri','Informatika']},
-                {nama:'Fakultas Pertanian', icon:'sprout', bg:'from-green-500 to-emerald-600', prodi:['Agroteknologi','Agribisnis']},
-                {nama:'Fakultas Ekonomi & Bisnis', icon:'trending-up', bg:'from-amber-500 to-orange-600', prodi:['Manajemen','Akuntansi']},
-                {nama:'Fakultas Hukum', icon:'scale', bg:'from-rose-500 to-red-600', prodi:['Hukum']},
-                {nama:'Fakultas Isipol', icon:'landmark', bg:'from-indigo-500 to-violet-600', prodi:['Ilmu Pemerintahan','Administrasi Publik','Ilmu Komunikasi']},
-                {nama:'Fakultas Psikologi', icon:'brain', bg:'from-fuchsia-500 to-purple-600', prodi:['Psikologi']},
-                {nama:'Fakultas Saintek', icon:'dna', bg:'from-teal-500 to-cyan-600', prodi:['Biologi']},
-                {nama:'Fakultas Agama Islam', icon:'book', bg:'from-lime-500 to-green-600', prodi:['Pendidikan Agama Islam']}
-            ]">
-                <div class="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition border border-slate-100 dark:border-slate-700">
-                    <div class="h-2" :class="'bg-gradient-to-r ' + f.bg"></div>
-                    <div class="p-6">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-lg" :class="'bg-gradient-to-br ' + f.bg">
-                                <i :data-lucide="f.icon" class="w-6 h-6"></i>
-                            </div>
-                            <h3 class="font-semibold text-slate-800 dark:text-white text-lg" x-text="f.nama"></h3>
-                        </div>
-                        <div class="mt-4 flex flex-wrap gap-2">
-                            <template x-for="p in f.prodi">
-                                <span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300" x-text="p"></span>
-                            </template>
-                        </div>
-                        <a href="#" class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-cyan-600 dark:text-cyan-400 hover:gap-2 transition-all">
-                            Lihat Galeri <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </a>
-                    </div>
-                </div>
-            </template>
+            <div class="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition border border-slate-100 dark:border-slate-700"><div class="h-2 bg-gradient-to-r from-sky-500 to-blue-600"></div><div class="p-6"><div class="flex items-center gap-4"><div class="w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-lg bg-gradient-to-br from-sky-500 to-blue-600"><i data-lucide="cog" class="w-6 h-6"></i></div><h3 class="font-semibold text-slate-800 dark:text-white text-lg">Fakultas Teknik</h3></div><div class="mt-4 flex flex-wrap gap-2"><span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Sipil</span><span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Elektro</span><span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Mesin</span><span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Arsitektur</span><span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Industri</span><span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Informatika</span></div><a href="galeri.html" class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-cyan-600 dark:text-cyan-400 hover:gap-2 transition-all">Lihat Galeri <i data-lucide="arrow-right" class="w-4 h-4"></i></a></div></div>
+            <div class="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition border border-slate-100 dark:border-slate-700"><div class="h-2 bg-gradient-to-r from-green-500 to-emerald-600"></div><div class="p-6"><div class="flex items-center gap-4"><div class="w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-lg bg-gradient-to-br from-green-500 to-emerald-600"><i data-lucide="sprout" class="w-6 h-6"></i></div><h3 class="font-semibold text-slate-800 dark:text-white text-lg">Fakultas Pertanian</h3></div><div class="mt-4 flex flex-wrap gap-2"><span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Agroteknologi</span><span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Agribisnis</span></div><a href="galeri.html" class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-cyan-600 dark:text-cyan-400 hover:gap-2 transition-all">Lihat Galeri <i data-lucide="arrow-right" class="w-4 h-4"></i></a></div></div>
+            <div class="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition border border-slate-100 dark:border-slate-700"><div class="h-2 bg-gradient-to-r from-amber-500 to-orange-600"></div><div class="p-6"><div class="flex items-center gap-4"><div class="w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-lg bg-gradient-to-br from-amber-500 to-orange-600"><i data-lucide="trending-up" class="w-6 h-6"></i></div><h3 class="font-semibold text-slate-800 dark:text-white text-lg">Fakultas Ekonomi & Bisnis</h3></div><div class="mt-4 flex flex-wrap gap-2"><span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Manajemen</span><span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Akuntansi</span></div><a href="galeri.html" class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-cyan-600 dark:text-cyan-400 hover:gap-2 transition-all">Lihat Galeri <i data-lucide="arrow-right" class="w-4 h-4"></i></a></div></div>
+            <div class="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition border border-slate-100 dark:border-slate-700"><div class="h-2 bg-gradient-to-r from-rose-500 to-red-600"></div><div class="p-6"><div class="flex items-center gap-4"><div class="w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-lg bg-gradient-to-br from-rose-500 to-red-600"><i data-lucide="scale" class="w-6 h-6"></i></div><h3 class="font-semibold text-slate-800 dark:text-white text-lg">Fakultas Hukum</h3></div><div class="mt-4 flex flex-wrap gap-2"><span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Hukum</span></div><a href="galeri.html" class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-cyan-600 dark:text-cyan-400 hover:gap-2 transition-all">Lihat Galeri <i data-lucide="arrow-right" class="w-4 h-4"></i></a></div></div>
+            <div class="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition border border-slate-100 dark:border-slate-700"><div class="h-2 bg-gradient-to-r from-indigo-500 to-violet-600"></div><div class="p-6"><div class="flex items-center gap-4"><div class="w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-lg bg-gradient-to-br from-indigo-500 to-violet-600"><i data-lucide="landmark" class="w-6 h-6"></i></div><h3 class="font-semibold text-slate-800 dark:text-white text-lg">Fakultas Isipol</h3></div><div class="mt-4 flex flex-wrap gap-2"><span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Ilmu Pemerintahan</span><span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Administrasi Publik</span><span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Ilmu Komunikasi</span></div><a href="galeri.html" class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-cyan-600 dark:text-cyan-400 hover:gap-2 transition-all">Lihat Galeri <i data-lucide="arrow-right" class="w-4 h-4"></i></a></div></div>
+            <div class="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition border border-slate-100 dark:border-slate-700"><div class="h-2 bg-gradient-to-r from-fuchsia-500 to-purple-600"></div><div class="p-6"><div class="flex items-center gap-4"><div class="w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-lg bg-gradient-to-br from-fuchsia-500 to-purple-600"><i data-lucide="brain" class="w-6 h-6"></i></div><h3 class="font-semibold text-slate-800 dark:text-white text-lg">Fakultas Psikologi</h3></div><div class="mt-4 flex flex-wrap gap-2"><span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">Psikologi</span></div><a href="galeri.html" class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-cyan-600 dark:text-cyan-400 hover:gap-2 transition-all">Lihat Galeri <i data-lucide="arrow-right" class="w-4 h-4"></i></a></div></div>
         </div>
     </section>
 
-    <!-- ==================== FITUR UTAMA ==================== -->
-    <section class="bg-white dark:bg-slate-800 py-20 border-y border-slate-100 dark:border-slate-700">
+    <!-- ==================== LAYANAN ==================== -->
+    <section class="bg-white dark:bg-slate-800 py-16 md:py-20 border-y border-slate-100 dark:border-slate-700">
         <div class="max-w-7xl mx-auto px-4">
-            <div class="text-center max-w-2xl mx-auto mb-12">
-                <span class="text-cyan-600 dark:text-cyan-400 font-semibold text-sm uppercase tracking-widest">Layanan</span>
-                <h2 class="mt-3 font-display text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">Layanan Informasi Laboratorium</h2>
-            </div>
+            <div class="text-center max-w-2xl mx-auto mb-12"><span class="text-cyan-600 dark:text-cyan-400 font-semibold text-sm uppercase tracking-widest">Layanan</span><h2 class="mt-3 font-display text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">Layanan Informasi Laboratorium</h2></div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Feature cards -->
-                <template x-for="(ft, idx) in [
-                    {title:'Jadwal Praktikum', desc:'Lihat jadwal praktikum per fakultas dan program studi secara mudah dan terstruktur.', icon:'calendar', color:'text-blue-600 dark:text-blue-400', bg:'bg-blue-100 dark:bg-blue-900/40'},
-                    {title:'Matakuliah Praktikum', desc:'Informasi lengkap matakuliah praktikum yang tersedia di setiap laboratorium.', icon:'book-open', color:'text-emerald-600 dark:text-emerald-400', bg:'bg-emerald-100 dark:bg-emerald-900/40'},
-                    {title:'Daftar Pengelola Lab', desc:'Daftar pelaksana dan pengelola laboratorium serta fasilitator praktikum.', icon:'users', color:'text-purple-600 dark:text-purple-400', bg:'bg-purple-100 dark:bg-purple-900/40'},
-                    {title:'Unduhan Dokumen', desc:'Akses dan unduh dokumen laboratorium, pedoman, dan format yang dibutuhkan.', icon:'download', color:'text-amber-600 dark:text-amber-400', bg:'bg-amber-100 dark:bg-amber-900/40'},
-                    {title:'Sertifikat Asisten', desc:'Unduh sertifikat asisten laboratorium setelah menyelesaikan tugas praktikum.', icon:'award', color:'text-rose-600 dark:text-rose-400', bg:'bg-rose-100 dark:bg-rose-900/40'},
-                    {title:'Lab Pengujian ISO', desc:'Laboratorium pengujian terakreditasi ISO/IEC 17025 untuk layanan kalibrasi dan uji.', icon:'badge-check', color:'text-cyan-600 dark:text-cyan-400', bg:'bg-cyan-100 dark:bg-cyan-900/40'}
-                ]">
-                    <div class="group p-6 rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-white dark:hover:bg-slate-800 transition hover:shadow-xl hover:-translate-y-1">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-11 h-11 rounded-xl flex items-center justify-center" :class="ft.bg + ' ' + ft.color">
-                                <i :data-lucide="ft.icon" class="w-5 h-5"></i>
-                            </div>
-                            <h3 class="font-semibold text-slate-800 dark:text-white" x-text="ft.title"></h3>
-                        </div>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed" x-text="ft.desc"></p>
-                        <a href="#" class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-cyan-600 dark:text-cyan-400 opacity-0 group-hover:opacity-100 transition">
-                            Selengkapnya <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </a>
-                    </div>
-                </template>
+                <div class="group p-6 rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-white dark:hover:bg-slate-800 transition hover:shadow-xl hover:-translate-y-1"><div class="flex items-center gap-3 mb-4"><div class="w-11 h-11 rounded-xl flex items-center justify-center bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400"><i data-lucide="calendar" class="w-5 h-5"></i></div><h3 class="font-semibold text-slate-800 dark:text-white">Jadwal Praktikum</h3></div><p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Lihat jadwal praktikum per fakultas dan program studi secara mudah dan terstruktur.</p><a href="layanan.html#jadwal" class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-cyan-600 dark:text-cyan-400">Selengkapnya <i data-lucide="arrow-right" class="w-4 h-4"></i></a></div>
+                <div class="group p-6 rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-white dark:hover:bg-slate-800 transition hover:shadow-xl hover:-translate-y-1"><div class="flex items-center gap-3 mb-4"><div class="w-11 h-11 rounded-xl flex items-center justify-center bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400"><i data-lucide="book-open" class="w-5 h-5"></i></div><h3 class="font-semibold text-slate-800 dark:text-white">Matakuliah Praktikum</h3></div><p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Informasi lengkap matakuliah praktikum yang tersedia di setiap laboratorium.</p><a href="layanan.html#matkul" class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-cyan-600 dark:text-cyan-400">Selengkapnya <i data-lucide="arrow-right" class="w-4 h-4"></i></a></div>
+                <div class="group p-6 rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-white dark:hover:bg-slate-800 transition hover:shadow-xl hover:-translate-y-1"><div class="flex items-center gap-3 mb-4"><div class="w-11 h-11 rounded-xl flex items-center justify-center bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400"><i data-lucide="users" class="w-5 h-5"></i></div><h3 class="font-semibold text-slate-800 dark:text-white">Pengelola Lab</h3></div><p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Daftar pelaksana dan pengelola laboratorium serta fasilitator praktikum.</p><a href="layanan.html#pengelola" class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-cyan-600 dark:text-cyan-400">Selengkapnya <i data-lucide="arrow-right" class="w-4 h-4"></i></a></div>
+                <div class="group p-6 rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-white dark:hover:bg-slate-800 transition hover:shadow-xl hover:-translate-y-1"><div class="flex items-center gap-3 mb-4"><div class="w-11 h-11 rounded-xl flex items-center justify-center bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400"><i data-lucide="download" class="w-5 h-5"></i></div><h3 class="font-semibold text-slate-800 dark:text-white">Unduhan Dokumen</h3></div><p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Akses dan unduh dokumen laboratorium, pedoman, dan format yang dibutuhkan.</p><a href="unduhan.html" class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-cyan-600 dark:text-cyan-400">Selengkapnya <i data-lucide="arrow-right" class="w-4 h-4"></i></a></div>
+                <div class="group p-6 rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-white dark:hover:bg-slate-800 transition hover:shadow-xl hover:-translate-y-1"><div class="flex items-center gap-3 mb-4"><div class="w-11 h-11 rounded-xl flex items-center justify-center bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400"><i data-lucide="award" class="w-5 h-5"></i></div><h3 class="font-semibold text-slate-800 dark:text-white">Sertifikat Asisten</h3></div><p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Unduh sertifikat asisten laboratorium setelah menyelesaikan tugas praktikum.</p><a href="unduhan.html" class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-cyan-600 dark:text-cyan-400">Selengkapnya <i data-lucide="arrow-right" class="w-4 h-4"></i></a></div>
+                <div class="group p-6 rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-white dark:hover:bg-slate-800 transition hover:shadow-xl hover:-translate-y-1"><div class="flex items-center gap-3 mb-4"><div class="w-11 h-11 rounded-xl flex items-center justify-center bg-cyan-100 dark:bg-cyan-900/40 text-cyan-600 dark:text-cyan-400"><i data-lucide="badge-check" class="w-5 h-5"></i></div><h3 class="font-semibold text-slate-800 dark:text-white">Lab Pengujian ISO</h3></div><p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Laboratorium pengujian terakreditasi ISO/IEC 17025 untuk layanan kalibrasi dan uji.</p><a href="https://umaiso17025.uma.ac.id/" target="_blank" class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-cyan-600 dark:text-cyan-400">Selengkapnya <i data-lucide="arrow-right" class="w-4 h-4"></i></a></div>
             </div>
         </div>
     </section>
 
     <!-- ==================== BERITA ==================== -->
-    <section class="max-w-7xl mx-auto px-4 py-20" id="berita">
-        <div class="flex items-end justify-between mb-10">
-            <div>
-                <span class="text-cyan-600 dark:text-cyan-400 font-semibold text-sm uppercase tracking-widest">Kabar Terbaru</span>
-                <h2 class="mt-3 font-display text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">Berita Laboratorium</h2>
-            </div>
-            <a href="https://laboratorium.uma.ac.id/all-news" class="hidden md:inline-flex items-center gap-1 text-sm font-semibold text-cyan-600 dark:text-cyan-400 hover:gap-2 transition-all">
-                Lihat Semua Berita <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </a>
+    <section class="max-w-7xl mx-auto px-4 py-16 md:py-20" id="berita">
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-10">
+            <div><span class="text-cyan-600 dark:text-cyan-400 font-semibold text-sm uppercase tracking-widest">Kabar Terbaru</span><h2 class="mt-3 font-display text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">Berita Laboratorium</h2></div>
+            <a href="berita.html" class="inline-flex items-center gap-1 text-sm font-semibold text-cyan-600 dark:text-cyan-400 hover:gap-2 transition-all">Lihat Semua Berita <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Berita 1 -->
-            <article class="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition border border-slate-100 dark:border-slate-700">
-                <div class="relative overflow-hidden h-48">
-                    <img src="https://laboratorium.uma.ac.id/admin/uploads/sertifikat%20asisten.png.png" alt="Sertifikat Asisten" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                    <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-red-500/90 text-white text-xs font-semibold">Informasi</span>
-                </div>
-                <div class="p-5">
-                    <p class="text-xs text-slate-400 flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> 17 Mar 2026</p>
-                    <h3 class="mt-2 font-semibold text-slate-800 dark:text-white leading-snug group-hover:text-cyan-600 transition">Informasi Pengunduhan Sertifikat Asisten Laboratorium Semester Ganjil TA. 2025/2026</h3>
-                    <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">99x dibaca</p>
-                </div>
-            </article>
-
-            <!-- Berita 2 -->
-            <article class="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition border border-slate-100 dark:border-slate-700">
-                <div class="relative overflow-hidden h-48">
-                    <img src="https://laboratorium.uma.ac.id/admin/uploads/P15122501%20(1).png.png" alt="Pengumuman Libur" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                    <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-amber-500/90 text-white text-xs font-semibold">Pengumuman</span>
-                </div>
-                <div class="p-5">
-                    <p class="text-xs text-slate-400 flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> 23 Dec 2025</p>
-                    <h3 class="mt-2 font-semibold text-slate-800 dark:text-white leading-snug group-hover:text-cyan-600 transition">Pengumuman Libur Kegiatan Pembelajaran</h3>
-                    <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">126x dibaca</p>
-                </div>
-            </article>
-
-            <!-- Berita 3 -->
-            <article class="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition border border-slate-100 dark:border-slate-700">
-                <div class="relative overflow-hidden h-48">
-                    <img src="https://laboratorium.uma.ac.id/admin/uploads/kuesioner-ganjil-25-26.png.png" alt="Kuesioner" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                    <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-cyan-500/90 text-white text-xs font-semibold">Pengumuman</span>
-                </div>
-                <div class="p-5">
-                    <p class="text-xs text-slate-400 flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> 19 Dec 2025</p>
-                    <h3 class="mt-2 font-semibold text-slate-800 dark:text-white leading-snug group-hover:text-cyan-600 transition">Informasi Pengisian Kuesioner Bagi Dosen dan Mahasiswa UMA Semester Ganjil TA 2025/2026</h3>
-                    <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">128x dibaca</p>
-                </div>
-            </article>
-        </div>
-
-        <div class="mt-8 text-center md:hidden">
-            <a href="https://laboratorium.uma.ac.id/all-news" class="inline-flex items-center gap-1 text-sm font-semibold text-cyan-600 dark:text-cyan-400">Lihat Semua Berita <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <article class="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition border border-slate-100 dark:border-slate-700"><div class="relative overflow-hidden h-48"><img src="https://laboratorium.uma.ac.id/admin/uploads/sertifikat%20asisten.png.png" alt="Sertifikat Asisten" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><span class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-red-500/90 text-white text-xs font-semibold">Informasi</span></div><div class="p-5"><p class="text-xs text-slate-400 flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> 17 Mar 2026</p><h3 class="mt-2 font-semibold text-slate-800 dark:text-white leading-snug group-hover:text-cyan-600 transition">Informasi Pengunduhan Sertifikat Asisten Laboratorium Semester Ganjil TA. 2025/2026</h3><p class="mt-2 text-sm text-slate-500 dark:text-slate-400">99x dibaca</p></div></article>
+            <article class="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition border border-slate-100 dark:border-slate-700"><div class="relative overflow-hidden h-48"><img src="https://laboratorium.uma.ac.id/admin/uploads/P15122501%20(1).png.png" alt="Pengumuman Libur" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><span class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-amber-500/90 text-white text-xs font-semibold">Pengumuman</span></div><div class="p-5"><p class="text-xs text-slate-400 flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> 23 Dec 2025</p><h3 class="mt-2 font-semibold text-slate-800 dark:text-white leading-snug group-hover:text-cyan-600 transition">Pengumuman Libur Kegiatan Pembelajaran</h3><p class="mt-2 text-sm text-slate-500 dark:text-slate-400">126x dibaca</p></div></article>
+            <article class="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition border border-slate-100 dark:border-slate-700"><div class="relative overflow-hidden h-48"><img src="https://laboratorium.uma.ac.id/admin/uploads/kuesioner-ganjil-25-26.png.png" alt="Kuesioner" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><span class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-cyan-500/90 text-white text-xs font-semibold">Pengumuman</span></div><div class="p-5"><p class="text-xs text-slate-400 flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> 19 Dec 2025</p><h3 class="mt-2 font-semibold text-slate-800 dark:text-white leading-snug group-hover:text-cyan-600 transition">Informasi Pengisian Kuesioner Bagi Dosen dan Mahasiswa UMA Semester Ganjil TA 2025/2026</h3><p class="mt-2 text-sm text-slate-500 dark:text-slate-400">128x dibaca</p></div></article>
         </div>
     </section>
 
     <!-- ==================== GALERI ==================== -->
-    <section class="bg-white dark:bg-slate-800 py-20 border-y border-slate-100 dark:border-slate-700" id="galeri">
+    <section class="bg-white dark:bg-slate-800 py-16 md:py-20 border-y border-slate-100 dark:border-slate-700" id="galeri">
         <div class="max-w-7xl mx-auto px-4">
-            <div class="text-center max-w-2xl mx-auto mb-12">
-                <span class="text-cyan-600 dark:text-cyan-400 font-semibold text-sm uppercase tracking-widest">Dokumentasi</span>
-                <h2 class="mt-3 font-display text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">Galeri Lab & Hasil Praktikum</h2>
-                <p class="mt-3 text-slate-500 dark:text-slate-400">Dokumentasi kegiatan praktikum dan penelitian di lingkungan UMA</p>
-            </div>
-
+            <div class="text-center max-w-2xl mx-auto mb-12"><span class="text-cyan-600 dark:text-cyan-400 font-semibold text-sm uppercase tracking-widest">Dokumentasi</span><h2 class="mt-3 font-display text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">Galeri Lab & Hasil Praktikum</h2><p class="mt-3 text-slate-500 dark:text-slate-400">Dokumentasi kegiatan praktikum dan penelitian di lingkungan UMA</p></div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <template x-for="(img, idx) in [
-                    'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6878142371714375724.jpg',
-                    'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6787828731762504523.jpeg',
-                    'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6506652741715048206.jpeg',
-                    'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/4433280541714615501.JPG',
-                    'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/7921851651715139853.jpeg',
-                    'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/20325948681714615643.jpg',
-                    'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/10114180091714702521.JPG',
-                    'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/19483733241715048931.jpeg',
-                    'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6402071771714744786.jpg',
-                    'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/8682340401717386694.jpg',
-                    'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/5221120081715053390.jpg',
-                    'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/19233998261714620755.JPG',
-                    'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/5782036091714616846.jpg',
-                    'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/20658843121714794465.jpeg',
-                    'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/20117448001714705970.jpeg',
-                    'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/1159941981714706438.jpeg'
-                ]">
-                    <div class="relative group overflow-hidden rounded-xl aspect-square">
-                        <img :src="img" alt="Galeri Lab" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3">
-                            <span class="text-white text-sm font-medium">Kegiatan Praktikum</span>
-                        </div>
-                    </div>
-                </template>
+                <div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6878142371714375724.jpg" alt="Galeri Lab" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Kegiatan Praktikum</span></div></div>
+                <div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6787828731762504523.jpeg" alt="Galeri Lab" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Kegiatan Praktikum</span></div></div>
+                <div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6506652741715048206.jpeg" alt="Galeri Lab" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Kegiatan Praktikum</span></div></div>
+                <div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/4433280541714615501.JPG" alt="Galeri Lab" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Kegiatan Praktikum</span></div></div>
+                <div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/7921851651715139853.jpeg" alt="Galeri Lab" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Kegiatan Praktikum</span></div></div>
+                <div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/20325948681714615643.jpg" alt="Galeri Lab" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Kegiatan Praktikum</span></div></div>
+                <div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/10114180091714702521.JPG" alt="Galeri Lab" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Kegiatan Praktikum</span></div></div>
+                <div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/19483733241715048931.jpeg" alt="Galeri Lab" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Kegiatan Praktikum</span></div></div>
             </div>
         </div>
     </section>
 
-    <!-- ==================== CTA / PENELITIAN ==================== -->
-    <section class="max-w-7xl mx-auto px-4 py-20">
+    <!-- ==================== CTA ==================== -->
+    <section class="max-w-7xl mx-auto px-4 py-16 md:py-20">
         <div class="rounded-3xl overflow-hidden bg-gradient-to-br from-primary-700 via-blue-700 to-cyan-600 text-white relative">
             <div class="absolute -top-20 -right-20 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
-            <div class="relative p-10 md:p-14 grid md:grid-cols-2 gap-8 items-center">
-                <div>
-                    <h2 class="font-display text-3xl md:text-4xl font-extrabold">Bidang Penelitian & Jenis Laboratorium</h2>
-                    <p class="mt-4 text-blue-100">Dari fisiologi tumbuhan, proteksi tanaman, hingga lahan percobaan UMA — fasilitas kami siap mendukung penelitian Anda.</p>
-                </div>
+            <div class="relative p-8 md:p-14 grid md:grid-cols-2 gap-8 items-center">
+                <div><h2 class="font-display text-2xl md:text-4xl font-extrabold">Bidang Penelitian & Jenis Laboratorium</h2><p class="mt-4 text-blue-100">Dari fisiologi tumbuhan, proteksi tanaman, hingga lahan percobaan UMA — fasilitas kami siap mendukung penelitian Anda.</p><a href="penelitian.html" class="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-white text-primary-700 font-semibold hover:bg-cyan-50 transition">Eksplorasi Penelitian <i data-lucide="arrow-right" class="w-5 h-5"></i></a></div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <a href="#" class="flex items-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur transition group">
-                        <div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center"><i data-lucide="leaf" class="w-5 h-5"></i></div>
-                        <div>
-                            <p class="font-semibold text-sm">Lab Fisiologi Tumbuhan</p>
-                            <p class="text-xs text-blue-200">Penelitian tumbuhan</p>
-                        </div>
-                        <i data-lucide="arrow-right" class="w-4 h-4 ml-auto group-hover:translate-x-1 transition"></i>
-                    </a>
-                    <a href="#" class="flex items-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur transition group">
-                        <div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center"><i data-lucide="shield" class="w-5 h-5"></i></div>
-                        <div>
-                            <p class="font-semibold text-sm">Lab Proteksi Tanaman</p>
-                            <p class="text-xs text-blue-200">Perlindungan tanaman</p>
-                        </div>
-                        <i data-lucide="arrow-right" class="w-4 h-4 ml-auto group-hover:translate-x-1 transition"></i>
-                    </a>
-                    <a href="#" class="flex items-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur transition group">
-                        <div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center"><i data-lucide="trees" class="w-5 h-5"></i></div>
-                        <div>
-                            <p class="font-semibold text-sm">Lahan Percobaan UMA</p>
-                            <p class="text-xs text-blue-200">Area percobaan</p>
-                        </div>
-                        <i data-lucide="arrow-right" class="w-4 h-4 ml-auto group-hover:translate-x-1 transition"></i>
-                    </a>
-                    <a href="#" class="flex items-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur transition group">
-                        <div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center"><i data-lucide="home" class="w-5 h-5"></i></div>
-                        <div>
-                            <p class="font-semibold text-sm">Rumah Kasa</p>
-                            <p class="text-xs text-blue-200">Mitigasi lingkungan</p>
-                        </div>
-                        <i data-lucide="arrow-right" class="w-4 h-4 ml-auto group-hover:translate-x-1 transition"></i>
-                    </a>
+                    <a href="penelitian.html#fisiologi" class="flex items-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur transition group"><div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center"><i data-lucide="leaf" class="w-5 h-5"></i></div><div><p class="font-semibold text-sm">Lab Fisiologi Tumbuhan</p><p class="text-xs text-blue-200">Penelitian tumbuhan</p></div><i data-lucide="arrow-right" class="w-4 h-4 ml-auto group-hover:translate-x-1 transition"></i></a>
+                    <a href="penelitian.html#proteksi" class="flex items-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur transition group"><div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center"><i data-lucide="shield" class="w-5 h-5"></i></div><div><p class="font-semibold text-sm">Lab Proteksi Tanaman</p><p class="text-xs text-blue-200">Perlindungan tanaman</p></div><i data-lucide="arrow-right" class="w-4 h-4 ml-auto group-hover:translate-x-1 transition"></i></a>
+                    <a href="penelitian.html#lahan" class="flex items-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur transition group"><div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center"><i data-lucide="trees" class="w-5 h-5"></i></div><div><p class="font-semibold text-sm">Lahan Percobaan UMA</p><p class="text-xs text-blue-200">Area percobaan</p></div><i data-lucide="arrow-right" class="w-4 h-4 ml-auto group-hover:translate-x-1 transition"></i></a>
+                    <a href="penelitian.html#rumahkasa" class="flex items-center gap-3 p-4 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur transition group"><div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center"><i data-lucide="home" class="w-5 h-5"></i></div><div><p class="font-semibold text-sm">Rumah Kasa</p><p class="text-xs text-blue-200">Mitigasi lingkungan</p></div><i data-lucide="arrow-right" class="w-4 h-4 ml-auto group-hover:translate-x-1 transition"></i></a>
                 </div>
             </div>
         </div>
@@ -446,64 +245,20 @@
 
     <!-- ==================== FOOTER ==================== -->
     <footer class="bg-slate-900 dark:bg-slate-950 text-slate-300">
-        <div class="max-w-7xl mx-auto px-4 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-            <!-- About -->
+        <div class="max-w-7xl mx-auto px-4 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
             <div>
-                <div class="flex items-center gap-2">
-                    <img src="https://susitao.uma.ac.id/assets/img/logo-main.webp" alt="Logo UMA" class="w-10 h-10 rounded-lg object-contain bg-white p-1">
-                    <div class="leading-tight">
-                        <p class="font-display font-bold text-lg text-white">LABORATORIUM</p>
-                        <p class="text-[10px] tracking-widest uppercase text-slate-400">Universitas Medan Area</p>
-                    </div>
-                </div>
+                <div class="flex items-center gap-2"><img src="https://susitao.uma.ac.id/assets/img/logo-main.webp" alt="Logo UMA" class="w-10 h-10 rounded-lg object-contain bg-white p-1"><div class="leading-tight"><p class="font-display font-bold text-lg text-white">LABORATORIUM</p><p class="text-[10px] tracking-widest uppercase text-slate-400">Universitas Medan Area</p></div></div>
                 <p class="mt-4 text-sm text-slate-400 leading-relaxed">Pusat kegiatan praktikum, penelitian, dan pengabdian masyarakat yang terstandarisasi di lingkungan Universitas Medan Area.</p>
-                <div class="mt-6 flex gap-3">
-                    <a href="https://twitter.com/kampus_uma" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-cyan-600 flex items-center justify-center transition"><i data-lucide="twitter" class="w-4 h-4"></i></a>
-                    <a href="https://www.facebook.com/kampusuma" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-cyan-600 flex items-center justify-center transition"><i data-lucide="facebook" class="w-4 h-4"></i></a>
-                    <a href="https://www.instagram.com/umabestari" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-cyan-600 flex items-center justify-center transition"><i data-lucide="instagram" class="w-4 h-4"></i></a>
-                    <a href="https://www.youtube.com/channel/UCrA3vXipMHrtt780hSfIThw" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-cyan-600 flex items-center justify-center transition"><i data-lucide="youtube" class="w-4 h-4"></i></a>
-                </div>
+                <div class="mt-6 flex gap-3"><a href="https://twitter.com/kampus_uma" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-cyan-600 flex items-center justify-center transition"><i data-lucide="twitter" class="w-4 h-4"></i></a><a href="https://www.facebook.com/kampusuma" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-cyan-600 flex items-center justify-center transition"><i data-lucide="facebook" class="w-4 h-4"></i></a><a href="https://www.instagram.com/umabestari" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-cyan-600 flex items-center justify-center transition"><i data-lucide="instagram" class="w-4 h-4"></i></a><a href="https://www.youtube.com/channel/UCrA3vXipMHrtt780hSfIThw" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-cyan-600 flex items-center justify-center transition"><i data-lucide="youtube" class="w-4 h-4"></i></a></div>
             </div>
-
-            <!-- Tautan -->
-            <div>
-                <h4 class="font-semibold text-white text-sm uppercase tracking-wider mb-4">Tautan Cepat</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="#" class="hover:text-cyan-400 transition">Profil Laboratorium</a></li>
-                    <li><a href="#" class="hover:text-cyan-400 transition">Jadwal Praktikum</a></li>
-                    <li><a href="#" class="hover:text-cyan-400 transition">Matakuliah Praktikum</a></li>
-                    <li><a href="#" class="hover:text-cyan-400 transition">Daftar Pengelola Lab</a></li>
-                    <li><a href="https://umaiso17025.uma.ac.id/" target="_blank" class="hover:text-cyan-400 transition">Lab Pengujian ISO</a></li>
-                    <li><a href="http://p2mal.uma.ac.id" class="hover:text-cyan-400 transition">P2MAL</a></li>
-                </ul>
-            </div>
-
-            <!-- Unduhan -->
-            <div>
-                <h4 class="font-semibold text-white text-sm uppercase tracking-wider mb-4">Unduhan</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="https://s.uma.ac.id/K8G7C" target="_blank" class="hover:text-cyan-400 transition">Dokumen Lab</a></li>
-                    <li><a href="https://script.google.com/a/macros/uma.ac.id/s/AKfycbwU9lJegxLxSHWxaBithwWIibNU_DZOl0jO3luTCcBpodRZT7u2Sw-rGpiUdJNojKPgUg/exec" target="_blank" class="hover:text-cyan-400 transition">Sertifikat Asisten Lab</a></li>
-                    <li><a href="https://laboratorium.uma.ac.id/all-news" class="hover:text-cyan-400 transition">Berita Terbaru</a></li>
-                </ul>
-            </div>
-
-            <!-- Kontak -->
-            <div>
-                <h4 class="font-semibold text-white text-sm uppercase tracking-wider mb-4">Kontak</h4>
-                <ul class="space-y-3 text-sm">
-                    <li class="flex gap-3"><i data-lucide="map-pin" class="w-5 h-5 text-cyan-400 shrink-0"></i> Jalan Kolam Nomor 1 Medan Estate / Jalan Gedung PBSI, Medan 20223</li>
-                    <li class="flex gap-3"><i data-lucide="phone" class="w-5 h-5 text-cyan-400 shrink-0"></i> (061) 7360168, 7366878, 7364348</li>
-                    <li class="flex gap-3"><i data-lucide="smartphone" class="w-5 h-5 text-cyan-400 shrink-0"></i> 0822-6777-1313, 0813-7095-7775</li>
-                </ul>
-            </div>
+            <div><h4 class="font-semibold text-white text-sm uppercase tracking-wider mb-4">Tautan Cepat</h4><ul class="space-y-2 text-sm"><li><a href="profil.html" class="hover:text-cyan-400 transition">Profil Laboratorium</a></li><li><a href="layanan.html#jadwal" class="hover:text-cyan-400 transition">Jadwal Praktikum</a></li><li><a href="layanan.html#matkul" class="hover:text-cyan-400 transition">Matakuliah Praktikum</a></li><li><a href="fasilitas.html" class="hover:text-cyan-400 transition">Laboratorium</a></li><li><a href="https://umaiso17025.uma.ac.id/" target="_blank" class="hover:text-cyan-400 transition">Lab Pengujian ISO</a></li><li><a href="http://p2mal.uma.ac.id" class="hover:text-cyan-400 transition">P2MAL</a></li></ul></div>
+            <div><h4 class="font-semibold text-white text-sm uppercase tracking-wider mb-4">Unduhan</h4><ul class="space-y-2 text-sm"><li><a href="unduhan.html" class="hover:text-cyan-400 transition">Dokumen Lab</a></li><li><a href="unduhan.html" class="hover:text-cyan-400 transition">Sertifikat Asisten Lab</a></li><li><a href="berita.html" class="hover:text-cyan-400 transition">Berita Terbaru</a></li><li><a href="kontak.html" class="hover:text-cyan-400 transition">Hubungi Kami</a></li></ul></div>
+            <div><h4 class="font-semibold text-white text-sm uppercase tracking-wider mb-4">Kontak</h4><ul class="space-y-3 text-sm"><li class="flex gap-3"><i data-lucide="map-pin" class="w-5 h-5 text-cyan-400 shrink-0"></i> Jalan Kolam Nomor 1 Medan Estate / Jalan Gedung PBSI, Medan 20223</li><li class="flex gap-3"><i data-lucide="phone" class="w-5 h-5 text-cyan-400 shrink-0"></i> (061) 7360168, 7366878, 7364348</li><li class="flex gap-3"><i data-lucide="smartphone" class="w-5 h-5 text-cyan-400 shrink-0"></i> 0822-6777-1313, 0813-7095-7775</li></ul></div>
         </div>
-
-        <div class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
-            <p>© 2026 Laboratorium Universitas Medan Area · <span class="text-cyan-400">Demo Prototype</span> · Dibuat untuk tujuan demonstrasi</p>
-        </div>
+        <div class="border-t border-slate-800 py-6 text-center text-xs text-slate-500"><p>© 2026 Laboratorium Universitas Medan Area · <span class="text-cyan-400">Demo Prototype</span> · Dibuat untuk tujuan demonstrasi</p></div>
     </footer>
 
     <script src="assets/js/app.js"></script>
+    <script src="assets/js/nav.js"></script>
 </body>
 </html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unduhan - Laboratorium Universitas Medan Area</title>
+    <meta name="description" content="Unduhan dokumen, pedoman, dan sertifikat laboratorium UMA">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'Inter', 'sans-serif'], display: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        primary: { 50: '#eff6ff', 100: '#dbeafe', 500: '#1e40af', 600: '#1e3a8a', 700: '#1e40af', 800: '#1e3a8a', 900: '#172554' },
+                        accent: '#06b6d4',
+                    },
+                },
+            },
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/nav.css">
+</head>
+<body class="font-sans bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 antialiased transition-colors duration-300">
+
+    <!-- TOP BAR -->
+    <div class="bg-slate-900 text-slate-200 text-xs py-2 hidden lg:block">
+        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center gap-5">
+                <span class="flex items-center gap-1.5"><i data-lucide="phone" class="w-3.5 h-3.5"></i> (061) 7360168</span>
+                <span class="flex items-center gap-1.5"><i data-lucide="mail" class="w-3.5 h-3.5"></i> lab@uma.ac.id</span>
+                <span class="flex items-center gap-1.5 hidden xl:flex"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Jl. Kolam No.1 Medan Estate</span>
+            </div>
+            <div class="flex items-center gap-5">
+                <a href="https://umaiso17025.uma.ac.id/" target="_blank" class="hover:text-cyan-300 transition font-medium">Lab Pengujian ISO</a>
+                <a href="http://p2mal.uma.ac.id" target="_blank" class="hover:text-cyan-300 transition font-medium">P2MAL</a>
+                <button data-theme-toggle class="flex items-center gap-1.5 hover:text-cyan-300 transition cursor-pointer"><i data-lucide="moon" class="w-3.5 h-3.5"></i><span class="theme-label">Gelap</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <header class="header-sticky">
+        <nav class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16 relative">
+            <a href="index.html" class="flex items-center gap-2 shrink-0">
+                <img src="https://susitao.uma.ac.id/assets/img/logo-main.webp" alt="Logo UMA" class="w-10 h-10 rounded-lg object-contain bg-white p-1 shadow-sm">
+                <span class="leading-tight"><span class="font-display font-bold text-lg text-primary-700 dark:text-cyan-400 block">LABORATORIUM</span><span class="text-[10px] tracking-widest uppercase text-slate-500 dark:text-slate-400">Universitas Medan Area</span></span>
+            </a>
+            <div class="desktop-nav flex items-center gap-0.5">
+                <a href="index.html" class="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary-700 dark:hover:text-cyan-400 transition rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">Beranda</a>
+                <div class="nav-item relative">
+                    <button class="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary-700 dark:hover:text-cyan-400 transition rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 inline-flex items-center gap-1">Profil <i data-lucide="chevron-down" class="w-4 h-4"></i></button>
+                    <div class="mega-menu"><div class="grid grid-cols-2 gap-1">
+                        <a href="profil.html"><span class="mm-icon bg-blue-100 dark:bg-slate-700 text-blue-600 dark:text-cyan-400"><i data-lucide="eye" class="w-4 h-4"></i></span><span><span class="mm-title block">Visi & Misi</span><span class="mm-desc block">Tujuan laboratorium</span></span></a>
+                        <a href="profil.html#struktur"><span class="mm-icon bg-amber-100 dark:bg-slate-700 text-amber-600"><i data-lucide="users" class="w-4 h-4"></i></span><span><span class="mm-title block">Struktur Organisasi</span><span class="mm-desc block">Pengurus & pegawai</span></span></a>
+                        <a href="profil.html#maps"><span class="mm-icon bg-emerald-100 dark:bg-slate-700 text-emerald-600"><i data-lucide="map" class="w-4 h-4"></i></span><span><span class="mm-title block">Maps Lab</span><span class="mm-desc block">Lokasi laboratorium</span></span></a>
+                        <a href="http://p2mal.uma.ac.id" target="_blank"><span class="mm-icon bg-purple-100 dark:bg-slate-700 text-purple-600"><i data-lucide="external-link" class="w-4 h-4"></i></span><span><span class="mm-title block">P2MAL</span><span class="mm-desc block">Pusat penelitian</span></span></a>
+                    </div></div>
+                </div>
+                <div class="nav-item relative">
+                    <button class="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary-700 dark:hover:text-cyan-400 transition rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 inline-flex items-center gap-1">Fasilitas <i data-lucide="chevron-down" class="w-4 h-4"></i></button>
+                    <div class="mega-menu" style="left:auto;right:0;transform:none;"><div class="grid grid-cols-1 gap-1 min-w-[280px]">
+                        <a href="fasilitas.html"><span class="mm-icon bg-cyan-100 dark:bg-slate-700 text-cyan-600"><i data-lucide="microscope" class="w-4 h-4"></i></span><span><span class="mm-title block">Daftar Laboratorium</span><span class="mm-desc block">Seluruh lab di UMA</span></span></a>
+                        <a href="https://umaiso17025.uma.ac.id/" target="_blank"><span class="mm-icon bg-sky-100 dark:bg-slate-700 text-sky-600"><i data-lucide="badge-check" class="w-4 h-4"></i></span><span><span class="mm-title block">Lab Pengujian ISO 17025</span><span class="mm-desc block">Akreditasi pengujian</span></span></a>
+                    </div></div>
+                </div>
+                <div class="nav-item relative">
+                    <button class="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary-700 dark:hover:text-cyan-400 transition rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 inline-flex items-center gap-1">Layanan <i data-lucide="chevron-down" class="w-4 h-4"></i></button>
+                    <div class="mega-menu" style="left:auto;right:0;transform:none;"><div class="grid grid-cols-1 gap-1 min-w-[280px]">
+                        <a href="layanan.html#jadwal"><span class="mm-icon bg-indigo-100 dark:bg-slate-700 text-indigo-600"><i data-lucide="calendar" class="w-4 h-4"></i></span><span><span class="mm-title block">Jadwal Praktikum</span><span class="mm-desc block">Per fakultas & prodi</span></span></a>
+                        <a href="layanan.html#matkul"><span class="mm-icon bg-emerald-100 dark:bg-slate-700 text-emerald-600"><i data-lucide="book-open" class="w-4 h-4"></i></span><span><span class="mm-title block">Matakuliah Praktikum</span><span class="mm-desc block">Daftar mata kuliah</span></span></a>
+                        <a href="layanan.html#pengelola"><span class="mm-icon bg-rose-100 dark:bg-slate-700 text-rose-600"><i data-lucide="user-cog" class="w-4 h-4"></i></span><span><span class="mm-title block">Pengelola Lab & Prakt</span><span class="mm-desc block">Pelaksana lab</span></span></a>
+                        <a href="unduhan.html"><span class="mm-icon bg-amber-100 dark:bg-slate-700 text-amber-600"><i data-lucide="download" class="w-4 h-4"></i></span><span><span class="mm-title block">Unduhan</span><span class="mm-desc block">Dokumen & sertifikat</span></span></a>
+                    </div></div>
+                </div>
+                <div class="nav-item relative">
+                    <button class="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary-700 dark:hover:text-cyan-400 transition rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 inline-flex items-center gap-1">Penelitian <i data-lucide="chevron-down" class="w-4 h-4"></i></button>
+                    <div class="mega-menu" style="left:auto;right:0;transform:none;"><div class="grid grid-cols-1 gap-1 min-w-[280px]">
+                        <a href="penelitian.html#fisiologi"><span class="mm-icon bg-green-100 dark:bg-slate-700 text-green-600"><i data-lucide="leaf" class="w-4 h-4"></i></span><span><span class="mm-title block">Lab Fisiologi Tumbuhan</span><span class="mm-desc block">Studi fungsi tumbuhan</span></span></a>
+                        <a href="penelitian.html#proteksi"><span class="mm-icon bg-orange-100 dark:bg-slate-700 text-orange-600"><i data-lucide="shield" class="w-4 h-4"></i></span><span><span class="mm-title block">Lab Proteksi Tanaman</span><span class="mm-desc block">Perlindungan tanaman</span></span></a>
+                        <a href="penelitian.html#lahan"><span class="mm-icon bg-teal-100 dark:bg-slate-700 text-teal-600"><i data-lucide="trees" class="w-4 h-4"></i></span><span><span class="mm-title block">Lahan Percobaan</span><span class="mm-desc block">Area percobaan UMA</span></span></a>
+                        <a href="penelitian.html#rumahkasa"><span class="mm-icon bg-lime-100 dark:bg-slate-700 text-lime-700"><i data-lucide="home" class="w-4 h-4"></i></span><span><span class="mm-title block">Rumah Kasa</span><span class="mm-desc block">Media tanam terlindung</span></span></a>
+                    </div></div>
+                </div>
+                <a href="galeri.html" class="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary-700 dark:hover:text-cyan-400 transition rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">Galeri</a>
+                <a href="berita.html" class="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary-700 dark:hover:text-cyan-400 transition rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">Berita</a>
+                <a href="kontak.html" class="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary-700 dark:hover:text-cyan-400 transition rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">Kontak</a>
+                <a href="https://laboratorium.uma.ac.id/login" class="ml-2 inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg bg-primary-700 text-white hover:bg-primary-800 transition shadow-sm"><i data-lucide="log-in" class="w-4 h-4"></i> Login</a>
+            </div>
+            <button class="mobile-hamburger lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition" aria-label="Menu"><i data-lucide="menu" class="w-6 h-6"></i></button>
+        </nav>
+    </header>
+
+    <!-- MOBILE DRAWER -->
+    <div class="nav-backdrop"></div>
+    <nav class="mobile-nav" aria-label="Navigasi utama">
+        <div class="mn-header">
+            <div class="flex items-center gap-2"><img src="https://susitao.uma.ac.id/assets/img/logo-main.webp" alt="Logo UMA" class="w-9 h-9 rounded-lg object-contain bg-white p-1"><div class="leading-tight"><p class="font-bold text-sm">LABORATORIUM</p><p class="text-[9px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Universitas Medan Area</p></div></div>
+            <button class="mn-close w-9 h-9 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center" aria-label="Tutup"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+        <div class="flex-1 overflow-y-auto p-2">
+            <a href="index.html" class="flex items-center gap-2 px-3 py-2.5 rounded-lg font-semibold text-sm hover:bg-cyan-50 dark:hover:bg-slate-800"><i data-lucide="home" class="w-4 h-4 text-cyan-600"></i> Beranda</a>
+            <div class="mn-group"><button class="mn-trigger"><span class="inline-flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-blue-600"></i> Profil</span><i data-lucide="chevron-down" class="w-4 h-4 chev"></i></button><div class="mn-body"><a href="profil.html">Visi & Misi</a><a href="profil.html#struktur">Struktur Organisasi</a><a href="profil.html#maps">Maps Lab</a><a href="http://p2mal.uma.ac.id" target="_blank">P2MAL</a></div></div>
+            <div class="mn-group"><button class="mn-trigger"><span class="inline-flex items-center gap-2"><i data-lucide="microscope" class="w-4 h-4 text-cyan-600"></i> Fasilitas</span><i data-lucide="chevron-down" class="w-4 h-4 chev"></i></button><div class="mn-body"><a href="fasilitas.html">Daftar Laboratorium</a><a href="https://umaiso17025.uma.ac.id/" target="_blank">Lab Pengujian ISO</a></div></div>
+            <div class="mn-group"><button class="mn-trigger"><span class="inline-flex items-center gap-2"><i data-lucide="calendar" class="w-4 h-4 text-indigo-600"></i> Layanan</span><i data-lucide="chevron-down" class="w-4 h-4 chev"></i></button><div class="mn-body"><a href="layanan.html#jadwal">Jadwal Praktikum</a><a href="layanan.html#matkul">Matakuliah Praktikum</a><a href="layanan.html#pengelola">Pengelola Lab & Prakt</a><a href="unduhan.html">Unduhan</a></div></div>
+            <div class="mn-group"><button class="mn-trigger"><span class="inline-flex items-center gap-2"><i data-lucide="flask-conical" class="w-4 h-4 text-emerald-600"></i> Penelitian</span><i data-lucide="chevron-down" class="w-4 h-4 chev"></i></button><div class="mn-body"><a href="penelitian.html#fisiologi">Lab Fisiologi Tumbuhan</a><a href="penelitian.html#proteksi">Lab Proteksi Tanaman</a><a href="penelitian.html#lahan">Lahan Percobaan</a><a href="penelitian.html#rumahkasa">Rumah Kasa</a></div></div>
+            <a href="galeri.html" class="flex items-center gap-2 px-3 py-2.5 rounded-lg font-semibold text-sm hover:bg-cyan-50 dark:hover:bg-slate-800"><i data-lucide="image" class="w-4 h-4 text-purple-600"></i> Galeri</a>
+            <a href="berita.html" class="flex items-center gap-2 px-3 py-2.5 rounded-lg font-semibold text-sm hover:bg-cyan-50 dark:hover:bg-slate-800"><i data-lucide="newspaper" class="w-4 h-4 text-rose-600"></i> Berita</a>
+            <a href="kontak.html" class="flex items-center gap-2 px-3 py-2.5 rounded-lg font-semibold text-sm hover:bg-cyan-50 dark:hover:bg-slate-800"><i data-lucide="phone" class="w-4 h-4 text-amber-600"></i> Kontak</a>
+            <a href="https://laboratorium.uma.ac.id/login" class="mt-3 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary-700 text-white font-semibold text-sm"><i data-lucide="log-in" class="w-4 h-4"></i> Login</a>
+        </div>
+    </nav>
+
+        <!-- PAGE HEADER -->
+    <section class="bg-gradient-to-r from-primary-700 to-blue-600 text-white">
+        <div class="max-w-7xl mx-auto px-4 py-16">
+            <nav class="text-xs text-blue-200 mb-3"><a href="index.html" class="hover:text-white">Beranda</a> / <span class="text-white">Unduhan</span></nav>
+            <h1 class="font-display text-3xl md:text-4xl font-extrabold">Unduhan Dokumen</h1>
+            <p class="mt-2 text-blue-100">Dokumen laboratorium, pedoman, dan sertifikat asisten</p>
+        </div>
+    </section>
+
+    <!-- DOKUMEN -->
+    <section class="max-w-7xl mx-auto px-4 py-16">
+        <div class="flex items-center gap-3 mb-8"><div class="w-11 h-11 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center text-amber-600"><i data-lucide="folder" class="w-5 h-5"></i></div><div><h2 class="font-display text-2xl font-bold text-slate-900 dark:text-white">Dokumen & Pedoman</h2><p class="text-sm text-slate-500">Panduan dan format dokumen yang dapat diunduh</p></div></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <a href="https://s.uma.ac.id/K8G7C" target="_blank" class="group flex items-center gap-4 p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-lg transition">
+                <div class="w-12 h-12 rounded-xl bg-red-100 dark:bg-red-900/40 flex items-center justify-center text-red-600 shrink-0"><i data-lucide="file-text" class="w-6 h-6"></i></div>
+                <div class="flex-1"><p class="font-semibold text-slate-800 dark:text-white">Dokumen Laboratorium</p><p class="text-sm text-slate-500">Kumpulan dokumen resmi lab UMA</p></div>
+                <i data-lucide="download" class="w-5 h-5 text-slate-300 group-hover:text-cyan-500 transition shrink-0"></i>
+            </a>
+            <a href="https://script.google.com/a/macros/uma.ac.id/s/AKfycbwU9lJegxLxSHWxaBithwWIibNU_DZOl0jO3luTCcBpodRZT7u2Sw-rGpiUdJNojKPgUg/exec" target="_blank" class="group flex items-center gap-4 p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-lg transition">
+                <div class="w-12 h-12 rounded-xl bg-cyan-100 dark:bg-cyan-900/40 flex items-center justify-center text-cyan-600 shrink-0"><i data-lucide="award" class="w-6 h-6"></i></div>
+                <div class="flex-1"><p class="font-semibold text-slate-800 dark:text-white">Sertifikat Asisten Lab</p><p class="text-sm text-slate-500">Unduh sertifikat asisten laboratorium</p></div>
+                <i data-lucide="download" class="w-5 h-5 text-slate-300 group-hover:text-cyan-500 transition shrink-0"></i>
+            </a>
+            <div class="group flex items-center gap-4 p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-lg transition cursor-default">
+                <div class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 shrink-0"><i data-lucide="file-text" class="w-6 h-6"></i></div>
+                <div class="flex-1"><p class="font-semibold text-slate-800 dark:text-white">Formulir Pendaftaran</p><p class="text-sm text-slate-500">Formulir pendaftaran penelitian / peminjaman</p></div>
+                <span class="text-xs font-semibold text-slate-400">Segera</span>
+            </div>
+            <div class="group flex items-center gap-4 p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-lg transition cursor-default">
+                <div class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 shrink-0"><i data-lucide="file-text" class="w-6 h-6"></i></div>
+                <div class="flex-1"><p class="font-semibold text-slate-800 dark:text-white">Panduan Alur Pendaftaran</p><p class="text-sm text-slate-500">Alur pengajuan penelitian ke laboratorium</p></div>
+                <span class="text-xs font-semibold text-slate-400">Segera</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 dark:bg-slate-950 text-slate-300 mt-4">
+        <div class="max-w-7xl mx-auto px-4 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+            <div><div class="flex items-center gap-2"><img src="https://susitao.uma.ac.id/assets/img/logo-main.webp" alt="Logo UMA" class="w-10 h-10 rounded-lg object-contain bg-white p-1"><div class="leading-tight"><p class="font-display font-bold text-lg text-white">LABORATORIUM</p><p class="text-[10px] tracking-widest uppercase text-slate-400">Universitas Medan Area</p></div></div><p class="mt-4 text-sm text-slate-400 leading-relaxed">Pusat kegiatan praktikum, penelitian, dan pengabdian masyarakat yang terstandarisasi di lingkungan Universitas Medan Area.</p><div class="mt-6 flex gap-3"><a href="https://twitter.com/kampus_uma" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-cyan-600 flex items-center justify-center transition"><i data-lucide="twitter" class="w-4 h-4"></i></a><a href="https://www.facebook.com/kampusuma" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-cyan-600 flex items-center justify-center transition"><i data-lucide="facebook" class="w-4 h-4"></i></a><a href="https://www.instagram.com/umabestari" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-cyan-600 flex items-center justify-center transition"><i data-lucide="instagram" class="w-4 h-4"></i></a><a href="https://www.youtube.com/channel/UCrA3vXipMHrtt780hSfIThw" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-cyan-600 flex items-center justify-center transition"><i data-lucide="youtube" class="w-4 h-4"></i></a></div></div>
+            <div><h4 class="font-semibold text-white text-sm uppercase tracking-wider mb-4">Tautan Cepat</h4><ul class="space-y-2 text-sm"><li><a href="profil.html" class="hover:text-cyan-400 transition">Profil Laboratorium</a></li><li><a href="layanan.html#jadwal" class="hover:text-cyan-400 transition">Jadwal Praktikum</a></li><li><a href="layanan.html#matkul" class="hover:text-cyan-400 transition">Matakuliah Praktikum</a></li><li><a href="fasilitas.html" class="hover:text-cyan-400 transition">Laboratorium</a></li><li><a href="https://umaiso17025.uma.ac.id/" target="_blank" class="hover:text-cyan-400 transition">Lab Pengujian ISO</a></li><li><a href="http://p2mal.uma.ac.id" class="hover:text-cyan-400 transition">P2MAL</a></li></ul></div>
+            <div><h4 class="font-semibold text-white text-sm uppercase tracking-wider mb-4">Unduhan</h4><ul class="space-y-2 text-sm"><li><a href="unduhan.html" class="hover:text-cyan-400 transition">Dokumen Lab</a></li><li><a href="unduhan.html" class="hover:text-cyan-400 transition">Sertifikat Asisten Lab</a></li><li><a href="berita.html" class="hover:text-cyan-400 transition">Berita Terbaru</a></li><li><a href="kontak.html" class="hover:text-cyan-400 transition">Hubungi Kami</a></li></ul></div>
+            <div><h4 class="font-semibold text-white text-sm uppercase tracking-wider mb-4">Kontak</h4><ul class="space-y-3 text-sm"><li class="flex gap-3"><i data-lucide="map-pin" class="w-5 h-5 text-cyan-400 shrink-0"></i> Jalan Kolam Nomor 1 Medan Estate / Jalan Gedung PBSI, Medan 20223</li><li class="flex gap-3"><i data-lucide="phone" class="w-5 h-5 text-cyan-400 shrink-0"></i> (061) 7360168, 7366878, 7364348</li><li class="flex gap-3"><i data-lucide="smartphone" class="w-5 h-5 text-cyan-400 shrink-0"></i> 0822-6777-1313, 0813-7095-7775</li></ul></div>
+        </div>
+        <div class="border-t border-slate-800 py-6 text-center text-xs text-slate-500"><p>© 2026 Laboratorium Universitas Medan Area · <span class="text-cyan-400">Demo Prototype</span> · Dibuat untuk tujuan demonstrasi</p></div>
+    </footer>
+
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/nav.js"></script>
+</body>
+</html>
