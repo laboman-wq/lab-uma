@@ -79,42 +79,58 @@
         <div class="max-w-7xl mx-auto px-4 py-16">
             <nav class="text-xs text-blue-200 mb-3"><a href="index.html" class="hover:text-white">Beranda</a> / <span class="text-white">Galeri</span></nav>
             <h1 class="font-display text-3xl md:text-4xl font-extrabold">Galeri Laboratorium</h1>
-            <p class="mt-2 text-blue-100">Dokumentasi kegiatan praktikum dan penelitian di seluruh fakultas</p>
+            <p class="mt-2 text-blue-100">Dokumentasi kegiatan praktikum dan penelitian</p>
         </div>
     </section>
 
-    <!-- FILTER -->
-    <section class="max-w-7xl mx-auto px-4 py-10">
-        <div class="flex flex-wrap gap-2" id="filterTabs">
-            <button data-filter="all" class="filter-btn px-4 py-2 rounded-full bg-primary-700 text-white text-sm font-semibold">Semua</button>
-            <button data-filter="teknik" class="filter-btn px-4 py-2 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-semibold hover:bg-slate-300 transition">Teknik</button>
-            <button data-filter="pertanian" class="filter-btn px-4 py-2 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-semibold hover:bg-slate-300 transition">Pertanian</button>
-            <button data-filter="psikologi" class="filter-btn px-4 py-2 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-semibold hover:bg-slate-300 transition">Psikologi</button>
-            <button data-filter="saintek" class="filter-btn px-4 py-2 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-semibold hover:bg-slate-300 transition">Saintek</button>
-            <button data-filter="umum" class="filter-btn px-4 py-2 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-semibold hover:bg-slate-300 transition">Kegiatan Umum</button>
+    <!-- GALERI (dinamis dari dashboard) -->
+    <section class="max-w-7xl mx-auto px-4 py-14">
+        <div class="flex flex-wrap gap-2 mb-8" id="g-filter">
+            <button data-cat="all" class="gfilter-btn px-4 py-2 rounded-full bg-primary-700 text-white text-sm font-semibold">Semua</button>
         </div>
-
-        <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3" id="galleryGrid">
-            <div class="gallery-item" data-cat="umum"><div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6878142371714375724.jpg" alt="Galeri" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Praktikum Umum</span></div></div></div>
-            <div class="gallery-item" data-cat="umum"><div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/11989206401714745234.jpg" alt="Galeri" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Kegiatan Lab</span></div></div></div>
-            <div class="gallery-item" data-cat="umum"><div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6787828731762504523.jpeg" alt="Galeri" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Kegiatan Lab</span></div></div></div>
-            <div class="gallery-item" data-cat="pertanian"><div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6506652741715048206.jpeg" alt="Galeri" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Pertanian</span></div></div></div>
-            <div class="gallery-item" data-cat="pertanian"><div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/4433280541714615501.JPG" alt="Galeri" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Lahan Percobaan</span></div></div></div>
-            <div class="gallery-item" data-cat="teknik"><div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/7921851651715139853.jpeg" alt="Galeri" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Prodi Sipil</span></div></div></div>
-            <div class="gallery-item" data-cat="teknik"><div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/20325948681714615643.jpg" alt="Galeri" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Prodi Elektro</span></div></div></div>
-            <div class="gallery-item" data-cat="teknik"><div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/10114180091714702521.JPG" alt="Galeri" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Prodi Mesin</span></div></div></div>
-            <div class="gallery-item" data-cat="teknik"><div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/19483733241715048931.jpeg" alt="Galeri" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Prodi Arsitektur</span></div></div></div>
-            <div class="gallery-item" data-cat="teknik"><div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6402071771714744786.jpg" alt="Galeri" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Prodi Industri</span></div></div></div>
-            <div class="gallery-item" data-cat="teknik"><div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/8682340401717386694.jpg" alt="Galeri" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Prodi Informatika</span></div></div></div>
-            <div class="gallery-item" data-cat="umum"><div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/5221120081715053390.jpg" alt="Galeri" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Kegiatan Lab</span></div></div></div>
-            <div class="gallery-item" data-cat="umum"><div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/19233998261714620755.JPG" alt="Galeri" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Kegiatan Lab</span></div></div></div>
-            <div class="gallery-item" data-cat="psikologi"><div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/5782036091714616846.jpg" alt="Galeri" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Lab Psikologi</span></div></div></div>
-            <div class="gallery-item" data-cat="saintek"><div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/20658843121714794465.jpeg" alt="Galeri" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Lab Biologi</span></div></div></div>
-            <div class="gallery-item" data-cat="saintek"><div class="relative group overflow-hidden rounded-xl aspect-square"><img src="https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/20117448001714705970.jpeg" alt="Galeri" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"><div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3"><span class="text-white text-sm font-medium">Lab Biologi</span></div></div></div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="g-grid">
+            <div class="col-span-full text-center py-16 text-slate-400">Memuat galeri...</div>
         </div>
+        <p class="mt-8 text-center text-sm text-slate-400">Kelola foto dari Dashboard (Admin) â†’ <b>Galeri / Banner</b>.</p>
     </section>
 
-    <!-- FOOTER -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var grid = document.getElementById('g-grid');
+            var filterBox = document.getElementById('g-filter');
+            var cur = 'all';
+            function render(gallery) {
+                var list = cur === 'all' ? gallery : gallery.filter(function (g) { return g.kategori === cur; });
+                if (!list.length) { grid.innerHTML = '<div class="col-span-full text-center py-16 text-slate-400">Belum ada foto untuk kategori ini.</div>'; return; }
+                grid.innerHTML = list.map(function (g, i) {
+                    var ic = ['microscope', 'sprout', 'flask-conical', 'shield', 'trees', 'home', 'brain', 'dna', 'building-2', 'server', 'cog', 'book-open'][i % 12];
+                    return '<figure class="relative group overflow-hidden rounded-xl aspect-square">' +
+                        '<img src="' + Site.esc(g.gambar) + '" alt="' + Site.esc(g.judul) + '" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">' +
+                        '<figcaption class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-3">' +
+                        '<span class="text-white text-sm font-medium flex items-center gap-1.5"><i data-lucide="' + ic + '" class="w-3.5 h-3.5"></i>' + Site.esc(g.judul) + '</span>' +
+                        '<span class="text-xs text-cyan-300">' + Site.esc(g.kategori) + '</span></figcaption></figure>';
+                }).join('');
+                if (window.lucide) lucide.createIcons();
+            }
+            Site.fetchSite().then(function (d) {
+                var gallery = d && d.ok ? d.gallery : [];
+                var cats = ['all'].concat(gallery.map(function (g) { return g.kategori; }).filter(function (v, i, a) { return a.indexOf(v) === i; }));
+                filterBox.innerHTML = cats.map(function (c) {
+                    return '<button data-cat="' + Site.esc(c) + '" class="gfilter-btn px-4 py-2 rounded-full ' + (c === 'all' ? 'bg-primary-700 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200') + ' text-sm font-semibold hover:bg-slate-300 transition">' + (c === 'all' ? 'Semua' : Site.esc(c)) + '</button>';
+                }).join('');
+                filterBox.querySelectorAll('.gfilter-btn').forEach(function (b) {
+                    b.addEventListener('click', function () {
+                        cur = b.dataset.cat;
+                        filterBox.querySelectorAll('.gfilter-btn').forEach(function (x) { x.className = 'gfilter-btn px-4 py-2 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-semibold hover:bg-slate-300 transition'; });
+                        b.className = 'gfilter-btn px-4 py-2 rounded-full bg-primary-700 text-white text-sm font-semibold';
+                        render(gallery);
+                    });
+                });
+                render(gallery);
+                if (window.lucide) lucide.createIcons();
+            }).catch(function () { grid.innerHTML = '<div class="col-span-full text-center py-16 text-slate-400">Gagal memuat galeri.</div>'; });
+        });
+    </script><!-- FOOTER -->
     <footer class="bg-slate-900 dark:bg-slate-950 text-slate-300 mt-4">
         <div class="max-w-7xl mx-auto px-4 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
             <div><div class="flex items-center gap-2"><img src="https://susitao.uma.ac.id/assets/img/logo-main.webp" alt="Logo UMA" class="w-10 h-10 rounded-lg object-contain bg-white p-1"><div class="leading-tight"><p class="font-display font-bold text-lg text-white">LABORATORIUM</p><p class="text-[10px] tracking-widest uppercase text-slate-400">Universitas Medan Area</p></div></div><p class="mt-4 text-sm text-slate-400 leading-relaxed">Pusat kegiatan praktikum, penelitian, dan pengabdian masyarakat yang terstandarisasi di lingkungan Universitas Medan Area.</p><div class="mt-6 flex gap-3"><a href="https://twitter.com/kampus_uma" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-cyan-600 flex items-center justify-center transition"><i data-lucide="twitter" class="w-4 h-4"></i></a><a href="https://www.facebook.com/kampusuma" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-cyan-600 flex items-center justify-center transition"><i data-lucide="facebook" class="w-4 h-4"></i></a><a href="https://www.instagram.com/umabestari" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-cyan-600 flex items-center justify-center transition"><i data-lucide="instagram" class="w-4 h-4"></i></a><a href="https://www.youtube.com/channel/UCrA3vXipMHrtt780hSfIThw" target="_blank" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-cyan-600 flex items-center justify-center transition"><i data-lucide="youtube" class="w-4 h-4"></i></a></div></div>

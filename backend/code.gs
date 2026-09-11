@@ -32,6 +32,7 @@ var SHEETS = {
   pages:           ['id','slug','judul','kategori','isi','published','tanggal'],
   posts:           ['id','judul','kategori','ringkasan','isi','gambar','tanggal','penulis','status','by_kepala','by_admin'],
   sliders:         ['id','judul','deskripsi','gambar','link','urutan','published'],
+  gallery:         ['id','judul','kategori','gambar','urutan','published'],
   settings:        ['key','value']
 };
 
@@ -298,6 +299,8 @@ function doSite() {
   sliders.sort(function (a, b) { return (parseInt(a.urutan, 10) || 0) - (parseInt(b.urutan, 10) || 0); });
   var certs = readTable('certificates').filter(function (c) { return c.published === '1' && c.status === 'Disetujui'; });
   var labs = readTable('labs');
+  var gallery = readTable('gallery').filter(function (g) { return g.published === '1'; });
+  gallery.sort(function (a, b) { return (parseInt(a.urutan, 10) || 0) - (parseInt(b.urutan, 10) || 0); });
   return {
     ok: true,
     menus: buildMenuTree(menus),
@@ -305,6 +308,7 @@ function doSite() {
     sliders: sliders,
     certs: certs,
     labs: labs,
+    gallery: gallery,
     settings: { semester: getSetting('semester') }
   };
 }
@@ -434,6 +438,77 @@ function upgradeDB() {
       ['2', 'Fasilitas Laboratorium Modern', 'Berbagai laboratorium di seluruh fakultas siap mendukung kegiatan akademik Anda.', 'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6787828731762504523.jpeg', 'fasilitas.html', '2', '1']
     ].forEach(function (r) { slSh.appendRow(r); });
   }
+
+  // Seed gallery (halaman Galeri)
+  if (!hasRows('gallery')) {
+    var gSh = book.getSheetByName('gallery');
+    [
+      ['1', 'Praktikum Lahan Percobaan', 'Kegiatan', 'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6878142371714375724.jpg', '1', '1'],
+      ['2', 'Praktikum Lab Biologi', 'Kegiatan', 'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/11989206401714745234.jpg', '2', '1'],
+      ['3', 'Fisiologi Tumbuhan', 'Pertanian', 'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6506652741715048206.jpeg', '3', '1'],
+      ['4', 'Proteksi Tanaman', 'Pertanian', 'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/4433280541714615501.JPG', '4', '1'],
+      ['5', 'Praktikum Prodi Sipil', 'Teknik', 'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/7921851651715139853.jpeg', '5', '1'],
+      ['6', 'Praktikum Prodi Elektro', 'Teknik', 'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/20325948681714615643.jpg', '6', '1'],
+      ['7', 'Praktikum Prodi Mesin', 'Teknik', 'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/10114180091714702521.JPG', '7', '1'],
+      ['8', 'Praktikum Arsitektur', 'Teknik', 'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/19483733241715048931.jpeg', '8', '1'],
+      ['9', 'Praktikum Psikologi', 'Psikologi', 'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/5782036091714616846.jpg', '9', '1'],
+      ['10', 'Praktikum Biologi', 'Saintek', 'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/20658843121714794465.jpeg', '10', '1'],
+      ['11', 'Penelitian Mahasiswa', 'Penelitian', 'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/5221120081715053390.jpg', '11', '1'],
+      ['12', 'Orientasi Laboratorium', 'Umum', 'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/20117448001714705970.jpeg', '12', '1']
+    ].forEach(function (r) { gSh.appendRow(r); });
+  }
+
+  // Pastikan halaman statis utama punya konten (jika belum ada)
+  function ensurePage(id, slug, judul, kategori, blocksArr, published) {
+    var pages = readTable('pages');
+    var exists = pages.some(function (p) { return p.slug === slug; });
+    if (!exists) {
+      book.getSheetByName('pages').appendRow([String(id), slug, judul, kategori, JSON.stringify(blocksArr), published, '2026-09-01']);
+    }
+  }
+  ensurePage('50', 'profil', 'Profil Laboratorium', 'Profil', [
+    { t: 'p', v: 'Laboratorium Universitas Medan Area merupakan unit penunjang akademik yang menyelenggarakan praktikum, penelitian, dan pengabdian masyarakat secara terstandarisasi di lingkungan kampus Medan Estate dan Gedung PBSI.' },
+    { t: 'img', v: 'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6878142371714375724.jpg' },
+    { t: 'h', v: 'Visi' },
+    { t: 'p', v: 'Menjadi pusat laboratorium pendidikan, penelitian, dan pengujian yang unggul, terstandarisasi, serta mendukung pengembangan ilmu pengetahuan dan pelayanan kepada masyarakat.' },
+    { t: 'h', v: 'Misi' },
+    { t: 'list', v: ['Menyelenggarakan praktikum yang terstruktur untuk seluruh program studi.', 'Mendukung kegiatan penelitian dosen dan mahasiswa.', 'Menyediakan layanan pengujian terstandarisasi (ISO 17025).', 'Meningkatkan kompetensi asisten laboratorium.', 'Memberikan pelayanan laboratorium bagi masyarakat.'] },
+    { t: 'h', v: 'Struktur Organisasi' },
+    { t: 'list', v: ['Kepala Laboratorium — pengendali operasional laboratorium.', 'Koordinator Praktikum — penjadwalan dan pelaksanaan praktikum.', 'Teknisi & Staf — perawatan alat dan administrasi.'] },
+    { t: 'h', v: 'Lokasi' },
+    { t: 'p', v: 'Jalan Kolam Nomor 1 Medan Estate / Jalan Gedung PBSI, Medan 20223.' }
+  ], '1');
+  ensurePage('51', 'layanan', 'Layanan Informasi', 'Layanan', [
+    { t: 'p', v: 'Berbagai layanan informasi laboratorium tersedia untuk mendukung kegiatan akademik dan penelitian seluruh civitas akademika UMA.' },
+    { t: 'h', v: 'Jadwal Praktikum' },
+    { t: 'p', v: 'Jadwal praktikum disusun per fakultas dan program studi. Mahasiswa dapat mengonfirmasi jadwal kepada asisten laboratorium masing-masing.' },
+    { t: 'list', v: ['Fakultas Teknik — Sipil, Elektro, Mesin, Arsitektur, Industri, Informatika', 'Fakultas Pertanian — Agroteknologi, Agribisnis', 'Fakultas Saintek — Biologi', 'Fakultas Psikologi — Psikologi'] },
+    { t: 'h', v: 'Matakuliah Praktikum' },
+    { t: 'list', v: ['Praktikum Biologi Umum', 'Praktikum Fisiologi Tumbuhan', 'Praktikum Proteksi Tanaman', 'Praktikum Psikologi', 'Praktikum Teknik (Sipil/Elektro/Mesin)'] },
+    { t: 'h', v: 'Pengelola Lab' },
+    { t: 'p', v: 'Daftar pelaksana dan pengelola laboratorium dapat diakses melalui dashboard operator serta papan informasi di unit laboratorium.' }
+  ], '1');
+  ensurePage('52', 'penelitian', 'Bidang Penelitian', 'Penelitian', [
+    { t: 'p', v: 'Laboratorium UMA mendukung kegiatan penelitian dosen dan mahasiswa pada berbagai bidang keilmuan.' },
+    { t: 'h', v: 'Laboratorium Fisiologi Tumbuhan' },
+    { t: 'p', v: 'Mempelajari fungsi dan proses kehidupan tumbuhan: fotosintesis, respirasi, transpirasi, kultur jaringan, dan analisis nutrisi.' },
+    { t: 'h', v: 'Laboratorium Proteksi Tanaman' },
+    { t: 'p', v: 'Fokus pada perlindungan tanaman dari hama, penyakit, dan gulma; mendukung entomologi, fitopatologi, dan pengendalian hayati.' },
+    { t: 'h', v: 'Lahan Percobaan UMA' },
+    { t: 'p', v: 'Lahan terbuka untuk percobaan lapangan agroteknologi, budidaya tanaman, dan riset ekologi dengan petak percobaan terstruktur.' },
+    { t: 'h', v: 'Rumah Kasa' },
+    { t: 'p', v: 'Media tanam terlindung untuk riset terkontrol: pembibitan, uji media tanam, dan perkecambahan.' }
+  ], '1');
+  ensurePage('53', 'kontak', 'Hubungi Kami', 'Kontak', [
+    { t: 'h', v: 'Alamat' },
+    { t: 'p', v: 'Jalan Kolam Nomor 1 Medan Estate / Jalan Gedung PBSI, Medan 20223.' },
+    { t: 'h', v: 'Telepon' },
+    { t: 'p', v: '(061) 7360168, 7366878, 7364348 — Call Center 0822-6777-1313, 0822-6777-1314, 0813-7095-7775.' },
+    { t: 'h', v: 'Email' },
+    { t: 'p', v: 'lab@uma.ac.id' },
+    { t: 'h', v: 'Jam Layanan' },
+    { t: 'p', v: 'Senin - Jumat, pukul 08.00 - 16.00 WIB.' }
+  ], '1');
 
   // Pastikan kolom published tersedia di certificates (jika header lama)
   var certSh = book.getSheetByName('certificates');

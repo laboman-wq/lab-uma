@@ -431,7 +431,7 @@ function vAdminPages() {
                 <h1 class="font-display text-2xl font-extrabold text-slate-900 dark:text-white">Halaman Dinamis</h1>
                 <button onclick="location.href='halaman.html'" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-700 text-white text-sm font-semibold hover:bg-primary-800"><i data-lucide="plus" class="w-4 h-4"></i> Halaman Baru</button>
             </div>
-            <p class="text-sm text-slate-500 mb-4">Halaman dibuat di sini lalu ditautkan lewat Menu Builder (tipe <b>page</b> dengan slug).</p>
+            <p class="text-sm text-slate-500 mb-4">Halaman dibuat di sini lalu ditautkan lewat Menu Builder (tipe <b>page</b> dengan slug). Halaman utama (<b>Profil, Layanan, Penelitian, Kontak, Fasilitas</b>) juga diedit dari sini.</p>
             <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-x-auto">
             <table class="w-full text-sm"><thead><tr class="text-left text-xs uppercase tracking-wider text-slate-400 bg-slate-50 dark:bg-slate-900">
                 <th class="py-3 px-3">Judul</th><th class="py-3 px-3">Slug</th><th class="py-3 px-3">Kategori</th><th class="py-3 px-3">Tanggal</th><th class="py-3 px-3">Status</th><th class="py-3 px-3 text-right">Aksi</th></tr></thead><tbody>
@@ -583,13 +583,102 @@ async function toggleCertPublish(id, val) {
     catch (e) { toast(e.message, 'error'); }
 }
 
+/* ================= GALERI FOTO (Admin) ================= */
+function vAdminGallery() {
+    const content = $('#content');
+    content.innerHTML = `<div class="p-6 text-center py-10 text-slate-400">Memuat...</div>`;
+    getTable('gallery').then(list => {
+        window._galData = list;
+        const GALERI = [
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6878142371714375724.jpg',
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/11989206401714745234.jpg',
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6787828731762504523.jpeg',
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6506652741715048206.jpeg',
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/4433280541714615501.JPG',
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/7921851651715139853.jpeg',
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/20325948681714615643.jpg',
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/10114180091714702521.JPG',
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/5782036091714616846.jpg',
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/20658843121714794465.jpeg',
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/5221120081715053390.jpg',
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/20117448001714705970.jpeg'
+        ];
+        content.innerHTML = `
+        <div class="p-6">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                <h1 class="font-display text-2xl font-extrabold text-slate-900 dark:text-white">Galeri Foto</h1>
+                <button onclick="modalGallery()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-700 text-white text-sm font-semibold hover:bg-primary-800"><i data-lucide="plus" class="w-4 h-4"></i> Tambah Foto</button>
+            </div>
+            <p class="text-sm text-slate-500 mb-4">Foto tampil di halaman <b>Galeri</b> publik dengan filter kategori (Kegiatan, Pertanian, Teknik, Psikologi, Saintek, Penelitian, Umum).</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            ${list.map(g => `<div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-700 shadow-sm">
+                <img src="${esc(g.gambar || '')}" class="h-36 w-full object-cover" alt="">
+                <div class="p-3">
+                    <div class="flex items-center justify-between gap-2"><p class="text-sm font-semibold truncate">${esc(g.judul)}</p>${g.published === '1' ? badge('Aktif') : badge('Tidak Aktif')}</div>
+                    <p class="text-xs text-slate-400 mt-0.5">${esc(g.kategori)}</p>
+                    <div class="flex gap-2 mt-2">
+                        <button onclick='modalGalleryEdit(${JSON.stringify(g).replace(/'/g, '&#39;')})' class="px-2 py-1 rounded-lg bg-cyan-50 text-cyan-700 text-xs font-semibold">Edit</button>
+                        <button onclick="hapusGallery('${g.id}')" class="px-2 py-1 rounded-lg bg-red-50 text-red-600 text-xs font-semibold">Hapus</button>
+                    </div>
+                </div></div>`).join('') || '<div class="md:col-span-4 text-center py-10 text-slate-400">Belum ada foto.</div>'}
+            </div>
+        </div>`;
+        window._galUrls = GALERI;
+        initIconsNow();
+    }).catch(e => toast(e.message, 'error'));
+}
+
+function modalGallery(data = {}) {
+    const isEdit = !!data.id;
+    openModal(`
+        <form id="frm-gallery" class="p-6">
+            <div class="flex items-center justify-between mb-4"><h3 class="font-display text-lg font-bold">${isEdit ? 'Edit' : 'Tambah'} Foto</h3><button type="button" onclick="closeModal()" class="w-8 h-8 rounded-lg hover:bg-slate-100"><i data-lucide="x" class="w-5 h-5"></i></button></div>
+            <div class="space-y-4">
+                <div><label class="block text-sm font-medium mb-1">Judul Foto</label><input id="ga-judul" required value="${esc(data.judul || '')}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-sm font-medium mb-1">Kategori</label><select id="ga-kat" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">
+                        ${['Kegiatan', 'Pertanian', 'Teknik', 'Psikologi', 'Saintek', 'Penelitian', 'Umum'].map(k => `<option ${data.kategori === k ? 'selected' : ''}>${k}</option>`).join('')}</select></div>
+                    <div><label class="block text-sm font-medium mb-1">Urutan</label><input id="ga-urutan" type="number" min="1" value="${esc(data.urutan || 1)}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                </div>
+                <div><label class="block text-sm font-medium mb-1">URL Gambar</label><input id="ga-gambar" required value="${esc(data.gambar || '')}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Pilih cepat dari galeri:</label>
+                    <div class="grid grid-cols-6 gap-2">${(window._galUrls || []).map((u, i) => `<button type="button" onclick="pickGalImg('ga-gambar',${i})" class="rounded-lg overflow-hidden aspect-video border-2 border-transparent hover:border-cyan-500 transition"><img src="${esc(u)}" class="w-full h-full object-cover"></button>`).join('')}</div>
+                </div>
+                <div><label class="block text-sm font-medium mb-1">Aktif</label><select id="ga-aktif" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"><option value="1">Ya</option><option value="0" ${data.published === '0' ? 'selected' : ''}>Tidak</option></select></div>
+                <button class="w-full py-2.5 rounded-lg bg-primary-700 text-white font-semibold text-sm">${isEdit ? 'Simpan' : 'Tambah'}</button>
+            </div>
+        </form>`);
+    $('#frm-gallery').addEventListener('submit', async e => {
+        e.preventDefault();
+        const payload = { judul: $('#ga-judul').value, kategori: $('#ga-kat').value, gambar: $('#ga-gambar').value, urutan: $('#ga-urutan').value, published: $('#ga-aktif').value };
+        try {
+            if (isEdit) { await updateRow('gallery', data.id, payload); toast('Foto diperbarui'); }
+            else { await addRow('gallery', payload); toast('Foto ditambahkan'); }
+            closeModal(); vAdminGallery();
+        } catch (err) { toast(err.message, 'error'); }
+    });
+    if (window.lucide) lucide.createIcons();
+}
+function pickGalImg(inputId, i) {
+    const urls = window._galUrls || [];
+    if (urls[i]) { const el = document.getElementById(inputId); if (el) el.value = urls[i]; }
+}
+function modalGalleryEdit(d) { modalGallery(d); }
+async function hapusGallery(id) {
+    if (!confirm('Hapus foto ini?')) return;
+    try { await deleteRow('gallery', id); toast('Foto dihapus'); vAdminGallery(); }
+    catch (e) { toast(e.message, 'error'); }
+}
+
 window.boards.admin = {
     nav: [
         { id: 'dashboard', label: 'Dashboard', icon: 'layout-dashboard' },
         { id: 'menu', label: 'Menu Website', icon: 'menu' },
         { id: 'halaman', label: 'Halaman Dinamis', icon: 'file-text' },
         { id: 'postingan', label: 'Postingan & Berita', icon: 'newspaper' },
-        { id: 'slider', label: 'Slider / Banner', icon: 'image' },
+        { id: 'galeri', label: 'Galeri Foto', icon: 'image' },
+        { id: 'slider', label: 'Slider / Banner', icon: 'panels-top-left' },
         { id: 'users', label: 'Kelola Pengguna', icon: 'users' },
         { id: 'labs', label: 'Master Data Lab', icon: 'building-2' },
         { id: 'pengajuan', label: 'Proses Pembelian', icon: 'credit-card' },
@@ -603,6 +692,7 @@ window.boards.admin = {
         menu: vAdminMenus,
         halaman: vAdminPages,
         postingan: vAdminPosts,
+        galeri: vAdminGallery,
         slider: vAdminSliders,
         users: vAdminUsers,
         labs: vAdminLabs,

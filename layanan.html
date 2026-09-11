@@ -77,47 +77,34 @@
     <!-- PAGE HEADER -->
     <section class="bg-gradient-to-r from-primary-700 to-blue-600 text-white">
         <div class="max-w-7xl mx-auto px-4 py-16">
-            <nav class="text-xs text-blue-200 mb-3"><a href="index.html" class="hover:text-white">Beranda</a> / <span class="text-white">Layanan Informasi</span></nav>
-            <h1 class="font-display text-3xl md:text-4xl font-extrabold">Layanan Informasi</h1>
-            <p class="mt-2 text-blue-100">Jadwal praktikum, matakuliah, dan pengelola laboratorium UMA</p>
+            <nav class="text-xs text-blue-200 mb-3"><a href="index.html" class="hover:text-white">Beranda</a> / <span class="text-white">Layanan</span></nav>
+            <h1 class="font-display text-3xl md:text-4xl font-extrabold" id="page-judul">Layanan Informasi</h1>
+            <p class="mt-2 text-blue-100" id="page-sub"></p>
         </div>
     </section>
 
-    <!-- JADWAL -->
-    <section class="max-w-7xl mx-auto px-4 py-16" id="jadwal">
-        <div class="flex items-center gap-3 mb-8"><div class="w-11 h-11 rounded-xl bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-600"><i data-lucide="calendar" class="w-5 h-5"></i></div><div><h2 class="font-display text-2xl font-bold text-slate-900 dark:text-white">Jadwal Praktikum Per Fakultas</h2><p class="text-sm text-slate-500">Pilih fakultas untuk melihat jadwal praktikum</p></div></div>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <a href="galeri.html" class="bg-white dark:bg-slate-800 rounded-2xl p-6 text-center shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-lg transition group"><i data-lucide="cog" class="w-8 h-8 mx-auto text-sky-600 group-hover:scale-110 transition"></i><p class="mt-3 font-semibold text-sm text-slate-800 dark:text-white">Fakultas Teknik</p></a>
-            <a href="galeri.html" class="bg-white dark:bg-slate-800 rounded-2xl p-6 text-center shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-lg transition group"><i data-lucide="sprout" class="w-8 h-8 mx-auto text-emerald-600 group-hover:scale-110 transition"></i><p class="mt-3 font-semibold text-sm text-slate-800 dark:text-white">Fakultas Pertanian</p></a>
-            <a href="galeri.html" class="bg-white dark:bg-slate-800 rounded-2xl p-6 text-center shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-lg transition group"><i data-lucide="trending-up" class="w-8 h-8 mx-auto text-amber-600 group-hover:scale-110 transition"></i><p class="mt-3 font-semibold text-sm text-slate-800 dark:text-white">Ekonomi & Bisnis</p></a>
-            <a href="galeri.html" class="bg-white dark:bg-slate-800 rounded-2xl p-6 text-center shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-lg transition group"><i data-lucide="scale" class="w-8 h-8 mx-auto text-rose-600 group-hover:scale-110 transition"></i><p class="mt-3 font-semibold text-sm text-slate-800 dark:text-white">Fakultas Hukum</p></a>
+    <section class="max-w-7xl mx-auto px-4 py-16">
+        <div id="page-body" class="max-w-3xl mx-auto">
+            <div class="text-center py-12 text-slate-400">Memuat konten...</div>
         </div>
     </section>
 
-    <!-- MATKUL -->
-    <section class="bg-white dark:bg-slate-800 py-16 border-y border-slate-100 dark:border-slate-700" id="matkul">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex items-center gap-3 mb-8"><div class="w-11 h-11 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600"><i data-lucide="book-open" class="w-5 h-5"></i></div><div><h2 class="font-display text-2xl font-bold text-slate-900 dark:text-white">Matakuliah Praktikum</h2><p class="text-sm text-slate-500">Contoh matakuliah praktikum yang tersedia</p></div></div>
-            <div class="grid md:grid-cols-2 gap-4">
-                <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-700"><p class="font-semibold text-slate-800 dark:text-white">Praktikum Biologi</p><p class="text-sm text-slate-500 mt-1">Fakultas Saintek · Prodi Biologi</p></div>
-                <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-700"><p class="font-semibold text-slate-800 dark:text-white">Praktikum Agroteknologi</p><p class="text-sm text-slate-500 mt-1">Fakultas Pertanian · Prodi Agroteknologi</p></div>
-                <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-700"><p class="font-semibold text-slate-800 dark:text-white">Praktikum Psikologi</p><p class="text-sm text-slate-500 mt-1">Fakultas Psikologi · Prodi Psikologi</p></div>
-                <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-700"><p class="font-semibold text-slate-800 dark:text-white">Praktikum Teknik</p><p class="text-sm text-slate-500 mt-1">Fakultas Teknik · Sipil / Elektro / Mesin</p></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- PENGELOLA -->
-    <section class="max-w-7xl mx-auto px-4 py-16" id="pengelola">
-        <div class="flex items-center gap-3 mb-8"><div class="w-11 h-11 rounded-xl bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center text-rose-600"><i data-lucide="user-cog" class="w-5 h-5"></i></div><div><h2 class="font-display text-2xl font-bold text-slate-900 dark:text-white">Daftar Pelaksana & Pengelola Lab</h2><p class="text-sm text-slate-500">Bertanggung jawab atas operasional laboratorium</p></div></div>
-        <div class="grid md:grid-cols-3 gap-6">
-            <div class="bg-slate-50 dark:bg-slate-900 rounded-2xl p-6 text-center border border-slate-100 dark:border-slate-700"><div class="w-14 h-14 mx-auto rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-xl">K</div><h3 class="mt-3 font-semibold text-slate-800 dark:text-white">Kepala Laboratorium</h3><p class="text-sm text-slate-500">Pusat lab</p></div>
-            <div class="bg-slate-50 dark:bg-slate-900 rounded-2xl p-6 text-center border border-slate-100 dark:border-slate-700"><div class="w-14 h-14 mx-auto rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-xl">K</div><h3 class="mt-3 font-semibold text-slate-800 dark:text-white">Koordinator Praktikum</h3><p class="text-sm text-slate-500">Penjadwalan praktikum</p></div>
-            <div class="bg-slate-50 dark:bg-slate-900 rounded-2xl p-6 text-center border border-slate-100 dark:border-slate-700"><div class="w-14 h-14 mx-auto rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-xl">T</div><h3 class="mt-3 font-semibold text-slate-800 dark:text-white">Teknisi & Staf</h3><p class="text-sm text-slate-500">Perawatan alat</p></div>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var slug = 'layanan';
+            Site.pageBySlug(slug).then(function (r) {
+                if (!r.ok || !r.page) { document.getElementById('page-body').innerHTML = '<p>' + Site.esc(r.message || 'Halaman tidak ditemukan') + '</p>'; return; }
+                var p = r.page;
+                if (p.judul) document.getElementById('page-judul').textContent = p.judul;
+                document.getElementById('page-sub').textContent = (p.kategori || '') + ' Â· diperbarui ' + Site.fmtDate(p.tanggal);
+                var b = document.getElementById('page-body');
+                b.innerHTML = '';
+                Site.renderBlocks(b, p.isi);
+                if (window.lucide) lucide.createIcons();
+            }).catch(function () { document.getElementById('page-body').innerHTML = '<p>Gagal memuat halaman.</p>'; });
+        });
+    </script>
+<!-- FOOTER -->
     <footer class="bg-slate-900 dark:bg-slate-950 text-slate-300 mt-4">
         <div class="max-w-7xl mx-auto px-4 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
             <div><div class="flex items-center gap-2"><img src="https://susitao.uma.ac.id/assets/img/logo-main.webp" alt="Logo UMA" class="w-10 h-10 rounded-lg object-contain bg-white p-1"><div class="leading-tight"><p class="font-display font-bold text-lg text-white">LABORATORIUM</p><p class="text-[10px] tracking-widest uppercase text-slate-400">Universitas Medan Area</p></div></div><p class="mt-4 text-sm text-slate-400 leading-relaxed">Pusat kegiatan praktikum, penelitian, dan pengabdian masyarakat yang terstandarisasi di lingkungan Universitas Medan Area.</p></div>
