@@ -8,8 +8,8 @@
         API: 'https://script.google.com/macros/s/AKfycbzhyilkrP1JmImvK9UGK5oqsQIaJHq8xtE7V9XlZNi4uJt_qhv5mt3yw7fHdm1vqdEQiw/exec',
         TOKEN: 'LABUMA2026'
     };
-    var CACHE_KEY = 'lab_site_cache_v1';
-    var CACHE_TTL = 300000; // 5 menit
+    var CACHE_KEY = 'lab_site_cache_v2';
+    var CACHE_TTL = 60000; // 1 menit — agar perubahan dari dashboard cepat tampil
 
     function esc(s) {
         return String(s == null ? '' : s).replace(/[&<>"']/g, function (m) {
