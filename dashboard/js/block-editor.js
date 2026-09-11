@@ -69,14 +69,32 @@ window.BlockEditor = {
         wrap.innerHTML = rows +
             `<button type="button" onclick="window.BlockEditor.add()" class="mt-3 w-full px-3 py-2.5 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 text-sm font-semibold text-cyan-600 hover:border-cyan-400 transition">+ Tambah Blok</button>`;
     },
-    add() { this.data.push({ t: 'p', v: '' }); this.render(); },
-    del(i) { this.data.splice(i, 1); this.render(); },
-    setT(i, t) { this.data[i].t = t; this.data[i].v = t === 'list' ? [] : ''; this.render(); },
+    add() { this.sync(); this.data.push({ t: 'p', v: '' }); this.render(); },
+    del(i) { this.sync(); this.data.splice(i, 1); this.render(); },
+    setT(i, t) { this.sync(); this.data[i].t = t; this.data[i].v = t === 'list' ? [] : ''; this.render(); },
     move(i, dir) {
         const j = i + dir;
         if (j < 0 || j >= this.data.length) return;
+        this.sync();
         const tmp = this.data[i]; this.data[i] = this.data[j]; this.data[j] = tmp;
         this.render();
+    },
+    // Simpan nilai semua blok DARI DOM ke data (dipanggil sebelum render ulang)
+    sync() {
+        const wrap = this.container;
+        if (!wrap) return;
+        wrap.querySelectorAll('.be-row').forEach(row => {
+            const i = parseInt(row.getAttribute('data-row'), 10);
+            if (!this.data[i]) return;
+            const t = this.data[i].t;
+            if (t === 'r') {
+                const rt = row.querySelector(`[data-be-rich="${i}"]`);
+                if (rt) this.data[i].v = rt.innerHTML;
+            } else {
+                const el = row.querySelector('[data-be-idx]');
+                if (el) this.data[i].v = el.value.trim();
+            }
+        });
     },
     // Terapkan perintah format ke blok rich text
     exec(i, cmd) {
