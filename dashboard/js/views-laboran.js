@@ -583,7 +583,7 @@ function vLaboranPostingan() {
         <div class="p-6">
             <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
                 <h1 class="font-display text-2xl font-extrabold text-slate-900 dark:text-white">Postingan Saya</h1>
-                <button onclick="modalPostLaboran()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-700 text-white text-sm font-semibold hover:bg-primary-800"><i data-lucide="plus" class="w-4 h-4"></i> Buat Postingan</button>
+                <button onclick="location.href='postingan.html?mode=laboran'" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-700 text-white text-sm font-semibold hover:bg-primary-800"><i data-lucide="plus" class="w-4 h-4"></i> Buat Postingan</button>
             </div>
             <p class="text-sm text-slate-500 mb-4">Alur: Draft → <b>Kirim ke Kepala Lab</b> → Disetujui → <b>Admin terbitkan</b> ke website.</p>
             <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-x-auto">
@@ -594,7 +594,7 @@ function vLaboranPostingan() {
                 <td class="py-3 px-3">${badge(p.status)}</td>
                 <td class="py-3 px-3 text-right whitespace-nowrap">
                     ${(p.status === 'Draft') ? `<button onclick="submitPost('${p.id}')" class="text-indigo-600 hover:underline text-sm font-semibold mr-2">Kirim ke Kepala</button>` : ''}
-                    <button onclick='modalPostLaboranEdit(${JSON.stringify(p).replace(/'/g, '&#39;')})' class="text-cyan-600 hover:underline text-sm font-semibold mr-2">Edit</button>
+                    <a href="postingan.html?mode=laboran&id=${encodeURIComponent(p.id)}" class="text-cyan-600 hover:underline text-sm font-semibold mr-2">Edit</a>
                     <button onclick="hapusPostLab('${p.id}')" class="text-red-500 hover:underline text-sm font-semibold">Hapus</button></td></tr>`).join('') || '<tr><td colspan="5" class="py-8 text-center text-slate-400">Belum ada postingan.</td></tr>'}
             </tbody></table></div>
         </div>`;
@@ -603,38 +603,8 @@ function vLaboranPostingan() {
 }
 
 function modalPostLaboran(data = {}) {
-    const isEdit = !!data.id;
-    const user = Auth.current();
-    openModal(`
-        <form id="frm-pl" class="p-6">
-            <div class="flex items-center justify-between mb-4"><h3 class="font-display text-lg font-bold">${isEdit ? 'Edit' : 'Buat'} Postingan</h3><button type="button" onclick="closeModal()" class="w-8 h-8 rounded-lg hover:bg-slate-100"><i data-lucide="x" class="w-5 h-5"></i></button></div>
-            <div class="space-y-4">
-                <div><label class="block text-sm font-medium mb-1">Judul</label><input id="pl-judul" required value="${esc(data.judul || '')}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div><label class="block text-sm font-medium mb-1">Kategori</label><select id="pl-kat" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">
-                        <option ${data.kategori === 'Berita' ? 'selected' : ''}>Berita</option><option ${data.kategori === 'Pengumuman' ? 'selected' : ''}>Pengumuman</option><option ${data.kategori === 'Kegiatan' ? 'selected' : ''}>Kegiatan</option></select></div>
-                    <div><label class="block text-sm font-medium mb-1">Tanggal</label><input id="pl-tanggal" type="date" value="${esc(data.tanggal || todayStr())}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
-                </div>
-                <div><label class="block text-sm font-medium mb-1">Gambar (URL)</label><input id="pl-gambar" value="${esc(data.gambar || '')}" placeholder="https://... jpg/png" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
-                <div><label class="block text-sm font-medium mb-1">Ringkasan</label><textarea id="pl-ringkas" rows="2" required class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">${esc(data.ringkasan || '')}</textarea></div>
-                <div><label class="block text-sm font-medium mb-1">Isi</label><div id="pl-blocks"></div></div>
-                <button class="w-full py-2.5 rounded-lg bg-primary-700 text-white font-semibold text-sm">${isEdit ? 'Simpan' : 'Simpan Draft'}</button>
-            </div>
-        </form>`);
-    try { window.BlockEditor.init('pl-blocks', JSON.parse(data.isi || '[]')); } catch (e) { window.BlockEditor.init('pl-blocks', []); }
-    $('#frm-pl').addEventListener('submit', async e => {
-        e.preventDefault();
-        const payload = {
-            judul: $('#pl-judul').value, kategori: $('#pl-kat').value, ringkasan: $('#pl-ringkas').value,
-            isi: window.BlockEditor.collect(), gambar: $('#pl-gambar').value, tanggal: $('#pl-tanggal').value || todayStr(),
-            penulis: data.penulis || user.name, status: data.status || 'Draft', by_kepala: '', by_admin: ''
-        };
-        try {
-            if (isEdit) { await updateRow('posts', data.id, payload); toast('Postingan disimpan'); }
-            else { await addRow('posts', payload); toast('Draft disimpan'); }
-            closeModal(); vLaboranPostingan();
-        } catch (err) { toast(err.message, 'error'); }
-    });
+    // Fallback ke halaman editor penuh
+    window.location.href = data.id ? 'postingan.html?mode=laboran&id=' + encodeURIComponent(data.id) : 'postingan.html?mode=laboran';
 }
 function modalPostLaboranEdit(d) { modalPostLaboran(d); }
 async function submitPost(id) {

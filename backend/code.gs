@@ -323,7 +323,7 @@ function doPosts(data) {
   return { ok: true, posts: rows };
 }
 
-function doPost(data) {
+function fetchPost(data) {
   var rows = readTable('posts');
   var p = rows.find(function (r) { return String(r.id) === String(data.id); });
   if (!p) return { ok: false, message: 'Postingan tidak ditemukan' };
@@ -564,7 +564,7 @@ try {
       case 'site': return json(doSite());
       case 'page': return json(doPage(data));
       case 'posts': return json(doPosts(data));
-      case 'post': return json(doPost(data));
+      case 'post': return json(fetchPost(data));
       case 'cert': return json(doCert(data));
       case 'add':
         var aid = addRow(data.table, data.data || {});

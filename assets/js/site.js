@@ -5,7 +5,7 @@
  *********************************************************************/
 (function () {
     var CONFIG = {
-        API: 'https://script.google.com/macros/s/AKfycbwl3Q-E8JnOX858LYjG0FqvGK9x8g9TL0QWP6eOADYHYMA2lZJ0IeYLfciYScjHnb2Y0w/exec',
+        API: 'https://script.google.com/macros/s/AKfycbzhyilkrP1JmImvK9UGK5oqsQIaJHq8xtE7V9XlZNi4uJt_qhv5mt3yw7fHdm1vqdEQiw/exec',
         TOKEN: 'LABUMA2026'
     };
     var CACHE_KEY = 'lab_site_cache_v1';

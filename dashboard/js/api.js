@@ -4,7 +4,7 @@
  * (berakhiran /exec). Langkah setup ada di README-DASHBOARD.md
  *********************************************************************/
 const CONFIG = {
-    APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwl3Q-E8JnOX858LYjG0FqvGK9x8g9TL0QWP6eOADYHYMA2lZJ0IeYLfciYScjHnb2Y0w/exec',
+    APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzhyilkrP1JmImvK9UGK5oqsQIaJHq8xtE7V9XlZNi4uJt_qhv5mt3yw7fHdm1vqdEQiw/exec',
     TOKEN: 'LABUMA2026'
 };
 

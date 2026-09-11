@@ -312,60 +312,6 @@ async function buatLapBulananAdmin() {
     } catch (e) { toast(e.message, 'error'); }
 }
 
-/* ============ BLOCK EDITOR (paragraf / judul / gambar / list) ============ */
-window.BlockEditor = {
-    container: null,
-    data: [],
-    init(elId, blocks) {
-        this.container = document.getElementById(elId);
-        this.data = blocks && blocks.length ? blocks : [];
-        if (this.container) this.render();
-    },
-    typeOpts(t) {
-        const map = { p: 'Paragraf', h: 'Judul', img: 'Gambar (URL)', list: 'Daftar Bullet' };
-        return Object.keys(map).map(k => `<option value="${k}" ${t === k ? 'selected' : ''}>${map[k]}</option>`).join('');
-    },
-    inputFor(b, i) {
-        if (b.t === 'img') return `<input data-be-idx="${i}" value="${esc(b.v || '')}" placeholder="https://..." class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">`;
-        const ph = b.t === 'list' ? 'Satu item per baris' : b.t === 'h' ? 'Teks judul' : 'Tulis paragraf...';
-        const val = b.t === 'list' ? (b.v || []).join('\n') : (b.v || '');
-        return `<textarea data-be-idx="${i}" rows="${b.t === 'p' ? 3 : 2}" placeholder="${ph}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">${esc(val)}</textarea>`;
-    },
-    render() {
-        const wrap = this.container;
-        if (!wrap) return;
-        const me = this;
-        const rows = this.data.map((b, i) => `
-            <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 be-row" data-row="${i}">
-                <div class="flex items-center gap-2 mb-1.5">
-                    <select onchange="window.BlockEditor.setT(${i},this.value)" class="px-2 py-1 rounded-lg border border-slate-200 text-sm bg-white dark:bg-slate-800">${this.typeOpts(b.t)}</select>
-                    <span class="text-xs text-slate-400">Blok ${i + 1}</span>
-                    <button type="button" onclick="window.BlockEditor.del(${i})" class="ml-auto text-xs font-semibold text-red-500">Hapus</button>
-                </div>
-                ${this.inputFor(b, i)}
-            </div>`).join('');
-        wrap.innerHTML = rows +
-            `<button type="button" onclick="window.BlockEditor.add()" class="mt-3 w-full px-3 py-2.5 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 text-sm font-semibold text-cyan-600 hover:border-cyan-400 transition">+ Tambah Blok</button>`;
-    },
-    add() { this.data.push({ t: 'p', v: '' }); this.render(); },
-    del(i) { this.data.splice(i, 1); this.render(); },
-    setT(i, t) { this.data[i].t = t; this.data[i].v = []; this.render(); },
-    collect() {
-        if (!this.container) return '[]';
-        const out = [];
-        this.container.querySelectorAll('.be-row').forEach(row => {
-            const i = parseInt(row.getAttribute('data-row'), 10);
-            const el = row.querySelector('[data-be-idx]');
-            const type = this.data[i] ? this.data[i].t : 'p';
-            const raw = el ? el.value.trim() : '';
-            if (!raw) return;
-            if (type === 'list') out.push({ t: type, v: raw.split(/\n/).map(s => s.trim()).filter(Boolean) });
-            else out.push({ t: type, v: raw });
-        });
-        return JSON.stringify(out);
-    }
-};
-
 /* ================= MENU BUILDER (Admin) ================= */
 function vAdminMenus() {
     const content = $('#content');
@@ -554,7 +500,7 @@ function vAdminPosts() {
         <div class="p-6">
             <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
                 <h1 class="font-display text-2xl font-extrabold text-slate-900 dark:text-white">Postingan / Berita</h1>
-                <button onclick="modalPost()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-700 text-white text-sm font-semibold hover:bg-primary-800"><i data-lucide="plus" class="w-4 h-4"></i> Tulis Postingan</button>
+                <button onclick="location.href='postingan.html?mode=admin'" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-700 text-white text-sm font-semibold hover:bg-primary-800"><i data-lucide="plus" class="w-4 h-4"></i> Tulis Postingan</button>
             </div>
             <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-x-auto">
             <table class="w-full text-sm"><thead><tr class="text-left text-xs uppercase tracking-wider text-slate-400 bg-slate-50 dark:bg-slate-900">
@@ -565,7 +511,7 @@ function vAdminPosts() {
                 <td class="py-3 px-3">${esc(p.penulis)}</td><td class="py-3 px-3">${badge(p.status)}</td>
                 <td class="py-3 px-3 text-right whitespace-nowrap">
                     ${p.status === 'Disetujui' ? `<button onclick="publishPost('${p.id}','Terbit')" class="text-emerald-600 hover:underline text-sm font-semibold mr-2">✔ Terbitkan</button>` : p.status === 'Draft' ? `<button onclick="publishPost('${p.id}','Terbit')" class="text-emerald-600 hover:underline text-sm font-semibold mr-2">Terbitkan</button>` : p.status === 'Terbit' ? `<button onclick="publishPost('${p.id}','Arsip')" class="text-amber-600 hover:underline text-sm font-semibold mr-2">Arsipkan</button>` : ''}
-                    <button onclick='modalPostEdit(${JSON.stringify(p).replace(/'/g, '&#39;')})' class="text-cyan-600 hover:underline text-sm font-semibold mr-2">Edit</button>
+                    <a href="postingan.html?mode=admin&id=${encodeURIComponent(p.id)}" class="text-cyan-600 hover:underline text-sm font-semibold mr-2">Edit</a>
                     <button onclick="hapusPost('${p.id}')" class="text-red-500 hover:underline text-sm font-semibold">Hapus</button></td></tr>`).join('') || '<tr><td colspan="6" class="py-8 text-center text-slate-400">Belum ada postingan.</td></tr>'}
             </tbody></table></div>
         </div>`;
@@ -573,50 +519,6 @@ function vAdminPosts() {
     }).catch(e => toast(e.message, 'error'));
 }
 
-function modalPost(data = {}) {
-    const isEdit = !!data.id;
-    const user = Auth.current();
-    openModal(`
-        <form id="frm-post" class="p-6">
-            <div class="flex items-center justify-between mb-4"><h3 class="font-display text-lg font-bold">${isEdit ? 'Edit' : 'Tulis'} Postingan</h3><button type="button" onclick="closeModal()" class="w-8 h-8 rounded-lg hover:bg-slate-100"><i data-lucide="x" class="w-5 h-5"></i></button></div>
-            <div class="space-y-4">
-                <div><label class="block text-sm font-medium mb-1">Judul</label><input id="po-judul" required value="${esc(data.judul || '')}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div><label class="block text-sm font-medium mb-1">Kategori</label><select id="po-kat" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">
-                        <option ${data.kategori === 'Berita' ? 'selected' : ''}>Berita</option><option ${data.kategori === 'Pengumuman' ? 'selected' : ''}>Pengumuman</option><option ${data.kategori === 'Kegiatan' ? 'selected' : ''}>Kegiatan</option></select></div>
-                    <div><label class="block text-sm font-medium mb-1">Tanggal</label><input id="po-tanggal" type="date" value="${esc(data.tanggal || todayStr())}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
-                </div>
-                <div><label class="block text-sm font-medium mb-1">Gambar (URL)</label><input id="po-gambar" value="${esc(data.gambar || '')}" placeholder="https://... jpg/png" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
-                <div><label class="block text-sm font-medium mb-1">Ringkasan (tampil di daftar)</label><textarea id="po-ringkas" rows="2" required class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">${esc(data.ringkasan || '')}</textarea></div>
-                <div><label class="block text-sm font-medium mb-1">Isi</label><div id="po-blocks"></div></div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div><label class="block text-sm font-medium mb-1">Status</label><select id="po-status" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">
-                        <option value="Draft" ${data.status === 'Draft' ? 'selected' : ''}>Draft</option>
-                        <option value="Menunggu" ${data.status === 'Menunggu' ? 'selected' : ''}>Menunggu Persetujuan</option>
-                        <option value="Terbit" ${data.status === 'Terbit' ? 'selected' : ''}>Terbit</option>
-                        <option value="Arsip" ${data.status === 'Arsip' ? 'selected' : ''}>Arsip</option></select></div>
-                    <div><label class="block text-sm font-medium mb-1">Penulis</label><input id="po-penulis" required value="${esc(data.penulis || user.name)}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
-                </div>
-                <button class="w-full py-2.5 rounded-lg bg-primary-700 text-white font-semibold text-sm">${isEdit ? 'Simpan' : 'Simpan Postingan'}</button>
-            </div>
-        </form>`);
-    try { BlockEditor.init('po-blocks', JSON.parse(data.isi || '[]')); } catch (e) { BlockEditor.init('po-blocks', []); }
-    $('#frm-post').addEventListener('submit', async e => {
-        e.preventDefault();
-        const payload = {
-            judul: $('#po-judul').value, kategori: $('#po-kat').value, ringkasan: $('#po-ringkas').value,
-            isi: BlockEditor.collect(), gambar: $('#po-gambar').value, tanggal: $('#po-tanggal').value || todayStr(),
-            penulis: $('#po-penulis').value, status: $('#po-status').value,
-            by_kepala: data.by_kepala || '', by_admin: user.name
-        };
-        try {
-            if (isEdit) { await updateRow('posts', data.id, payload); toast('Postingan diperbarui'); }
-            else { await addRow('posts', payload); toast('Postingan disimpan'); }
-            closeModal(); vAdminPosts();
-        } catch (err) { toast(err.message, 'error'); }
-    });
-}
-function modalPostEdit(d) { modalPost(d); }
 async function publishPost(id, status) {
     if (!confirm('Ubah status menjadi ' + status + '?')) return;
     const user = Auth.current();

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor Postingan - Dashboard Laboratorium UMA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { fontFamily: { sans: ['Poppins', 'Inter', 'sans-serif'] },
+                colors: { primary: { 700: '#1e40af', 800: '#1e3a8a' } } } }
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .be-row textarea, .be-row input { transition: border-color .15s; }
+        .be-row textarea:focus, .be-row input:focus { outline: none; border-color: #06b6d4; box-shadow: 0 0 0 3px rgba(6,182,212,.15); }
+    </style>
+</head>
+<body class="font-sans bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 antialiased min-h-screen">
+
+    <header class="sticky top-0 z-30 bg-white/90 dark:bg-slate-800/90 backdrop-blur border-b border-slate-200 dark:border-slate-700">
+        <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="dashboard.html" class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-cyan-600 transition"><i data-lucide="arrow-left" class="w-4 h-4"></i> Dashboard</a>
+                <span class="text-slate-300 dark:text-slate-600 hidden sm:inline">|</span>
+                <h1 class="font-display font-bold text-lg" id="editor-title">Tulis Postingan</h1>
+            </div>
+            <div class="flex items-center gap-2">
+                <a href="../index.html" target="_blank" class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-cyan-600 transition"><i data-lucide="external-link" class="w-4 h-4"></i> Website</a>
+                <span class="text-sm text-slate-500" id="user-chip"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-8">
+        <div class="grid md:grid-cols-[1fr_300px] gap-6 items-start">
+            <!-- FORM -->
+            <form id="post-form" class="bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700 p-6 space-y-5">
+                <div>
+                    <label class="block text-sm font-medium mb-1.5">Judul Postingan *</label>
+                    <input id="f-judul" required placeholder="Judul berita..." class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                </div>
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1.5">Kategori</label>
+                        <select id="f-kat" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                            <option>Berita</option><option>Pengumuman</option><option>Kegiatan</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1.5">Tanggal</label>
+                        <input id="f-tanggal" type="date" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5">Gambar Utama (URL)</label>
+                    <input id="f-gambar" placeholder="https://... gambar.jpg" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                    <button type="button" onclick="cariGambar('pilih-gambar')" class="text-xs font-semibold text-cyan-600 mt-1.5">Pilih dari galeri yang sudah ada</button>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5">Ringkasan (muncul di daftar berita)</label>
+                    <textarea id="f-ringkas" rows="2" required placeholder="Ringkasan singkat..." class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5">Isi Postingan <span class="text-xs text-slate-400">(susun blok di bawah)</span></label>
+                    <div id="blocks"></div>
+                </div>
+                <div class="hidden sm:block">
+                    <label class="block text-sm font-medium mb-1.5">Pratinjau</label>
+                    <div class="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl p-4 bg-slate-50 dark:bg-slate-900 max-h-72 overflow-y-auto text-sm" id="pratinjau"></div>
+                </div>
+            </form>
+
+            <!-- PANEL SAMPING -->
+            <aside class="space-y-4 sticky top-20">
+                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700 p-5">
+                    <h3 class="font-semibold text-slate-800 dark:text-white text-sm mb-3">Status</h3>
+                    <p class="text-xs text-slate-400 mb-2">Alur: Draft → Menunggu → Disetujui → <b>Terbit</b> di website</p>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">Status saat ini</label>
+                    <select id="f-status" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm mb-4">
+                        <option value="Draft">Draft</option>
+                        <option value="Menunggu">Menunggu Persetujuan</option>
+                        <option value="Disetujui">Disetujui</option>
+                        <option value="Terbit">Terbit</option>
+                        <option value="Arsip">Arsip</option>
+                    </select>
+                    <button id="btn-simpan" type="submit" form="post-form" class="w-full py-3 rounded-xl bg-primary-700 text-white text-sm font-semibold hover:bg-primary-800 transition flex items-center justify-center gap-2"><i data-lucide="save" class="w-4 h-4"></i> Simpan</button>
+                    <button id="btn-terbit" type="button" class="mt-2 w-full py-3 rounded-xl bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition flex items-center justify-center gap-2"><i data-lucide="send" class="w-4 h-4"></i> Simpan & Terbitkan</button>
+                </div>
+                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700 p-5 text-sm">
+                    <h3 class="font-semibold text-slate-800 dark:text-white mb-2">Blok Isi</h3>
+                    <ul class="text-xs space-y-1.5 text-slate-500">
+                        <li>• <b>Paragraf</b> — teks biasa</li>
+                        <li>• <b>Judul</b> — sub-bagian</li>
+                        <li>• <b>Gambar</b> — URL gambar</li>
+                        <li>• <b>Daftar bullet</b> — 1 item per baris</li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Modal pilih gambar -->
+    <div id="pilih-gambar-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-y-auto p-5">
+            <div class="flex items-center justify-between mb-4"><h3 class="font-display text-lg font-bold">Pilih Gambar Galeri</h3><button onclick="tutupPilihGambar()" class="w-8 h-8 rounded-lg hover:bg-slate-100"><i data-lucide="x" class="w-5 h-5"></i></button></div>
+            <div class="grid grid-cols-3 gap-3" id="gambar-grid"></div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/block-editor.js"></script>
+    <script>
+        const $ = (sel) => document.querySelector(sel);
+        function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
+        function todayStr() { const d = new Date(); const p = n => String(n).padStart(2, '0'); return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); }
+        function toast(msg, type) {
+            const box = document.createElement('div');
+            box.className = `fixed bottom-5 right-5 z-[100] ${type === 'error' ? 'bg-red-600' : type === 'warn' ? 'bg-amber-500' : 'bg-emerald-600'} text-white px-5 py-3 rounded-xl shadow-xl text-sm font-medium`;
+            box.textContent = msg; document.body.appendChild(box); setTimeout(() => box.remove(), 3200);
+        }
+
+        const user = Auth.guard();
+        if (!user) { location.href = 'login.html'; }
+        const params = new URLSearchParams(location.search);
+        const mode = params.get('mode') || 'admin';
+        const id = params.get('id');
+
+        if (user) {
+            if (mode === 'admin' && user.role !== 'admin') { location.href = 'dashboard.html'; }
+            if (mode === 'laboran' && user.role !== 'laboran' && user.role !== 'admin') { location.href = 'dashboard.html'; }
+            document.getElementById('user-chip').textContent = user.name + ' · ' + (mode === 'laboran' ? 'Laboran' : 'Admin');
+            if (mode === 'laboran') {
+                // Laboran: hanya bisa menyimpan sebagai draft
+                var st = $('#f-status');
+                st.innerHTML = '<option value="Draft">Draft</option>';
+                $('#btn-terbit').innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> Simpan & Kirim ke Kepala Lab';
+            }
+        }
+
+        const GALERI = [
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6878142371714375724.jpg',
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/11989206401714745234.jpg',
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6787828731762504523.jpeg',
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/6506652741715048206.jpeg',
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/4433280541714615501.JPG',
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/7921851651715139853.jpeg',
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/20325948681714615643.jpg',
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/10114180091714702521.JPG',
+            'https://laboratorium.uma.ac.id/admin/uploads/galeri/thumbs/5782036091714616846.jpg'
+        ];
+        function cariGambar() {
+            document.getElementById('pilih-gambar-modal').classList.remove('hidden');
+            document.getElementById('pilih-gambar-modal').classList.add('flex');
+            $('#gambar-grid').innerHTML = GALERI.map((g, i) =>
+                `<button type="button" onclick="pilihGambar(${i})" class="rounded-xl overflow-hidden aspect-video border-2 border-transparent hover:border-cyan-500 transition"><img src="${g}" class="w-full h-full object-cover" alt=""></button>`).join('');
+        }
+        function pilihGambar(i) { $('#f-gambar').value = GALERI[i]; tutupPilihGambar(); preview(); }
+        function tutupPilihGambar() {
+            document.getElementById('pilih-gambar-modal').classList.add('hidden');
+            document.getElementById('pilih-gambar-modal').classList.remove('flex');
+        }
+
+        function preview() {
+            const box = $('#pratinjau');
+            if (!box) return;
+            let blocks = [];
+            try { blocks = JSON.parse(window.BlockEditor.collect() || '[]'); } catch (e) {}
+            const img = $('#f-gambar').value;
+            box.innerHTML = (img ? `<img src="${esc(img)}" class="rounded-lg object-cover w-full max-h-40 mb-2">` : '') + blocks.map(b => {
+                if (b.t === 'h') return `<h3 class="font-bold mt-2 text-slate-900 dark:text-white">${esc(b.v)}</h3>`;
+                if (b.t === 'img') return `<img src="${esc(b.v)}" class="rounded-lg w-full my-1">`;
+                if (b.t === 'list') return `<ul class="list-disc pl-4 my-1">${(b.v || []).map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+                return `<p class="my-1">${esc(b.v)}</p>`;
+            }).join('');
+        }
+
+        async function save(status) {
+            const payload = {
+                judul: $('#f-judul').value.trim(),
+                kategori: $('#f-kat').value,
+                ringkasan: $('#f-ringkas').value.trim(),
+                isi: window.BlockEditor.collect(),
+                gambar: $('#f-gambar').value.trim(),
+                tanggal: $('#f-tanggal').value || todayStr(),
+                penulis: ($('#f-penulis') && $('#f-penulis').value) || user.name,
+                status: status,
+                by_kepala: window.__postByKepala || '',
+                by_admin: mode === 'admin' ? user.name : ''
+            };
+            if (!payload.judul || !payload.ringkasan) { toast('Judul dan ringkasan wajib diisi', 'warn'); return; }
+            try {
+                if (id) { await updateRow('posts', id, payload); toast('Postingan diperbarui'); }
+                else { await addRow('posts', payload); toast('Postingan disimpan'); }
+                setTimeout(() => location.href = mode === 'laboran' ? 'dashboard.html#laboran-post' : 'dashboard.html#admin-post', 500);
+            } catch (e) { toast(e.message, 'error'); }
+        }
+
+        (async function init() {
+            $('#f-tanggal').value = todayStr();
+            window.BlockEditor.init('blocks', []);
+            document.getElementById('editor-title').textContent = id ? 'Edit Postingan' : 'Tulis Postingan';
+
+            if (id) {
+                try {
+                    const r = await api('post', { id });
+                    if (r.ok && r.post) {
+                        const p = r.post;
+                        $('#f-judul').value = p.judul || '';
+                        $('#f-kat').value = p.kategori || 'Berita';
+                        $('#f-tanggal').value = p.tanggal || todayStr();
+                        $('#f-gambar').value = p.gambar || '';
+                        $('#f-ringkas').value = p.ringkasan || '';
+                        $('#f-status').value = p.status || 'Draft';
+                        window.__postByKepala = p.by_kepala || '';
+                        let blocks = []; try { blocks = JSON.parse(p.isi || '[]'); } catch (e) { blocks = []; }
+                        window.BlockEditor.init('blocks', blocks);
+                        preview();
+                    } else {
+                        toast(r.message || 'Postingan tidak ditemukan', 'error');
+                    }
+                } catch (e) { toast(e.message, 'error'); }
+            }
+            $('#f-judul').addEventListener('input', preview);
+            $('#f-ringkas').addEventListener('input', preview);
+            $('#f-gambar').addEventListener('input', preview);
+            if (window.lucide) lucide.createIcons();
+        })();
+
+        $('#btn-simpan').addEventListener('click', function (e) { e.preventDefault(); save($('#f-status').value); });
+        $('#btn-terbit').addEventListener('click', function (e) {
+            e.preventDefault();
+            save(mode === 'laboran' ? 'Menunggu' : 'Terbit');
+        });
+    </script>
+</body>
+</html>
