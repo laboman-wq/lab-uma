@@ -207,6 +207,48 @@
         });
     }
 
+    /* ============ HERO SLIDER ============ */
+    function renderHero(data) {
+        var box = document.getElementById('hero-slider');
+        if (!box) return;
+        var sliders = (data && data.sliders) || [];
+        if (!sliders.length) return; // biarkan hero default yang sudah ada di HTML
+
+        var dots = sliders.map(function (_, i) {
+            return '<button type="button" class="site-dot' + (i === 0 ? ' active' : '') + '" onclick="window.__heroGo(' + i + ')"></button>';
+        }).join('');
+
+        var slides = sliders.map(function (s, i) {
+            var linkBtn = s.link
+                ? '<a href="' + esc(s.link) + '" class="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-cyan-500 text-white font-semibold hover:bg-cyan-600 transition transform hover:-translate-y-0.5"><i data-lucide="arrow-right" class="w-5 h-5"></i> Selengkapnya</a>'
+                : '';
+            return '<div class="site-slide' + (i === 0 ? ' active' : '') + '" style="background-image:url(' + "'" + esc(s.gambar || '') + "'" + ')">' +
+                '<div class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/65 to-slate-900/30"></div>' +
+                '<div class="relative max-w-7xl mx-auto px-4 py-24 md:py-32">' +
+                '<h1 class="font-display text-3xl md:text-5xl font-extrabold text-white leading-tight max-w-2xl">' + esc(s.judul || '') + '</h1>' +
+                '<p class="mt-5 text-lg text-blue-100/90 max-w-2xl">' + esc(s.deskripsi || '') + '</p>' +
+                linkBtn + '</div></div>';
+        }).join('');
+
+        box.innerHTML = '<div class="relative w-full h-full min-h-[420px] md:min-h-[520px]">' + slides +
+            '<div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-10">' + dots + '</div></div>';
+
+        var current = 0;
+        window.__heroGo = function (i) {
+            var els = box.querySelectorAll('.site-slide');
+            var dts = box.querySelectorAll('.site-dot');
+            if (!els.length) return;
+            els[current].classList.remove('active');
+            if (dts[current]) dts[current].classList.remove('active');
+            current = ((i % els.length) + els.length) % els.length;
+            els[current].classList.add('active');
+            if (dts[current]) dts[current].classList.add('active');
+            els[current].querySelectorAll('a, h1, p').forEach(function (n) { n.classList.add('anim-hero'); });
+        };
+        setInterval(function () { window.__heroGo(current + 1); }, 6000);
+        lucide();
+    }
+
     /* ============ API tambahan ============ */
     async function pageBySlug(slug) {
         return apiOnce({ action: 'page', slug: slug, token: CONFIG.TOKEN });
@@ -229,6 +271,7 @@
                 renderDesktop(data.menus);
                 renderMobile(data.menus);
                 highlightActive();
+                renderHero(data);
                 window.SiteData = data;
                 var ev = new CustomEvent('site:ready', { detail: data });
                 document.dispatchEvent(ev);
