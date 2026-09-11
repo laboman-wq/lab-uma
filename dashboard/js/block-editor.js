@@ -48,7 +48,7 @@ window.BlockEditor = {
         }
         const ph = b.t === 'list' ? 'Satu item per baris' : b.t === 'h' ? 'Teks judul' : 'Tulis paragraf...';
         const val = b.t === 'list' ? (b.v || []).join('\n') : (b.v || '');
-        return `<textarea data-be-idx="${i}" rows="${b.t === 'p' ? 3 : 2}" placeholder="${ph}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">${esc(val)}</textarea>`;
+        return `<textarea data-be-idx="${i}" rows="${b.t === 'p' ? 5 : 2}" placeholder="${ph}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm">${esc(val)}</textarea>`;
     },
     render() {
         const wrap = this.container;
