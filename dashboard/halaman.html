@@ -165,7 +165,27 @@
             window.addEventListener('beforeunload', simpanDraft);
         })();
 
-        $('#page-form').addEventListener('submit', function (e) { e.preventDefault(); save(); });
+        $('#page-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const btn = $('#btn-simpan');
+            if (btn.disabled) return;
+            const original = btn.innerHTML;
+            btn.disabled = true;
+            btn.classList.add('opacity-70', 'cursor-wait', 'pointer-events-none');
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Menyimpan...';
+            if (window.lucide) lucide.createIcons();
+            save().then(function () {
+                btn.disabled = false;
+                btn.classList.remove('opacity-70', 'cursor-wait', 'pointer-events-none');
+                btn.innerHTML = original;
+                if (window.lucide) lucide.createIcons();
+            }).catch(function () {
+                btn.disabled = false;
+                btn.classList.remove('opacity-70', 'cursor-wait', 'pointer-events-none');
+                btn.innerHTML = original;
+                if (window.lucide) lucide.createIcons();
+            });
+        });
     </script>
 </body>
 </html>

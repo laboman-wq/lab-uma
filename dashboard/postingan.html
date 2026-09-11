@@ -276,11 +276,28 @@
             if (window.lucide) lucide.createIcons();
         })();
 
-        $('#btn-simpan').addEventListener('click', function (e) { e.preventDefault(); save($('#f-status').value); });
+        $('#btn-simpan').addEventListener('click', function (e) { e.preventDefault(); doSave($('#f-status').value, $('#btn-simpan'), 'Menyimpan...'); });
         $('#btn-terbit').addEventListener('click', function (e) {
             e.preventDefault();
-            save(mode === 'laboran' ? 'Menunggu' : 'Terbit');
+            doSave(mode === 'laboran' ? 'Menunggu' : 'Terbit', $('#btn-terbit'), mode === 'laboran' ? 'Menyimpan & Mengirim...' : 'Menyimpan & Menerbitkan...');
         });
+
+        async function doSave(status, btn, loadingText) {
+            if (btn.disabled) return;
+            const original = btn.innerHTML;
+            btn.disabled = true;
+            btn.classList.add('opacity-70', 'cursor-wait', 'pointer-events-none');
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> ' + loadingText;
+            if (window.lucide) lucide.createIcons();
+            try {
+                await save(status);
+            } catch (e) { }
+            // Restore tombol bila masih di halaman (misal validasi gagal)
+            btn.disabled = false;
+            btn.classList.remove('opacity-70', 'cursor-wait', 'pointer-events-none');
+            btn.innerHTML = original;
+            if (window.lucide) lucide.createIcons();
+        }
     </script>
 </body>
 </html>
