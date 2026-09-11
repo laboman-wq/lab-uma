@@ -83,17 +83,38 @@
         </div>
     </section>
 
-    <!-- DAFTAR LAB -->
+    <!-- DAFTAR LAB (dinamis dari Master Data Lab) -->
     <section class="max-w-7xl mx-auto px-4 py-16">
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-md border border-slate-100 dark:border-slate-700 hover:shadow-xl transition"><div class="flex items-center gap-3"><div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600"><i data-lucide="microscope" class="w-6 h-6"></i></div><h3 class="font-semibold text-slate-800 dark:text-white">Lab Fisiologi Tumbuhan</h3></div><p class="mt-3 text-sm text-slate-500 dark:text-slate-400">Studi fungsi dan proses kehidupan tumbuhan.</p></div>
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-md border border-slate-100 dark:border-slate-700 hover:shadow-xl transition"><div class="flex items-center gap-3"><div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600"><i data-lucide="shield" class="w-6 h-6"></i></div><h3 class="font-semibold text-slate-800 dark:text-white">Lab Proteksi Tanaman</h3></div><p class="mt-3 text-sm text-slate-500 dark:text-slate-400">Perlindungan tanaman dari hama dan penyakit.</p></div>
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-md border border-slate-100 dark:border-slate-700 hover:shadow-xl transition"><div class="flex items-center gap-3"><div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center text-amber-600"><i data-lucide="trees" class="w-6 h-6"></i></div><h3 class="font-semibold text-slate-800 dark:text-white">Lahan Percobaan</h3></div><p class="mt-3 text-sm text-slate-500 dark:text-slate-400">Area percobaan lapangan untuk penelitian dan praktikum.</p></div>
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-md border border-slate-100 dark:border-slate-700 hover:shadow-xl transition"><div class="flex items-center gap-3"><div class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center text-purple-600"><i data-lucide="home" class="w-6 h-6"></i></div><h3 class="font-semibold text-slate-800 dark:text-white">Rumah Kasa</h3></div><p class="mt-3 text-sm text-slate-500 dark:text-slate-400">Media tanam terlindung untuk riset terkontrol.</p></div>
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-md border border-slate-100 dark:border-slate-700 hover:shadow-xl transition"><div class="flex items-center gap-3"><div class="w-12 h-12 rounded-xl bg-cyan-100 dark:bg-cyan-900/40 flex items-center justify-center text-cyan-600"><i data-lucide="brain" class="w-6 h-6"></i></div><h3 class="font-semibold text-slate-800 dark:text-white">Lab Psikologi</h3></div><p class="mt-3 text-sm text-slate-500 dark:text-slate-400">Fasilitas riset & praktikum psikologi.</p></div>
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-md border border-slate-100 dark:border-slate-700 hover:shadow-xl transition"><div class="flex items-center gap-3"><div class="w-12 h-12 rounded-xl bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center text-rose-600"><i data-lucide="badge-check" class="w-6 h-6"></i></div><h3 class="font-semibold text-slate-800 dark:text-white">Lab Pengujian ISO 17025</h3></div><p class="mt-3 text-sm text-slate-500 dark:text-slate-400">Layanan pengujian terakreditasi internasional.</p></div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="fasilitas-list">
+            <div class="md:col-span-3 text-center py-16 text-slate-400">Memuat daftar laboratorium...</div>
         </div>
+        <p class="mt-8 text-center text-sm text-slate-400">Data dikelola dari Dashboard → <b>Master Data Lab</b> (login Admin).</p>
     </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var el = document.getElementById('fasilitas-list');
+            var icons = ['microscope', 'sprout', 'flask-conical', 'shield', 'trees', 'home', 'brain', 'dna', 'building-2', 'server', 'cog', 'book-open'];
+            var colors = ['bg-blue-100 text-blue-600', 'bg-emerald-100 text-emerald-600', 'bg-amber-100 text-amber-600', 'bg-purple-100 text-purple-600', 'bg-cyan-100 text-cyan-600', 'bg-rose-100 text-rose-600'];
+            Site.fetchSite().then(function (d) {
+                var labs = d && d.ok ? d.labs : [];
+                if (!labs.length) { el.innerHTML = '<div class="md:col-span-3 text-center py-14 text-slate-400">Belum ada laboratorium terdaftar.</div>'; return; }
+                el.innerHTML = labs.map(function (l, i) {
+                    var ic = icons[i % icons.length];
+                    var co = colors[i % colors.length];
+                    return '<div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-md border border-slate-100 dark:border-slate-700 hover:shadow-xl transition">' +
+                        '<div class="flex items-center gap-3"><div class="w-12 h-12 rounded-xl ' + co.split(' ')[0] + ' ' + co.split(' ')[1] + ' flex items-center justify-center"><i data-lucide="' + ic + '" class="w-6 h-6"></i></div>' +
+                        '<h3 class="font-semibold text-slate-800 dark:text-white">' + Site.esc(l.nama) + '</h3></div>' +
+                        '<div class="mt-3 flex flex-wrap gap-2 text-xs">' +
+                        '<span class="px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">' + Site.esc(l.fakultas) + '</span>' +
+                        (l.prodi && l.prodi !== '-' ? '<span class="px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">' + Site.esc(l.prodi) + '</span>' : '') +
+                        '<span class="px-2 py-1 rounded-full bg-cyan-50 dark:bg-slate-700 text-cyan-700 dark:text-cyan-300"><i data-lucide="map-pin" class="w-3 h-3 inline mr-1"></i>' + Site.esc(l.lokasi) + '</span></div>' +
+                        '<p class="mt-3 text-sm text-slate-500 dark:text-slate-400">' + Site.esc(l.deskripsi || '-') + '</p></div>';
+                }).join('');
+                if (window.lucide) lucide.createIcons();
+            }).catch(function () { el.innerHTML = '<div class="md:col-span-3 text-center py-14 text-slate-400">Gagal memuat daftar laboratorium.</div>'; });
+        });
+    </script>
 
     <!-- FOOTER -->
     <footer class="bg-slate-900 dark:bg-slate-950 text-slate-300 mt-4">

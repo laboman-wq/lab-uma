@@ -297,12 +297,14 @@ function doSite() {
   var sliders = readTable('sliders').filter(function (s) { return s.published === '1'; });
   sliders.sort(function (a, b) { return (parseInt(a.urutan, 10) || 0) - (parseInt(b.urutan, 10) || 0); });
   var certs = readTable('certificates').filter(function (c) { return c.published === '1' && c.status === 'Disetujui'; });
+  var labs = readTable('labs');
   return {
     ok: true,
     menus: buildMenuTree(menus),
     posts: posts.slice(0, 9),
     sliders: sliders,
     certs: certs,
+    labs: labs,
     settings: { semester: getSetting('semester') }
   };
 }
