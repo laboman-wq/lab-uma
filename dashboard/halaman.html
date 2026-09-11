@@ -92,6 +92,18 @@
         const params = new URLSearchParams(location.search);
         const id = params.get('id');
 
+        const DRAFT_KEY = 'lab_draft_page_' + (user ? user.username : 'guest') + '_' + (id || 'new');
+        function simpanDraft() {
+            try {
+                localStorage.setItem(DRAFT_KEY, JSON.stringify({
+                    judul: $('#f-judul').value, slug: $('#f-slug').value, kat: $('#f-kat').value,
+                    aktif: $('#f-aktif').value, blocks: window.BlockEditor.collect()
+                }));
+            } catch (e) { }
+        }
+        function hapusDraft() { try { localStorage.removeItem(DRAFT_KEY); } catch (e) { } }
+        function readDraft() { try { return JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch (e) { return null; } }
+
         $('#f-slug').addEventListener('input', function () {
             this.value = this.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '');
         });
@@ -110,12 +122,25 @@
             try {
                 if (id) { await updateRow('pages', id, payload); toast('Halaman diperbarui'); }
                 else { await addRow('pages', payload); toast('Halaman dibuat'); }
+                hapusDraft();
                 setTimeout(() => location.href = 'dashboard.html', 500);
             } catch (e) { toast(e.message, 'error'); }
         }
 
         (async function init() {
             window.BlockEditor.init('blocks', []);
+            if (!id) {
+                const dr = readDraft();
+                if (dr && (dr.judul || dr.slug || dr.blocks !== '[]')) {
+                    $('#f-judul').value = dr.judul || '';
+                    $('#f-slug').value = dr.slug || '';
+                    $('#f-kat').value = dr.kat || '';
+                    $('#f-aktif').value = dr.aktif || '1';
+                    let blocks = []; try { blocks = JSON.parse(dr.blocks || '[]'); } catch (e) { blocks = []; }
+                    window.BlockEditor.init('blocks', blocks);
+                    toast('Draft tersimpan otomatis dipulihkan');
+                }
+            }
             if (id) {
                 try {
                     const r = await api('get', { table: 'pages' });
@@ -136,6 +161,8 @@
                 } catch (e) { toast(e.message, 'error'); }
             }
             if (window.lucide) lucide.createIcons();
+            setInterval(simpanDraft, 2000);
+            window.addEventListener('beforeunload', simpanDraft);
         })();
 
         $('#page-form').addEventListener('submit', function (e) { e.preventDefault(); save(); });

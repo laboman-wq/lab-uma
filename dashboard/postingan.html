@@ -134,6 +134,25 @@
         const mode = params.get('mode') || 'admin';
         const id = params.get('id');
 
+        /* ===== Auto-save draft (localStorage) ===== */
+        const DRAFT_KEY = 'lab_draft_post_' + (user ? user.username : 'guest') + '_' + (id || 'new');
+        function simpanDraft() {
+            try {
+                localStorage.setItem(DRAFT_KEY, JSON.stringify({
+                    t: Date.now(),
+                    judul: $('#f-judul').value,
+                    kat: $('#f-kat').value,
+                    tanggal: $('#f-tanggal').value,
+                    gambar: $('#f-gambar').value,
+                    ringkas: $('#f-ringkas').value,
+                    status: $('#f-status').value,
+                    blocks: window.BlockEditor.collect()
+                }));
+            } catch (e) { }
+        }
+        function hapusDraft() { try { localStorage.removeItem(DRAFT_KEY); } catch (e) { } }
+        function readDraft() { try { return JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch (e) { return null; } }
+
         if (user) {
             if (mode === 'admin' && user.role !== 'admin') { location.href = 'dashboard.html'; }
             if (mode === 'laboran' && user.role !== 'laboran' && user.role !== 'admin') { location.href = 'dashboard.html'; }
@@ -201,6 +220,7 @@
             try {
                 if (id) { await updateRow('posts', id, payload); toast('Postingan diperbarui'); }
                 else { await addRow('posts', payload); toast('Postingan disimpan'); }
+                hapusDraft();
                 setTimeout(() => location.href = mode === 'laboran' ? 'dashboard.html#laboran-post' : 'dashboard.html#admin-post', 500);
             } catch (e) { toast(e.message, 'error'); }
         }
@@ -209,6 +229,23 @@
             $('#f-tanggal').value = todayStr();
             window.BlockEditor.init('blocks', []);
             document.getElementById('editor-title').textContent = id ? 'Edit Postingan' : 'Tulis Postingan';
+
+            // Pulihkan draft jika ada (khusus postingan baru)
+            if (!id) {
+                const dr = readDraft();
+                if (dr && (dr.judul || dr.ringkas || dr.blocks !== '[]')) {
+                    $('#f-judul').value = dr.judul || '';
+                    $('#f-kat').value = dr.kat || 'Berita';
+                    $('#f-tanggal').value = dr.tanggal || todayStr();
+                    $('#f-gambar').value = dr.gambar || '';
+                    $('#f-ringkas').value = dr.ringkas || '';
+                    $('#f-status').value = dr.status || 'Draft';
+                    let blocks = []; try { blocks = JSON.parse(dr.blocks || '[]'); } catch (e) { blocks = []; }
+                    window.BlockEditor.init('blocks', blocks);
+                    preview();
+                    toast('Draft tersimpan otomatis dipulihkan');
+                }
+            }
 
             if (id) {
                 try {
@@ -233,6 +270,9 @@
             $('#f-judul').addEventListener('input', preview);
             $('#f-ringkas').addEventListener('input', preview);
             $('#f-gambar').addEventListener('input', preview);
+            // Auto-save draft setiap 2 detik (mengunci semua blok termasuk teks kaya)
+            setInterval(simpanDraft, 2000);
+            window.addEventListener('beforeunload', simpanDraft);
             if (window.lucide) lucide.createIcons();
         })();
 
