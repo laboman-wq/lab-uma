@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor Halaman - Dashboard Laboratorium UMA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { fontFamily: { sans: ['Poppins', 'Inter', 'sans-serif'] },
+                colors: { primary: { 700: '#1e40af', 800: '#1e3a8a' } } } }
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="font-sans bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 antialiased min-h-screen">
+
+    <header class="sticky top-0 z-30 bg-white/90 dark:bg-slate-800/90 backdrop-blur border-b border-slate-200 dark:border-slate-700">
+        <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="dashboard.html" class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-cyan-600 transition"><i data-lucide="arrow-left" class="w-4 h-4"></i> Dashboard</a>
+                <span class="text-slate-300 dark:text-slate-600 hidden sm:inline">|</span>
+                <h1 class="font-display font-bold text-lg" id="editor-title">Halaman Baru</h1>
+            </div>
+            <div class="flex items-center gap-2">
+                <a href="../index.html" target="_blank" class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-cyan-600 transition"><i data-lucide="external-link" class="w-4 h-4"></i> Website</a>
+                <span class="text-sm text-slate-500" id="user-chip"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <form id="page-form" class="bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700 p-6 space-y-5">
+            <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1.5">Judul Halaman *</label>
+                    <input id="f-judul" required placeholder="Judul halaman..." class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5">Slug (unik, tanpa spasi) *</label>
+                    <input id="f-slug" required placeholder="contoh: visi-misi" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                    <p class="text-xs text-slate-400 mt-1">Dipakai di URL: <span class="font-mono">page.html?slug=...</span></p>
+                </div>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1.5">Kategori</label>
+                    <input id="f-kat" placeholder="Profil / Fasilitas / Layanan / dll" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1.5">Status</label>
+                    <select id="f-aktif" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                        <option value="1">Aktif (bisa dibuka publik)</option>
+                        <option value="0">Draft (tersembunyi)</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1.5">Isi Halaman <span class="text-xs text-slate-400">(blok: paragraf, judul, gambar, list, teks kaya — bisa diurutkan ↑↓)</span></label>
+                <div id="blocks"></div>
+            </div>
+            <div class="flex flex-wrap gap-3 items-center">
+                <button type="submit" id="btn-simpan" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary-700 text-white text-sm font-semibold hover:bg-primary-800 transition"><i data-lucide="save" class="w-4 h-4"></i> Simpan Halaman</button>
+                <a id="link-lihat" href="#" target="_blank" class="hidden inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-600 hover:gap-3 transition-all"><i data-lucide="eye" class="w-4 h-4"></i> Lihat di website</a>
+            </div>
+        </form>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/block-editor.js"></script>
+    <script>
+        const $ = (sel) => document.querySelector(sel);
+        function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
+        function todayStr() { const d = new Date(); const p = n => String(n).padStart(2, '0'); return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); }
+        function toast(msg, type) {
+            const box = document.createElement('div');
+            box.className = `fixed bottom-5 right-5 z-[100] ${type === 'error' ? 'bg-red-600' : type === 'warn' ? 'bg-amber-500' : 'bg-emerald-600'} text-white px-5 py-3 rounded-xl shadow-xl text-sm font-medium`;
+            box.textContent = msg; document.body.appendChild(box); setTimeout(() => box.remove(), 3200);
+        }
+
+        const user = Auth.guard();
+        if (!user) { location.href = 'login.html'; }
+        if (user && user.role !== 'admin') { location.href = 'dashboard.html'; }
+        if (user) document.getElementById('user-chip').textContent = user.name;
+
+        const params = new URLSearchParams(location.search);
+        const id = params.get('id');
+
+        $('#f-slug').addEventListener('input', function () {
+            this.value = this.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '');
+        });
+
+        async function save() {
+            const slug = $('#f-slug').value.trim();
+            if (!$('#f-judul').value.trim() || !slug) { toast('Judul dan slug wajib diisi', 'warn'); return; }
+            const payload = {
+                slug: slug,
+                judul: $('#f-judul').value.trim(),
+                kategori: $('#f-kat').value.trim() || 'Halaman',
+                isi: window.BlockEditor.collect(),
+                published: $('#f-aktif').value,
+                tanggal: (window.__pgTanggal || todayStr())
+            };
+            try {
+                if (id) { await updateRow('pages', id, payload); toast('Halaman diperbarui'); }
+                else { await addRow('pages', payload); toast('Halaman dibuat'); }
+                setTimeout(() => location.href = 'dashboard.html', 500);
+            } catch (e) { toast(e.message, 'error'); }
+        }
+
+        (async function init() {
+            window.BlockEditor.init('blocks', []);
+            if (id) {
+                try {
+                    const r = await api('get', { table: 'pages' });
+                    const p = (r.data || []).find(x => x.id === String(id));
+                    if (p) {
+                        $('#f-judul').value = p.judul || '';
+                        $('#f-slug').value = p.slug || '';
+                        $('#f-kat').value = p.kategori || '';
+                        $('#f-aktif').value = p.published || '1';
+                        window.__pgTanggal = p.tanggal;
+                        let blocks = []; try { blocks = JSON.parse(p.isi || '[]'); } catch (e) { blocks = []; }
+                        window.BlockEditor.init('blocks', blocks);
+                        document.getElementById('editor-title').textContent = 'Edit Halaman';
+                        const lk = document.getElementById('link-lihat');
+                        lk.href = '../page.html?slug=' + encodeURIComponent(p.slug);
+                        lk.classList.remove('hidden');
+                    } else { toast('Halaman tidak ditemukan', 'error'); }
+                } catch (e) { toast(e.message, 'error'); }
+            }
+            if (window.lucide) lucide.createIcons();
+        })();
+
+        $('#page-form').addEventListener('submit', function (e) { e.preventDefault(); save(); });
+    </script>
+</body>
+</html>

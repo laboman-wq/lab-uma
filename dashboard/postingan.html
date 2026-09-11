@@ -16,6 +16,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
     <style>
         .be-row textarea, .be-row input { transition: border-color .15s; }
         .be-row textarea:focus, .be-row input:focus { outline: none; border-color: #06b6d4; box-shadow: 0 0 0 3px rgba(6,182,212,.15); }
@@ -99,6 +100,7 @@
                         <li>• <b>Judul</b> — sub-bagian</li>
                         <li>• <b>Gambar</b> — URL gambar</li>
                         <li>• <b>Daftar bullet</b> — 1 item per baris</li>
+                        <li>• <b>Teks Kaya</b> — format penuh (tebal, miring, list, link, kutipan)</li>
                     </ul>
                 </div>
             </aside>
@@ -176,6 +178,7 @@
             box.innerHTML = (img ? `<img src="${esc(img)}" class="rounded-lg object-cover w-full max-h-40 mb-2">` : '') + blocks.map(b => {
                 if (b.t === 'h') return `<h3 class="font-bold mt-2 text-slate-900 dark:text-white">${esc(b.v)}</h3>`;
                 if (b.t === 'img') return `<img src="${esc(b.v)}" class="rounded-lg w-full my-1">`;
+                if (b.t === 'r') return `<div class="prose-content">${b.v || ''}</div>`;
                 if (b.t === 'list') return `<ul class="list-disc pl-4 my-1">${(b.v || []).map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
                 return `<p class="my-1">${esc(b.v)}</p>`;
             }).join('');

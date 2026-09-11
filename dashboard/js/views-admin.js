@@ -429,7 +429,7 @@ function vAdminPages() {
         <div class="p-6">
             <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
                 <h1 class="font-display text-2xl font-extrabold text-slate-900 dark:text-white">Halaman Dinamis</h1>
-                <button onclick="modalPage()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-700 text-white text-sm font-semibold hover:bg-primary-800"><i data-lucide="plus" class="w-4 h-4"></i> Halaman Baru</button>
+                <button onclick="location.href='halaman.html'" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-700 text-white text-sm font-semibold hover:bg-primary-800"><i data-lucide="plus" class="w-4 h-4"></i> Halaman Baru</button>
             </div>
             <p class="text-sm text-slate-500 mb-4">Halaman dibuat di sini lalu ditautkan lewat Menu Builder (tipe <b>page</b> dengan slug).</p>
             <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-x-auto">
@@ -441,7 +441,7 @@ function vAdminPages() {
                 <td class="py-3 px-3">${p.published === '1' ? badge('Aktif') : badge('Tidak Aktif')}</td>
                 <td class="py-3 px-3 text-right whitespace-nowrap">
                     <a href="../page.html?slug=${encodeURIComponent(p.slug)}" target="_blank" class="text-xs font-semibold text-slate-400 mr-2">Buka</a>
-                    <button onclick='modalPageEdit(${JSON.stringify(p).replace(/'/g, '&#39;')})' class="text-cyan-600 hover:underline text-sm font-semibold mr-2">Edit</button>
+                    <a href="halaman.html?id=${encodeURIComponent(p.id)}" class="text-cyan-600 hover:underline text-sm font-semibold mr-2">Edit</a>
                     <button onclick="hapusPage('${p.id}')" class="text-red-500 hover:underline text-sm font-semibold">Hapus</button></td></tr>`).join('') || '<tr><td colspan="6" class="py-8 text-center text-slate-400">Belum ada halaman.</td></tr>'}
             </tbody></table></div>
         </div>`;
@@ -449,40 +449,6 @@ function vAdminPages() {
     }).catch(e => toast(e.message, 'error'));
 }
 
-function modalPage(data = {}) {
-    const isEdit = !!data.id;
-    openModal(`
-        <form id="frm-page" class="p-6">
-            <div class="flex items-center justify-between mb-4"><h3 class="font-display text-lg font-bold">${isEdit ? 'Edit' : 'Buat'} Halaman</h3><button type="button" onclick="closeModal()" class="w-8 h-8 rounded-lg hover:bg-slate-100"><i data-lucide="x" class="w-5 h-5"></i></button></div>
-            <div class="space-y-4">
-                <div class="grid grid-cols-2 gap-3">
-                    <div><label class="block text-sm font-medium mb-1">Judul</label><input id="pg-judul" required value="${esc(data.judul || '')}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
-                    <div><label class="block text-sm font-medium mb-1">Slug (unik)</label><input id="pg-slug" required value="${esc(data.slug || '')}" placeholder="visi-misi" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div><label class="block text-sm font-medium mb-1">Kategori</label><input id="pg-kat" value="${esc(data.kategori || 'Halaman')}" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"></div>
-                    <div><label class="block text-sm font-medium mb-1">Status</label><select id="pg-aktif" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm"><option value="1">Aktif</option><option value="0" ${data.published === '0' ? 'selected' : ''}>Tidak Aktif</option></select></div>
-                </div>
-                <div><label class="block text-sm font-medium mb-1">Isi Halaman</label><div id="pg-blocks"></div></div>
-                <button class="w-full py-2.5 rounded-lg bg-primary-700 text-white font-semibold text-sm">${isEdit ? 'Simpan' : 'Buat Halaman'}</button>
-            </div>
-        </form>`);
-    try { BlockEditor.init('pg-blocks', JSON.parse(data.isi || '[]')); } catch (e) { BlockEditor.init('pg-blocks', []); }
-    $('#frm-page').addEventListener('submit', async e => {
-        e.preventDefault();
-        const payload = {
-            slug: $('#pg-slug').value.trim().toLowerCase().replace(/\s+/g, '-'),
-            judul: $('#pg-judul').value, kategori: $('#pg-kat').value || 'Halaman',
-            isi: BlockEditor.collect(), published: $('#pg-aktif').value, tanggal: data.tanggal || todayStr()
-        };
-        try {
-            if (isEdit) { await updateRow('pages', data.id, payload); toast('Halaman diperbarui'); }
-            else { await addRow('pages', payload); toast('Halaman dibuat'); }
-            closeModal(); vAdminPages();
-        } catch (err) { toast(err.message, 'error'); }
-    });
-}
-function modalPageEdit(d) { modalPage(d); }
 async function hapusPage(id) {
     if (!confirm('Hapus halaman ini?')) return;
     try { await deleteRow('pages', id); toast('Halaman dihapus'); vAdminPages(); }

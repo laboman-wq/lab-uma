@@ -190,6 +190,10 @@
                 node.src = b.v || '';
                 node.alt = 'Gambar';
                 node.className = 'my-4 rounded-xl w-full object-cover max-h-80 shadow-sm';
+            } else if (b.t === 'r') {
+                node = document.createElement('div');
+                node.className = 'prose-content my-3 leading-relaxed text-slate-600 dark:text-slate-300';
+                node.innerHTML = b.v || '';
             } else if (b.t === 'list') {
                 node = document.createElement('ul');
                 node.className = 'my-3 space-y-1.5 list-disc pl-5 text-slate-600 dark:text-slate-300';
